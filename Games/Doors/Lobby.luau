@@ -1,16 +1,16 @@
 local LoadStart = tick()
-Abysall.SavePath = "Doors/Lobby"
+F1xWare.SavePath = "Doors/Lobby"
 
-local Library = Abysall.Interface.Library
-local SaveManager = Abysall.Interface.SaveManager
-local ThemeManager = Abysall.Interface.ThemeManager
+local Library = F1xWare.Interface.Library
+local SaveManager = F1xWare.Interface.SaveManager
+local ThemeManager = F1xWare.Interface.ThemeManager
 
 local Toggles = Library.Toggles
 local Options = Library.Options
 
 local function CloneReference(Object)
-    if Abysall and Abysall.Environment.cloneref then
-        return Abysall.Environment.cloneref(Object)
+    if F1xWare and F1xWare.Environment.cloneref then
+        return F1xWare.Environment.cloneref(Object)
     else
         return Object
     end
@@ -27,6 +27,68 @@ local Globals = {}
 local Connections = {}
 local Functions = {}
 
+local Languages = {
+    ["English"] = {
+        TabName = "General",
+        BoxSelf = "Self",
+        BoxAuto = "Automation",
+        BoxQuick = "Quick Play",
+        ToggleElevator = "Auto Join Elevator",
+        ToggleElevatorDesc = "Automatically joins the selected player's elevator.",
+        DropdownTarget = "Target",
+        ToggleCycle = "Cycle Achievements",
+        ToggleCycleDesc = "Rapidly equips a random badge.",
+        SliderDelay = "Cycle Delay",
+        ButtonRedeem = "Redeem All Codes",
+        BtnHotel = "The Hotel",
+        BtnMines = "The Mines",
+        BtnBackdoor = "The Backdoor",
+        BtnRooms = "The Rooms",
+        BtnGarden = "The Outdoors",
+        BtnParty = "Battle Mode",
+        BtnRetro = "Retro Mode",
+        BtnRush = "Rush Mode",
+        BtnHallow = "Halloween",
+        BtnOldHotel = "Hotel-",
+        BtnSuperHard = "Super Hard Mode",
+        BtnRoomsFree = "The Rooms [Free]",
+        BtnGardenFree = "The Outdoors [Free]",
+        NotifyRedeem = "Redeeming %d codes...",
+        NotifyLoaded = "Successfully loaded in %s seconds.",
+        NotifyPress = "Press '%s' to toggle the UI."
+    },
+    ["Русский"] = {
+        TabName = "Главное",
+        BoxSelf = "Игрок",
+        BoxAuto = "Автоматизация",
+        BoxQuick = "Быстрый старт",
+        ToggleElevator = "Авто-вход в лифт",
+        ToggleElevatorDesc = "Автоматически заходит в лифт выбранного игрока.",
+        DropdownTarget = "Цель",
+        ToggleCycle = "Крутить достижения",
+        ToggleCycleDesc = "Быстро меняет значки достижений.",
+        SliderDelay = "Задержка",
+        ButtonRedeem = "Активировать все коды",
+        BtnHotel = "Отель",
+        BtnMines = "Шахты",
+        BtnBackdoor = "Задверье",
+        BtnRooms = "The Rooms",
+        BtnGarden = "Улица (Garden)",
+        BtnParty = "Битва (Party)",
+        BtnRetro = "Ретро",
+        BtnRush = "Rush Mode",
+        BtnHallow = "Хэллоуин",
+        BtnOldHotel = "Отель- (Старый)",
+        BtnSuperHard = "Super Hard Mode",
+        BtnRoomsFree = "The Rooms [Без прогресса]",
+        BtnGardenFree = "The Outdoors [Без прогресса]",
+        NotifyRedeem = "Активация %d кодов...",
+        NotifyLoaded = "Успешно загружено за %s секунд.",
+        NotifyPress = "Нажми '%s' чтобы скрыть меню."
+    }
+}
+local CurrentLang = Languages["English"]
+
 local LocalPlayer = Services.Players.LocalPlayer
 local RemotesFolder = Services.ReplicatedStorage:WaitForChild("RemotesFolder")
 
@@ -36,26 +98,26 @@ end
 task.wait(1)
 
 local Window = Library:CreateWindow({
-    Title = "Abysall Hub",
-    Footer = "dsc.gg/abysallhub",
+    Title = "F1xWare",
+    Footer = "F1xWare A.C  |  by MolniaF1x",
     NotifySide = "Right",
     ShowCustomCursor = false,
     AutoShow = true,
     Center = true,
-	TabPadding = 3,
-	MenuFadeTime = 0,
-    CornerRadius = 2,
+	TabPadding = 4,
+	MenuFadeTime = 0.15,
+    CornerRadius = 6,
 })
 
-Abysall.Interface.ApplyInfoTab(Window)
+F1xWare.Interface.ApplyInfoTab(Window)
 local Tabs = {
-    General = Window:AddTab("General", "house"),
+    General = Window:AddTab(CurrentLang.TabName, "house"),
 }
 
 Functions.CheckCompatability = function(Array)
     local Valid = true
     for Index, Name in pairs(Array) do
-        if not Abysall.Environment[Name] then
+        if not F1xWare.Environment[Name] then
             Valid = false
         end
     end
@@ -64,7 +126,7 @@ end
 
 local function GetHiddenContainer()
 	if Functions.CheckCompatability({"gethui"}) then
-		return Abysall.Environment.gethui()
+		return F1xWare.Environment.gethui()
 	else
 		return Services.CoreGui
 	end
@@ -76,7 +138,7 @@ local NotificationLibrary = {
 }
 
 local Container = Instance.new("ScreenGui")
-Container.Name = Abysall.ESPLibrary:GenerateRandomString()
+Container.Name = F1xWare.ESPLibrary:GenerateRandomString()
 Container.Parent = GetHiddenContainer()
 Container.DisplayOrder = 32767
 Container.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -182,7 +244,7 @@ end
 Functions.Notify = function(Settings)
     local Container
     if Functions.CheckCompatability({"gethui"}) then
-        Container = Abysall.Environment.gethui()
+        Container = F1xWare.Environment.gethui()
     else
         Container = Services.CoreGui
     end
@@ -225,61 +287,39 @@ end
 
 Globals.RedeemingCodes = false
 Globals.CodesList = {
-    "67",
-	"54",
-	"41",
-	"CHEDDAR BALLS",
-	"XQC",
-	"PENGUINZ0",
-	"KREEKCRAFT",
-	"ISHOWSPEED",
-	"DANTDM",
-	"KUBZ SCOUTS",
-	"FIND THE TROLLFACES",
-	"THINKNOODLES",
-	"W",
-	"RAGDOLL UNIVERSE",
-	"RAGDOLL MAYHEM",
-	"BIJUU MIKE",
-	"8BITRYAN",
-	"SCREECHSUCKS",
-	"LORE",
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-	"FIND THE TROLLFACES",
-	"3rd",
-	"LAZYDEVS",
-	"RAGDOLL COMBAT",
-	"VOCAB HAVOC",
-	"PATHSWAP",
-	"JUMP OVER THE BRICK"
+    "67", "54", "41", "CHEDDAR BALLS", "XQC", "PENGUINZ0", "KREEKCRAFT", "ISHOWSPEED",
+	"DANTDM", "KUBZ SCOUTS", "FIND THE TROLLFACES", "THINKNOODLES", "W", "RAGDOLL UNIVERSE",
+	"RAGDOLL MAYHEM", "BIJUU MIKE", "8BITRYAN", "SCREECHSUCKS", "LORE",
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZ", "FIND THE TROLLFACES", "3rd", "LAZYDEVS",
+	"RAGDOLL COMBAT", "VOCAB HAVOC", "PATHSWAP", "JUMP OVER THE BRICK"
 }
 Globals.UnlockedBadges = {}
 
-Groupboxes.General_Self = Tabs.General:AddLeftGroupbox("Self")
+Groupboxes.General_Self = Tabs.General:AddLeftGroupbox(CurrentLang.BoxSelf)
 
 Groupboxes.General_Self:AddToggle("AutoJoinElevator", {
-    Text = "Auto Join Elevator",
+    Text = CurrentLang.ToggleElevator,
     Default = false,
-    Tooltip = "Automatically joins the selected player's elevator."
+    Tooltip = CurrentLang.ToggleElevatorDesc
 })
 
 Groupboxes.General_Self:AddDropdown("AutoJoinElevatorTarget", {
-    Text = "Target",
+    Text = CurrentLang.DropdownTarget,
     SpecialType = "Player",
     ExcludeLocalPlayer = true,
     Searchable = true
 })
 
-Groupboxes.General_Automation = Tabs.General:AddLeftGroupbox("Automation")
+Groupboxes.General_Automation = Tabs.General:AddLeftGroupbox(CurrentLang.BoxAuto)
 
 Groupboxes.General_Automation:AddToggle("CycleAchievements", {
-    Text = "Cycle Achievements",
+    Text = CurrentLang.ToggleCycle,
     Default = false,
-    Tooltip = "Rapidly equips a random badge."
+    Tooltip = CurrentLang.ToggleCycleDesc
 })
 
 Groupboxes.General_Automation:AddSlider("CycleAchievementsDelay", {
-    Text = "Cycle Delay",
+    Text = CurrentLang.SliderDelay,
     Min = 0,
     Max = 1,
     Default = 0.1,
@@ -289,12 +329,9 @@ Groupboxes.General_Automation:AddSlider("CycleAchievementsDelay", {
 
 Groupboxes.General_Automation:AddDivider()
 
-Groupboxes.General_Automation:AddButton("Redeem All Codes", function()
-    if Globals.RedeemingCodes then
-        return
-    end
-
-    Functions.Notify({Title = "Redeeming " .. #Globals.CodesList .. " codes.", Body = "Please wait."})
+Groupboxes.General_Automation:AddButton(CurrentLang.ButtonRedeem, function()
+    if Globals.RedeemingCodes then return end
+    Functions.Notify({Title = string.format(CurrentLang.NotifyRedeem, #Globals.CodesList), Body = "..."})
     Globals.RedeemingCodes = true
     for Index, Code in pairs(Globals.CodesList) do
         RemotesFolder.ShopCode:FireServer(Code)
@@ -347,204 +384,64 @@ Connections.MainConnection = Services.RunService.Heartbeat:Connect(function()
 	end
 end)
 
-Groupboxes.General_QuickPlay = Tabs.General:AddRightGroupbox("Quick Play")
+Groupboxes.General_QuickPlay = Tabs.General:AddRightGroupbox(CurrentLang.BoxQuick)
 
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "The Hotel",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {},
-        	Settings = {},
-        	Destination = "Hotel",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
+local function FireElevator(dest, mods)
+    RemotesFolder.CreateElevator:FireServer({
+        Mods = mods or {},
+        Settings = {},
+        Destination = dest,
+        FriendsOnly = false,
+        MaxPlayers = "1"
+    })
+end
 
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "The Mines",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {},
-        	Settings = {},
-        	Destination = "Mines",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
-
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "The Backdoor",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {},
-        	Settings = {},
-        	Destination = "Backdoor",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
-
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "The Rooms",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {},
-        	Settings = {},
-        	Destination = "Rooms",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
-
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "The Outdoors",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {},
-        	Settings = {},
-        	Destination = "Garden",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
-
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnHotel, DoubleClick = false, Func = function() FireElevator("Hotel") end })
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnMines, DoubleClick = false, Func = function() FireElevator("Mines") end })
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnBackdoor, DoubleClick = false, Func = function() FireElevator("Backdoor") end })
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnRooms, DoubleClick = false, Func = function() FireElevator("Rooms") end })
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnGarden, DoubleClick = false, Func = function() FireElevator("Garden") end })
 Groupboxes.General_QuickPlay:AddDivider()
-
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "Battle Mode",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {},
-        	Settings = {},
-        	Destination = "Party",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
-
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "Retro Mode",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {},
-        	Settings = {},
-        	Destination = "Retro",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
-
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "Rush Mode",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {},
-        	Settings = {},
-        	Destination = "Fools26",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
-
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnParty, DoubleClick = false, Func = function() FireElevator("Party") end })
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnRetro, DoubleClick = false, Func = function() FireElevator("Retro") end })
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnRush, DoubleClick = false, Func = function() FireElevator("Fools26") end })
 Groupboxes.General_QuickPlay:AddDivider()
-
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "Halloween",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {},
-        	Settings = {},
-        	Destination = "Halloween25",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
-
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "Hotel-",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {},
-        	Settings = {},
-        	Destination = "BeforePlus",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
-
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "Super Hard Mode",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {},
-        	Settings = {},
-        	Destination = "SuperHardMode",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
-
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnHallow, DoubleClick = false, Func = function() FireElevator("Halloween25") end })
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnOldHotel, DoubleClick = false, Func = function() FireElevator("BeforePlus") end })
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnSuperHard, DoubleClick = false, Func = function() FireElevator("SuperHardMode") end })
 Groupboxes.General_QuickPlay:AddDivider()
-
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "The Rooms [Free, No Progress]",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {
-				"AdminPanel"
-			},
-        	Settings = {},
-        	Destination = "Rooms",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
-
-Groupboxes.General_QuickPlay:AddButton({
-	Text = "The Outdoors [Free, No Progress]",
-	DoubleClick = false,
-	Func = function()
-		RemotesFolder.CreateElevator:FireServer({
-        	Mods = {
-				"AdminPanel"
-			},
-        	Settings = {},
-        	Destination = "Garden",
-        	FriendsOnly = false,
-        	MaxPlayers = "1"
-    	})
-	end
-})
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnRoomsFree, DoubleClick = false, Func = function() FireElevator("Rooms", {"AdminPanel"}) end })
+Groupboxes.General_QuickPlay:AddButton({ Text = CurrentLang.BtnGardenFree, DoubleClick = false, Func = function() FireElevator("Garden", {"AdminPanel"}) end })
 
 Library:OnUnload(function()
     Connections.MainConnection:Disconnect()
-	getgenv().Abysall = nil
+	getgenv().F1xWare = nil
 end)
 
-Abysall.Interface.ApplySettingsTab(Window)
-Functions.Notify({ Title = "Successfully loaded in " .. math.floor((tick() - LoadStart) * 1000) / 1000 .. " seconds." , Body = "Press '" .. tostring(Options.MenuKeybind.Value) .. "' to toggle the UI."})
+F1xWare.Interface.ApplySettingsTab(Window)
+
+local SettingsTab = Library.SettingsTab
+if SettingsTab then
+    local LangBox = SettingsTab:AddLeftGroupbox("Language / Язык")
+    LangBox:AddDropdown("LanguageSelector", {
+        Text = "Select Language",
+        Values = {"English", "Русский"},
+        Default = "English",
+        Callback = function(Value)
+            CurrentLang = Languages[Value]
+            if Window.Root then
+                for _, child in pairs(Window.Root:GetDescendants()) do
+                    if child:IsA("TextLabel") or child:IsA("TextButton") then
+                        if child.Text == "General" then child.Text = CurrentLang.TabName end
+                        if child.Text == "Self" then child.Text = CurrentLang.BoxSelf end
+                        if child.Text == "Automation" then child.Text = CurrentLang.BoxAuto end
+                        if child.Text == "Quick Play" then child.Text = CurrentLang.BoxQuick end
+                    end
+                end
+            end
+            Functions.Notify({Title = "Language changed / Язык изменен", Body = Value})
+        end
+    })
+end
+
+Functions.Notify({ Title = string.format(CurrentLang.NotifyLoaded, math.floor((tick() - LoadStart) * 1000) / 1000), Body = string.format(CurrentLang.NotifyPress, tostring(Options.MenuKeybind.Value))})
