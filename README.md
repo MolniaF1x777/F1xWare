@@ -1,6 +1,10 @@
-# Abysall Hub is a free, open-sourced script hub I made because scripting is fun.
-If you want to try it for yourself:
-```
-loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/Abysall/refs/heads/main/Loader.luau"))()
-```
-Feel free to use any of the source code for your own projects, but credit would be appreciated.
+# F1xWare Hub
+
+F1xWare is a free, open-source script hub designed for maximum performance and a sleek user experience. 
+
+## How to use
+
+To load the hub, execute the following script in your executor:
+
+```lua
+loadstring(game:HttpGet("https://molniaf1x777.github.io/F1xWare/Loader.luau"))()
