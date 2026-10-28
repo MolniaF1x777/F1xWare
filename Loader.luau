@@ -1,7 +1,7 @@
 if getgenv().F1xWareLoaded then return end
 getgenv().F1xWareLoaded = true
 
-local BaseUrl = "https://molniaf1x777.github.io/F1xWare/"
+local BaseUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
 
 local function LoadFile(path)
     local success, content = pcall(function()
