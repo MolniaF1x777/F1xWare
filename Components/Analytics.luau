@@ -1,46 +1,31 @@
---[[
+local BaseUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
+local HttpService = game:GetService("HttpService")
 
-    For anyone wondering, this just sends a discord message when someone executed the script.
-    We only log basic data such as roblox username, executor used and the game you are in.
-    Sensetive data such as IP adresses or HWIDs are NOT logged and never will be.
-    If you want proof of this, feel free to dm me on discord: bocaj111004.
+local Analytics = {
+    BaseUrl = BaseUrl,
+    SessionStart = os.time(),
+    Events = {}
+}
 
-]]--
-
-local function CloneReference(Object)
-    if Abysall.Environment.cloneref then
-        return Abysall.Environment.cloneref(Object)
-    else
-        return Object
-    end
-end
-
-local Services = setmetatable({}, {
-    __index = function(self, Name)
-        return CloneReference(game:GetService(Name))
-    end
-})
-
-if Abysall.Environment.identifyexecutor and Abysall.Environment.request then
-    local Player = Services.Players.LocalPlayer
-    local Data = {
-        Account = Player.Name,
-        Executor = Abysall.Environment.identifyexecutor(),
-        Executions = tonumber(Abysall.TotalExecutions),
-        GameName = Services.MarketplaceService:GetProductInfo(game.PlaceId).Name,
-        PlaceId = tostring(game.PlaceId)
+function Analytics:LogEvent(eventName, payload)
+    local entry = {
+        Event = eventName,
+        Timestamp = os.time(),
+        Data = payload or {}
     }
+    table.insert(self.Events, entry)
 
-    task.spawn(function()
+    if isfile and isfile("F1xWare/UserData.json") then
         pcall(function()
-            Abysall.Environment.request({
-                Url = "https://abysall.wispbyte.org/api/send",
-                Method = "POST",
-                Headers = {
-                    ["content-type"] = "application/json"
-                },
-                Body = Services.HttpService:JSONEncode(Data)
-            })
+            local current = HttpService:JSONDecode(readfile("F1xWare/UserData.json"))
+            current["LastEvent"] = eventName
+            current["LastActive"] = os.time()
+            writefile("F1xWare/UserData.json", HttpService:JSONEncode(current))
         end)
-    end)
+    end
 end
+
+Analytics:LogEvent("SessionInitialized", { PlaceId = game.PlaceId })
+
+getgenv().Analytics = Analytics
+return Analytics
