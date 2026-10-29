@@ -1,16 +1,16 @@
 local LoadStart = tick()
-F1xWare.SavePath = "Doors/Lobby"
+Abysall.SavePath = "Doors/Lobby"
 
-local Library = Interface.Library
-local SaveManager = Interface.SaveManager
-local ThemeManager = Interface.ThemeManager
+local Library = Abysall.Interface.Library
+local SaveManager = Abysall.Interface.SaveManager
+local ThemeManager = Abysall.Interface.ThemeManager
 
 local Toggles = Library.Toggles
 local Options = Library.Options
 
 local function CloneReference(Object)
-    if Environment and Environment.cloneref then
-        return Environment.cloneref(Object)
+    if Abysall and Abysall.Environment.cloneref then
+        return Abysall.Environment.cloneref(Object)
     else
         return Object
     end
@@ -36,26 +36,26 @@ end
 task.wait(1)
 
 local Window = Library:CreateWindow({
-    Title = "F1xWare",
-    Footer = "F1xWare A.C  |  by MolniaF1x",
+    Title = "Abysall Hub",
+    Footer = "dsc.gg/abysallhub",
     NotifySide = "Right",
     ShowCustomCursor = false,
     AutoShow = true,
     Center = true,
-	TabPadding = 4,
-	MenuFadeTime = 0.15,
-    CornerRadius = 6,
+	TabPadding = 3,
+	MenuFadeTime = 0,
+    CornerRadius = 2,
 })
 
-Interface.ApplyInfoTab(Window)
+Abysall.Interface.ApplyInfoTab(Window)
 local Tabs = {
-    General = Window:AddTab("Главное", "house"),
+    General = Window:AddTab("General", "house"),
 }
 
 Functions.CheckCompatability = function(Array)
     local Valid = true
     for Index, Name in pairs(Array) do
-        if not Environment[Name] then
+        if not Abysall.Environment[Name] then
             Valid = false
         end
     end
@@ -64,7 +64,7 @@ end
 
 local function GetHiddenContainer()
 	if Functions.CheckCompatability({"gethui"}) then
-		return Environment.gethui()
+		return Abysall.Environment.gethui()
 	else
 		return Services.CoreGui
 	end
@@ -76,7 +76,7 @@ local NotificationLibrary = {
 }
 
 local Container = Instance.new("ScreenGui")
-Container.Name = ESPLibrary:GenerateRandomString()
+Container.Name = Abysall.ESPLibrary:GenerateRandomString()
 Container.Parent = GetHiddenContainer()
 Container.DisplayOrder = 32767
 Container.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -182,7 +182,7 @@ end
 Functions.Notify = function(Settings)
     local Container
     if Functions.CheckCompatability({"gethui"}) then
-        Container = Environment.gethui()
+        Container = Abysall.Environment.gethui()
     else
         Container = Services.CoreGui
     end
@@ -225,39 +225,61 @@ end
 
 Globals.RedeemingCodes = false
 Globals.CodesList = {
-    "67", "54", "41", "CHEDDAR BALLS", "XQC", "PENGUINZ0", "KREEKCRAFT", "ISHOWSPEED",
-	"DANTDM", "KUBZ SCOUTS", "FIND THE TROLLFACES", "THINKNOODLES", "W", "RAGDOLL UNIVERSE",
-	"RAGDOLL MAYHEM", "BIJUU MIKE", "8BITRYAN", "SCREECHSUCKS", "LORE",
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZ", "FIND THE TROLLFACES", "3rd", "LAZYDEVS",
-	"RAGDOLL COMBAT", "VOCAB HAVOC", "PATHSWAP", "JUMP OVER THE BRICK"
+    "67",
+	"54",
+	"41",
+	"CHEDDAR BALLS",
+	"XQC",
+	"PENGUINZ0",
+	"KREEKCRAFT",
+	"ISHOWSPEED",
+	"DANTDM",
+	"KUBZ SCOUTS",
+	"FIND THE TROLLFACES",
+	"THINKNOODLES",
+	"W",
+	"RAGDOLL UNIVERSE",
+	"RAGDOLL MAYHEM",
+	"BIJUU MIKE",
+	"8BITRYAN",
+	"SCREECHSUCKS",
+	"LORE",
+	"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+	"FIND THE TROLLFACES",
+	"3rd",
+	"LAZYDEVS",
+	"RAGDOLL COMBAT",
+	"VOCAB HAVOC",
+	"PATHSWAP",
+	"JUMP OVER THE BRICK"
 }
 Globals.UnlockedBadges = {}
 
-Groupboxes.General_Self = Tabs.General:AddLeftGroupbox("Игрок")
+Groupboxes.General_Self = Tabs.General:AddLeftGroupbox("Self")
 
 Groupboxes.General_Self:AddToggle("AutoJoinElevator", {
-    Text = "Авто-вход в лифт",
+    Text = "Auto Join Elevator",
     Default = false,
-    Tooltip = "Автоматически заходит в лифт выбранного игрока."
+    Tooltip = "Automatically joins the selected player's elevator."
 })
 
 Groupboxes.General_Self:AddDropdown("AutoJoinElevatorTarget", {
-    Text = "Цель",
+    Text = "Target",
     SpecialType = "Player",
     ExcludeLocalPlayer = true,
     Searchable = true
 })
 
-Groupboxes.General_Automation = Tabs.General:AddLeftGroupbox("Автоматизация")
+Groupboxes.General_Automation = Tabs.General:AddLeftGroupbox("Automation")
 
 Groupboxes.General_Automation:AddToggle("CycleAchievements", {
-    Text = "Крутить достижения",
+    Text = "Cycle Achievements",
     Default = false,
-    Tooltip = "Быстро меняет значки достижений."
+    Tooltip = "Rapidly equips a random badge."
 })
 
 Groupboxes.General_Automation:AddSlider("CycleAchievementsDelay", {
-    Text = "Задержка",
+    Text = "Cycle Delay",
     Min = 0,
     Max = 1,
     Default = 0.1,
@@ -267,12 +289,12 @@ Groupboxes.General_Automation:AddSlider("CycleAchievementsDelay", {
 
 Groupboxes.General_Automation:AddDivider()
 
-Groupboxes.General_Automation:AddButton("Активировать все коды", function()
+Groupboxes.General_Automation:AddButton("Redeem All Codes", function()
     if Globals.RedeemingCodes then
         return
     end
 
-    Functions.Notify({Title = "Активация " .. #Globals.CodesList .. " кодов.", Body = "Подождите..."})
+    Functions.Notify({Title = "Redeeming " .. #Globals.CodesList .. " codes.", Body = "Please wait."})
     Globals.RedeemingCodes = true
     for Index, Code in pairs(Globals.CodesList) do
         RemotesFolder.ShopCode:FireServer(Code)
@@ -325,10 +347,10 @@ Connections.MainConnection = Services.RunService.Heartbeat:Connect(function()
 	end
 end)
 
-Groupboxes.General_QuickPlay = Tabs.General:AddRightGroupbox("Быстрый старт")
+Groupboxes.General_QuickPlay = Tabs.General:AddRightGroupbox("Quick Play")
 
 Groupboxes.General_QuickPlay:AddButton({
-	Text = "Отель",
+	Text = "The Hotel",
 	DoubleClick = false,
 	Func = function()
 		RemotesFolder.CreateElevator:FireServer({
@@ -342,7 +364,7 @@ Groupboxes.General_QuickPlay:AddButton({
 })
 
 Groupboxes.General_QuickPlay:AddButton({
-	Text = "Шахты",
+	Text = "The Mines",
 	DoubleClick = false,
 	Func = function()
 		RemotesFolder.CreateElevator:FireServer({
@@ -356,7 +378,7 @@ Groupboxes.General_QuickPlay:AddButton({
 })
 
 Groupboxes.General_QuickPlay:AddButton({
-	Text = "Задверье",
+	Text = "The Backdoor",
 	DoubleClick = false,
 	Func = function()
 		RemotesFolder.CreateElevator:FireServer({
@@ -384,7 +406,7 @@ Groupboxes.General_QuickPlay:AddButton({
 })
 
 Groupboxes.General_QuickPlay:AddButton({
-	Text = "Улица (Garden)",
+	Text = "The Outdoors",
 	DoubleClick = false,
 	Func = function()
 		RemotesFolder.CreateElevator:FireServer({
@@ -400,7 +422,7 @@ Groupboxes.General_QuickPlay:AddButton({
 Groupboxes.General_QuickPlay:AddDivider()
 
 Groupboxes.General_QuickPlay:AddButton({
-	Text = "Битва (Party)",
+	Text = "Battle Mode",
 	DoubleClick = false,
 	Func = function()
 		RemotesFolder.CreateElevator:FireServer({
@@ -414,7 +436,7 @@ Groupboxes.General_QuickPlay:AddButton({
 })
 
 Groupboxes.General_QuickPlay:AddButton({
-	Text = "Ретро",
+	Text = "Retro Mode",
 	DoubleClick = false,
 	Func = function()
 		RemotesFolder.CreateElevator:FireServer({
@@ -444,7 +466,7 @@ Groupboxes.General_QuickPlay:AddButton({
 Groupboxes.General_QuickPlay:AddDivider()
 
 Groupboxes.General_QuickPlay:AddButton({
-	Text = "Хэллоуин",
+	Text = "Halloween",
 	DoubleClick = false,
 	Func = function()
 		RemotesFolder.CreateElevator:FireServer({
@@ -458,7 +480,7 @@ Groupboxes.General_QuickPlay:AddButton({
 })
 
 Groupboxes.General_QuickPlay:AddButton({
-	Text = "Отель- (Старый)",
+	Text = "Hotel-",
 	DoubleClick = false,
 	Func = function()
 		RemotesFolder.CreateElevator:FireServer({
@@ -488,7 +510,7 @@ Groupboxes.General_QuickPlay:AddButton({
 Groupboxes.General_QuickPlay:AddDivider()
 
 Groupboxes.General_QuickPlay:AddButton({
-	Text = "The Rooms [Без прогресса]",
+	Text = "The Rooms [Free, No Progress]",
 	DoubleClick = false,
 	Func = function()
 		RemotesFolder.CreateElevator:FireServer({
@@ -504,7 +526,7 @@ Groupboxes.General_QuickPlay:AddButton({
 })
 
 Groupboxes.General_QuickPlay:AddButton({
-	Text = "The Outdoors [Без прогресса]",
+	Text = "The Outdoors [Free, No Progress]",
 	DoubleClick = false,
 	Func = function()
 		RemotesFolder.CreateElevator:FireServer({
@@ -521,7 +543,8 @@ Groupboxes.General_QuickPlay:AddButton({
 
 Library:OnUnload(function()
     Connections.MainConnection:Disconnect()
+	getgenv().Abysall = nil
 end)
 
-Interface.ApplySettingsTab(Window)
-Functions.Notify({ Title = "Успешно загружено за " .. math.floor((tick() - LoadStart) * 1000) / 1000 .. " секунд." , Body = "Нажми '" .. tostring(Options.MenuKeybind.Value) .. "' чтобы скрыть меню."})
+Abysall.Interface.ApplySettingsTab(Window)
+Functions.Notify({ Title = "Successfully loaded in " .. math.floor((tick() - LoadStart) * 1000) / 1000 .. " seconds." , Body = "Press '" .. tostring(Options.MenuKeybind.Value) .. "' to toggle the UI."})
