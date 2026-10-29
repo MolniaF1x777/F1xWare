@@ -1,16 +1,16 @@
 local LoadStart = tick()
-F1xWare.SavePath = "Doors/Game"
+Abysall.SavePath = "Doors/Game"
 
-local Library = F1xWare.Interface.Library
-local SaveManager = F1xWare.Interface.SaveManager
-local ThemeManager = F1xWare.Interface.ThemeManager
+local Library = Abysall.Interface.Library
+local SaveManager = Abysall.Interface.SaveManager
+local ThemeManager = Abysall.Interface.ThemeManager
 
 local Toggles = Library.Toggles
 local Options = Library.Options
 
 local function CloneReference(Object)
-	if F1xWare and F1xWare.Environment.cloneref then
-		return F1xWare.Environment.cloneref(Object)
+	if Abysall and Abysall.Environment.cloneref then
+		return Abysall.Environment.cloneref(Object)
 	end
 	return Object
 end
@@ -55,7 +55,7 @@ Globals.IncompatibleMessage = "Your executor doesn't support this feature."
 
 Functions.CheckCompatability = function(Array)
 	for _, Name in Array do
-		if not F1xWare.Environment[Name] then
+		if not Abysall.Environment[Name] then
 			return false
 		end
 	end
@@ -254,7 +254,7 @@ end
 
 local function GetHiddenContainer()
 	if Functions.CheckCompatability({"gethui"}) then
-		return F1xWare.Environment.gethui()
+		return Abysall.Environment.gethui()
 	end
 	return Services.CoreGui
 end
@@ -265,7 +265,7 @@ local NotificationLibrary = {
 }
 
 local Container = Instance.new("ScreenGui")
-Container.Name = F1xWare.ESPLibrary:GenerateRandomString()
+Container.Name = Abysall.ESPLibrary:GenerateRandomString()
 Container.Parent = GetHiddenContainer()
 Container.DisplayOrder = 32767
 Container.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -474,7 +474,7 @@ Functions.Notify = function(Settings)
 		Settings.Body = "..."
 	end
 
-	if not Options.NotifyStyle or Options.NotifyStyle.Value == "F1xWare" then
+	if not Options.NotifyStyle or Options.NotifyStyle.Value == "Abysall" then
 		local Sound = Instance.new("Sound", HiddenContainer)
 		Sound.SoundId = "rbxassetid://8784885431"
 		Sound.Volume = (Toggles.NotifyPlaySound and Toggles.NotifyPlaySound.Value and Options.NotifySoundVolume.Value) or (Toggles.NotifyPlaySound and 0 or 3)
@@ -491,7 +491,7 @@ Functions.Notify = function(Settings)
 			end
 		end
 		Globals.DoorsNotify({
-			Title = "F1xWare",
+			Title = "Abysall Hub",
 			Description = Settings.Title,
 			Reason = Settings.Body,
 			Style = IsEntity and "WARNING" or "NOTIFICATION",
@@ -508,13 +508,13 @@ Functions.Notify = function(Settings)
 
 		if Settings.Image then
 			Globals.STX:Notify(
-				{Title = "F1xWare", Description = Settings.Title .. "\n" .. Settings.Body},
+				{Title = "Abysall Hub", Description = Settings.Title .. "\n" .. Settings.Body},
 				{OutlineColor = Library.Scheme.AccentColor,Time = Settings.Time or 5, Type = "image"},
 				{Image = Settings.Image, ImageColor = Color3.fromRGB(255, 255, 255)}
 			)
 		else
 			Globals.STX:Notify(
-				{Title = "F1xWare", Description = Settings.Title .. "\n" .. Settings.Body},
+				{Title = "Abysall Hub", Description = Settings.Title .. "\n" .. Settings.Body},
 				{OutlineColor = Library.Scheme.AccentColor,Time = Settings.Time or 5, Type = "default"}
 			)
 		end
@@ -584,7 +584,7 @@ Library.Notify = function(Data, Body, Time)
 end
 
 if not LocalPlayer.Character or not CurrentRooms:FindFirstChildOfClass("Model") then
-	Functions.Notify({ Title = "Ожидание загрузки игры..." })
+	Functions.Notify({ Title = "Waiting for the game to load..." })
 	while not LocalPlayer.Character or not CurrentRooms:FindFirstChildOfClass("Model") do
 		task.wait()
 	end
@@ -662,10 +662,10 @@ for _, Object in Services.Lighting:GetChildren() do
 end
 
 Globals.SeekNodesFolder = Instance.new("Folder", Services.Workspace)
-Globals.SeekNodesFolder.Name = F1xWare.ESPLibrary:GenerateRandomString()
+Globals.SeekNodesFolder.Name = Abysall.ESPLibrary:GenerateRandomString()
 
 Globals.RoomsNodesFolder = Instance.new("Folder", Services.Workspace)
-Globals.RoomsNodesFolder.Name = F1xWare.ESPLibrary:GenerateRandomString()
+Globals.RoomsNodesFolder.Name = Abysall.ESPLibrary:GenerateRandomString()
 
 Functions.SendChat = function(Message)
 	local Folder = Services.ReplicatedStorage:FindFirstChild("DefaultChatSystemEvents") or Instance.new("Folder")
@@ -772,7 +772,7 @@ Functions.GetNearestEntity = function(CheckDisabled, List, UseRaycasting)
 				if Distance < EntityDistances[Entity.Name] and Distance < Nearest.Distance then
 					if not CheckDisabled or Entity:GetAttribute("Inactive") ~= true then
 						Nearest.Distance = Distance
-						 Nearest.Object = Entity
+						Nearest.Object = Entity
 					end
 				end
 			end
@@ -898,21 +898,21 @@ Functions.AddESP = function(ESPOptions, RoomBased)
 		local ObjectRoom = tonumber(Object:GetAttribute("ParentRoom"))
 
 		if ObjectRoom == CurrentRoom or (table.find(Objects.Doors, Object) and ObjectRoom == CurrentRoom + 1) then
-			F1xWare.ESPLibrary:AddESP(ESPOptions)
+			Abysall.ESPLibrary:AddESP(ESPOptions)
 		end
 
 		local RoomConnection = LocalPlayer:GetAttributeChangedSignal("CurrentRoom"):Connect(function()
-			if F1xWare.ESPLibrary.ColorTable[Object] then
-				ESPOptions.Color = F1xWare.ESPLibrary.ColorTable[Object]
+			if Abysall.ESPLibrary.ColorTable[Object] then
+				ESPOptions.Color = Abysall.ESPLibrary.ColorTable[Object]
 			end
 
 			local NewCurrentRoom = tonumber(LocalPlayer:GetAttribute("CurrentRoom"))
 			local ObjRoom = tonumber(Object:GetAttribute("ParentRoom"))
 
 			if ObjRoom == NewCurrentRoom or (table.find(Objects.Doors, Object) and ObjRoom == NewCurrentRoom + 1) then
-				F1xWare.ESPLibrary:AddESP(ESPOptions)
+				Abysall.ESPLibrary:AddESP(ESPOptions)
 			else
-				F1xWare.ESPLibrary:RemoveESP(Object)
+				Abysall.ESPLibrary:RemoveESP(Object)
 			end
 		end)
 
@@ -921,14 +921,14 @@ Functions.AddESP = function(ESPOptions, RoomBased)
 
 		Object.Destroying:Once(function()
 			RoomConnection:Disconnect()
-			if F1xWare then
-				F1xWare.ESPLibrary:RemoveESP(Object)
+			if Abysall then
+				Abysall.ESPLibrary:RemoveESP(Object)
 			end
 			local Pos = table.find(Connections, RoomConnection)
 			if Pos then table.remove(Connections, Pos) end
 		end)
 	else
-		F1xWare.ESPLibrary:AddESP(ESPOptions)
+		Abysall.ESPLibrary:AddESP(ESPOptions)
 	end
 end
 
@@ -940,7 +940,7 @@ Functions.RemoveESP = function(Object)
 		local Pos = table.find(Connections, Conn)
 		if Pos then table.remove(Connections, Pos) end
 	end
-	F1xWare.ESPLibrary:RemoveESP(Object)
+	Abysall.ESPLibrary:RemoveESP(Object)
 end
 
 Functions.BlacklistESP = function(Object)
@@ -1012,52 +1012,52 @@ Functions.GetRandomCode = function()
 end
 
 local Window = Library:CreateWindow({
-	Title = "F1xWare",
-	Footer = "F1xWare A.C  |  by MolniaF1x",
+	Title = "Abysall Hub",
+	Footer = "dsc.gg/abysallhub",
 	NotifySide = "Right",
 	ShowCustomCursor = false,
 	AutoShow = true,
 	Center = true,
-	TabPadding = 4,
-	MenuFadeTime = 0.15,
-	CornerRadius = 6,
+	TabPadding = 3,
+	MenuFadeTime = 0,
+	CornerRadius = 2,
 })
 
-F1xWare.Interface.ApplyInfoTab(Window)
+Abysall.Interface.ApplyInfoTab(Window)
 
 local Tabs = {
-	General  = Window:AddTab("Главное", "house"),
-	Exploits = Window:AddTab("Читы", "shield"),
-	Visuals  = Window:AddTab("Визуал", "eye"),
-	Floors   = Window:AddTab("Этажи", "earth"),
+	General  = Window:AddTab("General", "house"),
+	Exploits = Window:AddTab("Exploits", "shield"),
+	Visuals  = Window:AddTab("Visuals", "eye"),
+	Floors   = Window:AddTab("Floors", "earth"),
 }
 
-Groupboxes.General_Character = Tabs.General:AddLeftGroupbox("Персонаж")
+Groupboxes.General_Character = Tabs.General:AddLeftGroupbox("Character")
 Groupboxes.General_Character:AddSlider("SpeedBoostSlider", {
-	Text = "Скорость", Min = 0, Max = 100, Default = 0, Rounding = 0, Compact = true
+	Text = "Speed Boost", Min = 0, Max = 100, Default = 0, Rounding = 0, Compact = true
 })
 Groupboxes.General_Character:AddToggle("SpeedBoostToggle", {
-	Text = "Включить скорость", Default = false, Tooltip = "Увеличивает вашу скорость ходьбы на указанное значение."
+	Text = "Enable Speed Boost", Default = false, Tooltip = "Increases your walkspeed by the specified amount."
 })
 Groupboxes.General_Character:AddToggle("FlyToggle", {
-	Text = "Полёт", Default = false, Tooltip = "Позволяет свободно летать по карте."
+	Text = "Fly", Default = false, Tooltip = "Allows you to freely fly around the map."
 })
 Toggles.FlyToggle:AddKeyPicker("FlyKeybind", {
-	Text = "Полёт", Default = "F", Mode = "Toggle", SyncToggleState = true
+	Text = "Fly", Default = "F", Mode = "Toggle", SyncToggleState = true
 })
 Groupboxes.General_Character:AddSlider("FlySpeed", {
-	Text = "Скорость полёта", Min = 0, Max = 115, Default = 20, Rounding = 0, Compact = true
+	Text = "Fly Speed", Min = 0, Max = 115, Default = 20, Rounding = 0, Compact = true
 })
 Groupboxes.General_Character:AddDivider()
 Groupboxes.General_Character:AddToggle("NoclipToggle", {
-	Text = "Ноклип", Default = false, Tooltip = "Позволяет проходить сквозь стены."
+	Text = "Noclip", Default = false, Tooltip = "Allows your character to pass through solid objects."
 })
 Groupboxes.General_Character:AddToggle("RemoveClosetDelay", {
-	Text = "Убрать задержку шкафа", Default = false,
-	Tooltip = "Убирает задержку, когда вы не можете выйти из шкафа после анимации."
+	Text = "Remove Closet Delay", Default = false,
+	Tooltip = "Removes the short window where you can't exit out of a closet after the animation finishes."
 })
 Groupboxes.General_Character:AddToggle("RemoveAcceleration", {
-	Text = "Убрать ускорение", Default = false, Tooltip = "Убирает скольжение персонажа при движении."
+	Text = "Remove Acceleration", Default = false, Tooltip = "Prevents your character from sliding while moving."
 })
 
 local CustomPhysics
@@ -1069,7 +1069,7 @@ Options.SpeedBoostSlider:OnChanged(function(Value)
 end)
 
 Toggles.NoclipToggle:AddKeyPicker("NoclipKeybind", {
-	Text = "Ноклип", Default = "N", Mode = "Toggle", SyncToggleState = true
+	Text = "Noclip", Default = "N", Mode = "Toggle", SyncToggleState = true
 })
 Toggles.RemoveAcceleration:OnChanged(function(Value)
 	for Index, Old in PartProperties do
@@ -1079,13 +1079,13 @@ end)
 
 Groupboxes.General_Character:AddDivider()
 Groupboxes.General_Character:AddToggle("EnableCharacterJump", {
-	Text = "Включить прыжок", Default = false, Tooltip = "Позволяет персонажу прыгать."
+	Text = "Enable Jumping", Default = false, Tooltip = "Allows your character to jump."
 })
 Groupboxes.General_Character:AddToggle("EnableCharacterSlide", {
-	Text = "Включить скольжение", Default = false, Tooltip = "Позволяет персонажу скользить."
+	Text = "Enable Sliding", Default = false, Tooltip = "Allows your character to slide."
 })
 Groupboxes.General_Character:AddToggle("InfiniteJumps", {
-	Text = "Бесконечные прыжки", Default = false, Tooltip = "Позволяет прыгать в воздухе."
+	Text = "Infinite Jumps", Default = false, Tooltip = "Allows you to jump while in the air."
 })
 
 local OldJump = false
@@ -1107,16 +1107,16 @@ Toggles.EnableCharacterSlide:OnChanged(function(Value)
 	end
 end)
 
-Groupboxes.General_Self = Tabs.General:AddLeftGroupbox("Игрок")
+Groupboxes.General_Self = Tabs.General:AddLeftGroupbox("Self")
 Groupboxes.General_Self:AddToggle("DoorReachToggle", {
-	Text = "Достать до двери", Default = false, Tooltip = "Позволяет открывать двери с большего расстояния."
+	Text = "Door Reach", Default = false, Tooltip = "Allows you to open doors from further away."
 })
 Groupboxes.General_Self:AddToggle("DisableIdleKick", {
-	Text = "Убрать кик за АФК", Default = false, Tooltip = "Предотвращает кик за бездействие."
+	Text = "Disable Idle Kick", Default = false, Tooltip = "Prevents the kick from being idle for 20 minutes."
 })
 Toggles.DisableIdleKick:OnChanged(function(Value)
 	if Functions.CheckCompatability({"getconnections"}) then
-		for _, Conn in F1xWare.Environment.getconnections(LocalPlayer.Idled) do
+		for _, Conn in Abysall.Environment.getconnections(LocalPlayer.Idled) do
 			if Value then Conn:Disable() else Conn:Enable() end
 		end
 	end
@@ -1130,13 +1130,13 @@ end)
 
 Groupboxes.General_Self:AddDivider()
 Groupboxes.General_Self:AddSlider("PromptReachSlider", {
-	Text = "Множитель дистанции", Min = 1, Max = 2, Default = 1, Rounding = 1, Compact = true
+	Text = "Prompt Reach Multiplier", Min = 1, Max = 2, Default = 1, Rounding = 1, Compact = true
 })
 Groupboxes.General_Self:AddToggle("InstantPrompts", {
-	Text = "Мгновенные действия", Default = false, Tooltip = "Позволяет мгновенно взаимодействовать с объектами."
+	Text = "Instant Prompts", Default = false, Tooltip = "Allows you to trigger all prompts instantly."
 })
 Groupboxes.General_Self:AddToggle("PromptClip", {
-	Text = "Взаимодействие через стены", Default = false, Tooltip = "Позволяет взаимодействовать с объектами через стены."
+	Text = "Prompt Clip", Default = false, Tooltip = "Allows you to interact with prompts through walls."
 })
 
 Options.PromptReachSlider:OnChanged(function(Value)
@@ -1155,19 +1155,19 @@ Toggles.PromptClip:OnChanged(function(Value)
 	end
 end)
 
-Groupboxes.Self_Automation = Tabs.General:AddRightGroupbox("Автоматизация")
+Groupboxes.Self_Automation = Tabs.General:AddRightGroupbox("Automation")
 Groupboxes.Self_Automation:AddToggle("AutoBreakerBox", {
-	Text = "Авто-рубильник", Default = false, Tooltip = "Автоматически решает головоломку с рубильником."
+	Text = "Auto Breaker Box", Default = false, Tooltip = "Automatically solves the breaker box."
 })
 Groupboxes.Self_Automation:AddToggle("AutoSolveAnchors", {
-	Text = "Авто-решение якорей", Default = false,
-	Tooltip = "Автоматически вводит правильный код в якоря, когда вы рядом."
+	Text = "Auto Solve Anchors", Default = false,
+	Tooltip = "Automatically enters the correct code into anchors when you are near them."
 })
 Toggles.AutoBreakerBox:OnChanged(function(Value)
 	if Value and CurrentRooms:FindFirstChild("ElevatorBreaker", true) then
 		if not Globals.BreakerBoxInteracted then
 			if not Globals.BreakerBoxNotified then
-				Functions.Notify({ Title = "Взаимодействуйте с рубильником.", Body = "Он решится автоматически." })
+				Functions.Notify({ Title = "Interact with the breaker box.", Body = "It will be automatically solved." })
 				Globals.BreakerBoxInteracted = true
 			end
 		else
@@ -1176,49 +1176,49 @@ Toggles.AutoBreakerBox:OnChanged(function(Value)
 	end
 end)
 
-Groupboxes.Self_Automation:AddToggle("AutoHeartbeatMinigame", { Text = "Авто-сердцебиение", Default = false, Tooltip = "Предотвращает провал мини-игры с Фигурой.", Disabled = not Functions.CheckCompatability({"hookmetamethod", "newcclosure", "getnamecallmethod"}), DisabledTooltip = Globals.IncompatibleMessage })
+Groupboxes.Self_Automation:AddToggle("AutoHeartbeatMinigame", { Text = "Auto Heartbeat Minigame", Default = false, Tooltip = "Prevents the 'Figure' minigame from ever failing.", Disabled = not Functions.CheckCompatability({"hookmetamethod", "newcclosure", "getnamecallmethod"}), DisabledTooltip = Globals.IncompatibleMessage })
 Groupboxes.Self_Automation:AddDivider()
 Groupboxes.Self_Automation:AddToggle("AutoUnlockPadlockToggle", {
-	Text = "Авто-замок", Default = false, Tooltip = "Автоматически вводит код в замок библиотеки."
+	Text = "Auto Unlock Padlock", Default = false, Tooltip = "Automatically enters the code into the library padlock."
 })
 Groupboxes.Self_Automation:AddSlider("AutoUnlockPadlockSlider", {
-	Text = "Дистанция", Min = 1, Max = 50, Default = 10, Rounding = 0, Compact = true
+	Text = "Unlock Distance", Min = 1, Max = 50, Default = 10, Rounding = 0, Compact = true
 })
 Groupboxes.Self_Automation:AddToggle("AutoLibraryGuessCode", {
-	Text = "Угадать код библиотеки", Default = false,
-	Tooltip = "Пытается угадать код библиотеки."
+	Text = "Guess Library Code", Default = false,
+	Tooltip = "Attempts to guess the library code, but collecting some books is also necessary."
 })
 Groupboxes.Self_Automation:AddDivider()
 Groupboxes.Self_Automation:AddToggle("AutoInteractToggle", {
-	Text = "Авто-действие", Default = false, Tooltip = "Автоматически взаимодействует с ближайшими объектами."
+	Text = "Auto Interact", Default = false, Tooltip = "Automatically triggers nearby prompts."
 })
 Toggles.AutoInteractToggle:AddKeyPicker("AutoInteractKeybind", {
-	Text = "Авто-действие", Default = "R",
+	Text = "Auto Interact", Default = "R",
 	Mode = Library.IsMobile and "Toggle" or "Hold", SyncToggleState = true
 })
 Groupboxes.Self_Automation:AddDropdown("AutoInteractIgnoreList", {
-	Text = "Игнорировать",
+	Text = "Ignore List",
 	Values = { "Glitch Fragments", "Jeff Items", "Dropped Items", "Currency", "Minecarts", "Locks" },
 	Default = { "Glitch Fragments", "Jeff Items", "Dropped Items" },
 	Multi = true, AllowNull = true
 })
 Groupboxes.Self_Automation:AddDivider()
 Groupboxes.Self_Automation:AddToggle("AutoClosetToggle", {
-	Text = "Авто-шкаф", Default = false,
-	Tooltip = "Автоматически прячется в ближайший шкаф, когда сущность рядом."
+	Text = "Auto Closet", Default = false,
+	Tooltip = "Automatically hides in a nearby closet when an entity is near."
 })
 Toggles.AutoClosetToggle:AddKeyPicker("AutoClosetKeybind", {
-	Text = "Авто-шкаф", Default = "Q", Mode = "Toggle", SyncToggleState = true
+	Text = "Auto Closet", Default = "Q", Mode = "Toggle", SyncToggleState = true
 })
 Groupboxes.Self_Automation:AddDropdown("AutoClosetEntityList", {
-	Text = "Игнорировать",
+	Text = "Ignore List",
 	Values = { "Rush", "Ambush", "Blitz", "A-60", "A-120", "AR0xMBUSH", "RNIUSHCG==" },
 	Multi = true, AllowNull = true
 })
 Groupboxes.Self_Automation:AddToggle("SpectateEntityToggle", {
-	Text = "Следить за сущностью",
+	Text = "Spectate Entity",
 	Default = false,
-	Tooltip = "Следит за сущностью, пока вы прячетесь."
+	Tooltip = "Spectates the entity while auto hiding."
 })
 Groupboxes.Self_Automation:AddDropdown("SpecateEntityMode", {
 	Values = {"Player to Entity", "Entity to Player"},
@@ -1226,29 +1226,29 @@ Groupboxes.Self_Automation:AddDropdown("SpecateEntityMode", {
 	AllowNull = true
 })
 
-Groupboxes.Self_Misc = Tabs.General:AddRightGroupbox("Разное")
+Groupboxes.Self_Misc = Tabs.General:AddRightGroupbox("Miscellaneous")
 Groupboxes.Self_Misc:AddButton({
-	Text = "Играть снова", Tooltip = "Заставляет вас присоединиться к новому забегу.", DoubleClick = true,
+	Text = "Play Again", Tooltip = "Makes you join a new run, click again to cancel.", DoubleClick = true,
 	Func = function() RemotesFolder.PlayAgain:FireServer() end
 })
 Groupboxes.Self_Misc:AddButton({
-	Text = "Вернуться в лобби", Tooltip = "Телепортирует вас обратно в лобби.", DoubleClick = true,
+	Text = "Return to Lobby", Tooltip = "Makes you teleport back to the lobby.", DoubleClick = true,
 	Func = function() RemotesFolder.Lobby:FireServer() end
 })
 Groupboxes.Self_Misc:AddButton({
-	Text = "Возродиться",
-	Tooltip = "Возрождает вас, если у вас есть возрождение.",
+	Text = "Revive",
+	Tooltip = "Makes you revive, if you have a revive and haven't already revived in this run.",
 	DoubleClick = true,
 	Func = function() RemotesFolder.Revive:FireServer() end
 })
 Groupboxes.Self_Misc:AddButton({
-	Text = "Убить себя",
-	Tooltip = "Убивает вашего персонажа.",
+	Text = "Reset Character",
+	Tooltip = "Kills your character on the server. (takes around 20 seconds if replicatesignal isn't supported)",
 	DoubleClick = true,
 	Func = function()
 		Globals.SelfKilled = true
 		if Functions.CheckCompatability({"replicatesignal"}) then
-			F1xWare.Environment.replicatesignal(LocalPlayer.Kill)
+			Abysall.Environment.replicatesignal(LocalPlayer.Kill)
 		else
 			if RemotesFolder:FindFirstChild("Underwater") then
 				RemotesFolder.Underwater:FireServer(true)
@@ -1259,19 +1259,19 @@ Groupboxes.Self_Misc:AddButton({
 	end
 })
 
-Groupboxes.Exploits_Bypass = Tabs.Exploits:AddLeftGroupbox("Обход")
-Groupboxes.Exploits_Bypass:AddToggle("BypassGiggle",         { Text = "Обход Гиггла",           Default = false, Tooltip = "Предотвращает атаку Гиггла." })
-Groupboxes.Exploits_Bypass:AddToggle("BypassDupe",           { Text = "Обход Дюпа",             Default = false, Tooltip = "Предотвращает открытие фейковых дверей." })
-Groupboxes.Exploits_Bypass:AddToggle("BypassEyes",           { Text = "Обход Глаз",             Default = false, Tooltip = "Предотвращает урон от Глаз." })
-Groupboxes.Exploits_Bypass:AddToggle("BypassLookman",        { Text = "Обход Лукмена",          Default = false, Tooltip = "Предотвращает урон от Лукмена." })
-Groupboxes.Exploits_Bypass:AddToggle("BypassGloombatEggs",   { Text = "Обход яиц Глумбата",    Default = false, Tooltip = "Предотвращает урон от яиц Глумбата." })
-Groupboxes.Exploits_Bypass:AddToggle("BypassSeekObstructions", { Text = "Обход препятствий Сика", Default = false, Tooltip = "Предотвращает урон от препятствий во время погони." })
-Groupboxes.Exploits_Bypass:AddToggle("BypassVacuum",         { Text = "Обход вакуума",           Default = false, Tooltip = "Предотвращает падение в фейковые двери." })
-Groupboxes.Exploits_Bypass:AddToggle("BypassKillbricks",     { Text = "Обход лавы",       Default = false, Tooltip = "Предотвращает урон от лавы." })
-Groupboxes.Exploits_Bypass:AddToggle("BypassSeekingWall",    { Text = "Обход стены Сика",     Default = false, Tooltip = "Предотвращает урон от стены Сика." })
-Groupboxes.Exploits_Bypass:AddToggle("BypassSnare",          { Text = "Обход Снейра",            Default = false, Tooltip = "Предотвращает ловушку Снейра." })
-Groupboxes.Exploits_Bypass:AddToggle("BypassBanana",         { Text = "Обход банана",           Default = false, Tooltip = "Предотвращает скольжение на банановой кожуре." })
-Groupboxes.Exploits_Bypass:AddToggle("BypassJeff",           { Text = "Обход Джеффа",             Default = false, Tooltip = "Предотвращает удар от Джеффа." })
+Groupboxes.Exploits_Bypass = Tabs.Exploits:AddLeftGroupbox("Bypass")
+Groupboxes.Exploits_Bypass:AddToggle("BypassGiggle",         { Text = "Bypass Giggle",           Default = false, Tooltip = "Prevents 'Giggle' from attacking you." })
+Groupboxes.Exploits_Bypass:AddToggle("BypassDupe",           { Text = "Bypass Dupe",             Default = false, Tooltip = "Prevents you from open 'Dupe' fake doors." })
+Groupboxes.Exploits_Bypass:AddToggle("BypassEyes",           { Text = "Bypass Eyes",             Default = false, Tooltip = "Prevents 'Eyes' from hurting you." })
+Groupboxes.Exploits_Bypass:AddToggle("BypassLookman",        { Text = "Bypass Lookman",          Default = false, Tooltip = "Prevents 'Lookman' from hurting you." })
+Groupboxes.Exploits_Bypass:AddToggle("BypassGloombatEggs",   { Text = "Bypass Gloombat Eggs",    Default = false, Tooltip = "Prevents taking damage from stepping on 'Gloombat' eggs." })
+Groupboxes.Exploits_Bypass:AddToggle("BypassSeekObstructions", { Text = "Bypass Seek Obstructions", Default = false, Tooltip = "Prevents obstacles in the 'Seek' chase from harming you." })
+Groupboxes.Exploits_Bypass:AddToggle("BypassVacuum",         { Text = "Bypass Vacuum",           Default = false, Tooltip = "Prevents you from falling into 'Vacuum' fake doors." })
+Groupboxes.Exploits_Bypass:AddToggle("BypassKillbricks",     { Text = "Bypass Killbricks",       Default = false, Tooltip = "Prevents 'Lava' from hurting you." })
+Groupboxes.Exploits_Bypass:AddToggle("BypassSeekingWall",    { Text = "Bypass Seeking Wall",     Default = false, Tooltip = "Prevents 'ScaryWall' from hurting you." })
+Groupboxes.Exploits_Bypass:AddToggle("BypassSnare",          { Text = "Bypass Snare",            Default = false, Tooltip = "Prevents 'Snare' from trapping you." })
+Groupboxes.Exploits_Bypass:AddToggle("BypassBanana",         { Text = "Bypass Banana",           Default = false, Tooltip = "Prevents 'Banana Peel' from slipping you up (sometimes doesn't work)." })
+Groupboxes.Exploits_Bypass:AddToggle("BypassJeff",           { Text = "Bypass Jeff",             Default = false, Tooltip = "Prevents 'Jeff the Killer' from stabbing you (sometimes doesn't work)." })
 
 Toggles.BypassGiggle:OnChanged(function(Value)
 	for _, Object in Objects.Entities do
@@ -1382,14 +1382,14 @@ Toggles.BypassJeff:OnChanged(function(Value)
 	end
 end)
 
-Groupboxes.Exploits_BypassRight = Tabs.Exploits:AddRightGroupbox("Обход")
+Groupboxes.Exploits_BypassRight = Tabs.Exploits:AddRightGroupbox("Bypass")
 Groupboxes.Exploits_BypassRight:AddToggle("DisableAnticheat", {
-	Text = "Обход анти-чита", Default = false,
-	Tooltip = "Полностью отключает анти-чит после взаимодействия с лестницей."
+	Text = "Anticheat Bypass", Default = false,
+	Tooltip = "Completely disables the anticheat, after interacting with a ladder."
 })
 Groupboxes.Exploits_BypassRight:AddToggle("VelocityManipulationToggle", {
-	Text = "Манипуляция скоростью", Default = false,
-	Tooltip = "Медленно двигает персонажа вперед, обходя анти-ноклип."
+	Text = "Velocity Manipulation", Default = false,
+	Tooltip = "Moves your character forward slowly, mitigating the game's anti-noclip."
 })
 Toggles.DisableAnticheat:OnChanged(function(Value)
 	if Globals.AnticheatDisabled == true and not Value then
@@ -1398,23 +1398,23 @@ Toggles.DisableAnticheat:OnChanged(function(Value)
 	end
 end)
 Toggles.VelocityManipulationToggle:AddKeyPicker("VelocityManipulationKeybind", {
-	Text = "Манипуляция скоростью", Default = "V",
+	Text = "Velocity Manipulation", Default = "V",
 	Mode = Library.IsMobile and "Toggle" or "Hold", SyncToggleState = true
 })
 Groupboxes.Exploits_BypassRight:AddDropdown("VelocityManipulationMode", {
-	Values = {"Velocity", "Pivot"}, Text = "Метод",
+	Values = {"Velocity", "Pivot"}, Text = "Manipulation Method",
 	Default = 1,
 })
 
 Groupboxes.Exploits_BypassRight:AddDivider()
 Groupboxes.Exploits_BypassRight:AddToggle("InfiniteItemsToggle", {
-	Text = "Бесконечные предметы", Default = false,
-	Tooltip = "Позволяет использовать некоторые предметы без траты прочности.",
+	Text = "Infinite Items", Default = false,
+	Tooltip = "Allows certain items to be used without draining their uses.",
 	Disabled = not Functions.CheckCompatability({"fireproximityprompt"}),
 	DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Exploits_BypassRight:AddDropdown("InfiniteItemsList", {
-	Text = "Список предметов",
+	Text = "Item List",
 	Values = { "Lockpicks", "Skeleton Key", "Shears", "Multitool" },
 	Multi = true, AllowNull = true,
 	Disabled = not Functions.CheckCompatability({"fireproximityprompt"}),
@@ -1423,11 +1423,11 @@ Groupboxes.Exploits_BypassRight:AddDropdown("InfiniteItemsList", {
 
 Groupboxes.Exploits_BypassRight:AddDivider()
 Groupboxes.Exploits_BypassRight:AddToggle("PositionSpoof", {
-	Text = "Спуф позиции", Default = false,
-	Tooltip = "Заставляет ваш персонаж казаться под землей для сервера, защищая от сущностей."
+	Text = "Position Spoof", Default = false,
+	Tooltip = "Makes your character appear underground on the server, protecting you from rush-like entities."
 })
 Groupboxes.Exploits_BypassRight:AddToggle("CrouchSpoof", {
-	Text = "Спуф приседания", Default = false, Tooltip = "Заставляет игру думать, что вы всегда приседаете."
+	Text = "Crouch Spoof", Default = false, Tooltip = "Makes the game think you are always crouching."
 })
 Toggles.PositionSpoof:OnChanged(function(Value)
 	if Floor ~= "Fools" and Floor ~= "OldHotel" then
@@ -1442,7 +1442,7 @@ Toggles.PositionSpoof:OnChanged(function(Value)
 	end
 end)
 Toggles.PositionSpoof:AddKeyPicker("PositionSpoof", {
-	Text = "Спуф позиции", Default = "B", Mode = "Toggle", SyncToggleState = true
+	Text = "Position Spoof", Default = "B", Mode = "Toggle", SyncToggleState = true
 })
 Toggles.CrouchSpoof:OnChanged(function(Value)
 	if RemotesFolder:FindFirstChild("Crouch") then
@@ -1450,17 +1450,17 @@ Toggles.CrouchSpoof:OnChanged(function(Value)
 	end
 end)
 
-Groupboxes.Exploits_Remove = Tabs.Exploits:AddRightGroupbox("Удалить")
-Groupboxes.Exploits_Remove:AddToggle("RemoveScreech", { Text = "Убрать Скрича",  Default = false, Tooltip = "Предотвращает появление Скрича." })
-Groupboxes.Exploits_Remove:AddToggle("RemoveHalt",    { Text = "Убрать Халта",     Default = false, Tooltip = "Предотвращает появление Халта." })
-Groupboxes.Exploits_Remove:AddToggle("RemoveA90",     { Text = "Убрать А-90",     Default = false, Tooltip = "Предотвращает появление А-90." })
-Groupboxes.Exploits_Remove:AddToggle("RemoveDread",   { Text = "Убрать Дреда",    Default = false, Tooltip = "Предотвращает появление Дреда." })
-Groupboxes.Exploits_Remove:AddToggle("RemoveSurge", { Text = "Убрать Сурдж", Default = false, Tooltip = "Предотвращает появление Сурджа."})
+Groupboxes.Exploits_Remove = Tabs.Exploits:AddRightGroupbox("Remove")
+Groupboxes.Exploits_Remove:AddToggle("RemoveScreech", { Text = "Remove Screech",  Default = false, Tooltip = "Prevents 'Screech' from spawning." })
+Groupboxes.Exploits_Remove:AddToggle("RemoveHalt",    { Text = "Remove Halt",     Default = false, Tooltip = "Prevents 'Halt' from spawning." })
+Groupboxes.Exploits_Remove:AddToggle("RemoveA90",     { Text = "Remove A-90",     Default = false, Tooltip = "Prevents 'A-90' from spawning." })
+Groupboxes.Exploits_Remove:AddToggle("RemoveDread",   { Text = "Remove Dread",    Default = false, Tooltip = "Prevents 'Dread' from spawning." })
+Groupboxes.Exploits_Remove:AddToggle("RemoveSurge", { Text = "Remove Surge", Default = false, Tooltip = "Prevents 'Surge' from spawning."})
 Groupboxes.Exploits_Remove:AddDivider()
-Groupboxes.Exploits_Remove:AddToggle("NoScreechDamage", { Text = "Без урона от Скрича", Default = false, Tooltip = "Предотвращает урон от Скрича." })
-Groupboxes.Exploits_Remove:AddToggle("NoHaltDamage",    { Text = "Без урона от Халта",    Default = false, Tooltip = "Предотвращает урон от Халта." })
-Groupboxes.Exploits_Remove:AddToggle("NoA90Damage",     { Text = "Без урона от А-90",    Default = false, Tooltip = "Предотвращает урон от А-90." })
-Groupboxes.Exploits_Remove:AddToggle("NoSurgeDamage",   { Text = "Без урона от Сурджа",   Default = false, Tooltip = "Предотвращает урон от Сурджа." })
+Groupboxes.Exploits_Remove:AddToggle("NoScreechDamage", { Text = "No Screech Damage", Default = false, Tooltip = "Prevents 'Screech' from hurting you." })
+Groupboxes.Exploits_Remove:AddToggle("NoHaltDamage",    { Text = "No Halt Damage",    Default = false, Tooltip = "Prevents 'Halt' from hurting you." })
+Groupboxes.Exploits_Remove:AddToggle("NoA90Damage",     { Text = "No A-90 Damage",    Default = false, Tooltip = "Prevents 'A-90' from hurting you." })
+Groupboxes.Exploits_Remove:AddToggle("NoSurgeDamage",   { Text = "No Surge Damage",   Default = false, Tooltip = "Prevents 'Surge' from hurting you." })
 
 Toggles.NoScreechDamage:OnChanged(function(Value)
 	if Value then
@@ -1530,12 +1530,12 @@ Toggles.RemoveSurge:OnChanged(function(Value)
 	end
 end)
 
-Groupboxes.Exploits_Audio = Tabs.Exploits:AddLeftGroupbox("Звук")
+Groupboxes.Exploits_Audio = Tabs.Exploits:AddLeftGroupbox("Audio")
 Globals.JamMuffle = Services.SoundService:WaitForChild("Main"):FindFirstChild("Jamming") or Instance.new("EqualizerSoundEffect")
 
-Groupboxes.Exploits_Audio:AddToggle("RemoveFootstepSounds",    { Text = "Убрать звуки шагов",    Default = false, Tooltip = "Убирает звуки при ходьбе." })
-Groupboxes.Exploits_Audio:AddToggle("RemoveJamminMusic",       { Text = "Убрать музыку Джеммин",       Default = false, Tooltip = "Убирает музыку и эффект от модификатора 'Jammin'." })
-Groupboxes.Exploits_Audio:AddToggle("RemoveInteractingSounds", { Text = "Убрать звуки взаимодействия", Default = false, Tooltip = "Убирает звуки при взаимодействии с объектами." })
+Groupboxes.Exploits_Audio:AddToggle("RemoveFootstepSounds",    { Text = "Remove Footstep Sounds",    Default = false, Tooltip = "Removes the sounds when walking." })
+Groupboxes.Exploits_Audio:AddToggle("RemoveJamminMusic",       { Text = "Remove Jammin Music",       Default = false, Tooltip = "Removes the music and muffle effect from the 'Jammin' modifier." })
+Groupboxes.Exploits_Audio:AddToggle("RemoveInteractingSounds", { Text = "Remove Interacting Sounds", Default = false, Tooltip = "Removes the sounds when interacting with proximity prompts." })
 
 Toggles.RemoveJamminMusic:OnChanged(function(Value)
 	local Jam = Globals.MainUI.Initiator.Main_Game.Health:FindFirstChild("Jam")
@@ -1552,38 +1552,38 @@ Toggles.RemoveInteractingSounds:OnChanged(function(Value)
 	Globals.MainUI.Initiator.Main_Game.Reminder.Caption.Volume = Value and 0 or 0.1
 end)
 
-Groupboxes.Visuals_LeftTab = Tabs.Visuals:AddLeftTabbox("Камера / Эффекты")
-Groupboxes.Visuals_Camera = Groupboxes.Visuals_LeftTab:AddTab("Камера")
-Groupboxes.Visuals_Camera:AddToggle("AmbientToggle", { Text = "Освещение", Default = false, Tooltip = "Меняет цвет освещения на указанный." })
-Groupboxes.Visuals_Camera:AddSlider("FieldOfView", { Text = "Угол обзора", Min = 1, Max = 120, Default = 70, Rounding = 0 })
+Groupboxes.Visuals_LeftTab = Tabs.Visuals:AddLeftTabbox("Camera / Effects")
+Groupboxes.Visuals_Camera = Groupboxes.Visuals_LeftTab:AddTab("Camera")
+Groupboxes.Visuals_Camera:AddToggle("AmbientToggle", { Text = "Ambient", Default = false, Tooltip = "Changes the lighting color to the specified value." })
+Groupboxes.Visuals_Camera:AddSlider("FieldOfView", { Text = "Field of View", Min = 1, Max = 120, Default = 70, Rounding = 0 })
 Groupboxes.Visuals_Camera:AddDivider()
 Groupboxes.Visuals_Camera:AddToggle("RemoveCameraShake", {
-	Text = "Убрать тряску камеры", Default = false, Tooltip = "Предотвращает тряску камеры.",
+	Text = "Remove Camera Shake", Default = false, Tooltip = "Prevents the camera from shaking.",
 	Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Visuals_Camera:AddToggle("RemoveCameraBobbing", {
-	Text = "Убрать покачивание", Default = false, Tooltip = "Предотвращает покачивание камеры при движении.",
+	Text = "Remove Camera Bobbing", Default = false, Tooltip = "Prevents the camera from bobbing when moving.",
 	Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage
 })
-Groupboxes.Visuals_Camera:AddToggle("RemoveCutscenes", { Text = "Убрать катсцены", Default = false, Tooltip = "Убирает все ненужные катсцены." })
-Groupboxes.Visuals_Camera:AddToggle("RemoveCameraFog", { Text = "Убрать туман", Default = false, Tooltip = "Убирает все эффекты тумана." })
+Groupboxes.Visuals_Camera:AddToggle("RemoveCutscenes", { Text = "Remove Cutscenes", Default = false, Tooltip = "Removes all non-necessary cutscenes." })
+Groupboxes.Visuals_Camera:AddToggle("RemoveCameraFog", { Text = "Remove Fog", Default = false, Tooltip = "Removes all fog effects from the camera." })
 Groupboxes.Visuals_Camera:AddDivider()
-Groupboxes.Visuals_Camera:AddToggle("ThirdPersonToggle", { Text = "Третье лицо", Default = false, Tooltip = "Отдаляет камеру, позволяя видеть персонажа сзади." })
-Toggles.ThirdPersonToggle:AddKeyPicker("ThirdPersonKeybind", { Text = "Третье лицо", Default = "T", Mode = "Toggle", SyncToggleState = true })
-Groupboxes.Visuals_Camera:AddSlider("ThirdPersonOffsetX", { Text = "Смещение X", Min = -10, Max = 10, Default = 1.5, Rounding = 1, Compact = true })
-Groupboxes.Visuals_Camera:AddSlider("ThirdPersonOffsetY", { Text = "Смещение Y", Min = -10, Max = 10, Default = 1,   Rounding = 1, Compact = true })
-Groupboxes.Visuals_Camera:AddSlider("ThirdPersonOffsetZ", { Text = "Смещение Z", Min = -10, Max = 10, Default = 5,   Rounding = 1, Compact = true })
-Groupboxes.Visuals_Camera:AddToggle("ThirdPersonWallCheck", { Text = "Проверка стен", Default = false, Tooltip = "Предотвращает прохождение камеры сквозь стены." })
+Groupboxes.Visuals_Camera:AddToggle("ThirdPersonToggle", { Text = "Third Person", Default = false, Tooltip = "Zooms out your camera, allowing you to see your character from behind." })
+Toggles.ThirdPersonToggle:AddKeyPicker("ThirdPersonKeybind", { Text = "Third Person", Default = "T", Mode = "Toggle", SyncToggleState = true })
+Groupboxes.Visuals_Camera:AddSlider("ThirdPersonOffsetX", { Text = "X Offset", Min = -10, Max = 10, Default = 1.5, Rounding = 1, Compact = true })
+Groupboxes.Visuals_Camera:AddSlider("ThirdPersonOffsetY", { Text = "Y Offset", Min = -10, Max = 10, Default = 1,   Rounding = 1, Compact = true })
+Groupboxes.Visuals_Camera:AddSlider("ThirdPersonOffsetZ", { Text = "Z Offset", Min = -10, Max = 10, Default = 5,   Rounding = 1, Compact = true })
+Groupboxes.Visuals_Camera:AddToggle("ThirdPersonWallCheck", { Text = "Wall Check", Default = false, Tooltip = "Prevents third person from going through walls." })
 Groupboxes.Visuals_Camera:AddDivider()
 Groupboxes.Visuals_Camera:AddToggle("ViewmodelOffsetToggle", {
-	Text = "Смещение оружия", Default = false, Tooltip = "Меняет смещение оружия в руках.",
+	Text = "Viewmodel Offset", Default = false, Tooltip = "Changes the offset of your viewmodel while holding an item.",
 	Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage
 })
-Groupboxes.Visuals_Camera:AddSlider("ViewmodelOffsetX", { Text = "Смещение X", Min = -10, Max = 10, Default = 0, Rounding = 1, Compact = true, Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage })
-Groupboxes.Visuals_Camera:AddSlider("ViewmodelOffsetY", { Text = "Смещение Y", Min = -10, Max = 10, Default = 0, Rounding = 1, Compact = true, Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage })
-Groupboxes.Visuals_Camera:AddSlider("ViewmodelOffsetZ", { Text = "Смещение Z", Min = -10, Max = 10, Default = 0, Rounding = 1, Compact = true, Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage })
+Groupboxes.Visuals_Camera:AddSlider("ViewmodelOffsetX", { Text = "X Offset", Min = -10, Max = 10, Default = 0, Rounding = 1, Compact = true, Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage })
+Groupboxes.Visuals_Camera:AddSlider("ViewmodelOffsetY", { Text = "Y Offset", Min = -10, Max = 10, Default = 0, Rounding = 1, Compact = true, Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage })
+Groupboxes.Visuals_Camera:AddSlider("ViewmodelOffsetZ", { Text = "Z Offset", Min = -10, Max = 10, Default = 0, Rounding = 1, Compact = true, Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage })
 
-Toggles.AmbientToggle:AddColorPicker("AmbientColor", { Text = "Освещение", Default = Color3.fromRGB(255, 255, 255), Transparency = 0 })
+Toggles.AmbientToggle:AddColorPicker("AmbientColor", { Text = "Ambient", Default = Color3.fromRGB(255, 255, 255), Transparency = 0 })
 Toggles.AmbientToggle:OnChanged(function(Value)
 	local OldAmbient = CurrentRooms:FindFirstChild(tostring(LocalPlayer:GetAttribute("CurrentRoom"))):GetAttribute("Ambient")
 	Services.TweenService:Create(Services.Lighting, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), {
@@ -1617,9 +1617,9 @@ Toggles.RemoveCutscenes:OnChanged(function(Value)
     end
 end)
 
-Groupboxes.Visuals_Effects = Groupboxes.Visuals_LeftTab:AddTab("Эффекты")
-Groupboxes.Visuals_Effects:AddToggle("TransparentHidingSpotsToggle", { Text = "Прозрачные укрытия", Default = false, Tooltip = "Делает укрытие прозрачным, когда вы в нем." })
-Groupboxes.Visuals_Effects:AddSlider("TransparentHidingSpotsSlider", { Text = "Прозрачность", Min = 0, Max = 1, Default = 0.5, Rounding = 2, Compact = true })
+Groupboxes.Visuals_Effects = Groupboxes.Visuals_LeftTab:AddTab("Effects")
+Groupboxes.Visuals_Effects:AddToggle("TransparentHidingSpotsToggle", { Text = "Transparent Hiding Spots", Default = false, Tooltip = "Makes a hiding spot transparent when you enter it." })
+Groupboxes.Visuals_Effects:AddSlider("TransparentHidingSpotsSlider", { Text = "Transparency", Min = 0, Max = 1, Default = 0.5, Rounding = 2, Compact = true })
 
 local function ApplyHidingTransparency(Value, SliderValue)
 	for _, Object in Objects.HidingSpots do
@@ -1648,13 +1648,13 @@ Options.TransparentHidingSpotsSlider:OnChanged(function(Value)
 end)
 
 Groupboxes.Visuals_Effects:AddDivider()
-Groupboxes.Visuals_Effects:AddToggle("DisableGlitchJumpscare",   { Text = "Убрать скример Глитча",   Default = false, Tooltip = "Отключает скример от Глитча." })
-Groupboxes.Visuals_Effects:AddToggle("DisableTimothyJumpscare",  { Text = "Убрать скример Тимоти",  Default = false, Tooltip = "Отключает скример от Тимоти." })
-Groupboxes.Visuals_Effects:AddToggle("DisableVoidJumpscare",     { Text = "Убрать скример Войда",     Default = false, Tooltip = "Отключает скример от Войда." })
+Groupboxes.Visuals_Effects:AddToggle("DisableGlitchJumpscare",   { Text = "Disable Glitch Jumpscare",   Default = false, Tooltip = "Disables the jumpscare from 'Glitch'" })
+Groupboxes.Visuals_Effects:AddToggle("DisableTimothyJumpscare",  { Text = "Disable Timothy Jumpscare",  Default = false, Tooltip = "Disables the jumpscare from 'Timothy'" })
+Groupboxes.Visuals_Effects:AddToggle("DisableVoidJumpscare",     { Text = "Disable Void Jumpscare",     Default = false, Tooltip = "Disables the jumpscare from 'Void'" })
 Groupboxes.Visuals_Effects:AddDivider()
-Groupboxes.Visuals_Effects:AddToggle("DisableHideVignette",      { Text = "Убрать эффект укрытия",      Default = false, Tooltip = "Отключает эффект экрана при укрытии." })
-Groupboxes.Visuals_Effects:AddToggle("DisableFiredampEffect",    { Text = "Убрать эффект газа",    Default = false, Tooltip = "Отключает эффект экрана от газа." })
-Groupboxes.Visuals_Effects:AddToggle("DisableEntityJumpscares",  { Text = "Убрать скримеры сущностей",  Default = false, Tooltip = "Отключает скримеры от Раша, Амбуш и т.д." })
+Groupboxes.Visuals_Effects:AddToggle("DisableHideVignette",      { Text = "Disable Hide Vignette",      Default = false, Tooltip = "Disables the hiding screen effect." })
+Groupboxes.Visuals_Effects:AddToggle("DisableFiredampEffect",    { Text = "Disable Firedamp Effect",    Default = false, Tooltip = "Disables the firedamp screen effect." })
+Groupboxes.Visuals_Effects:AddToggle("DisableEntityJumpscares",  { Text = "Disable Entity Jumpscares",  Default = false, Tooltip = "Disables jumpscares from entities like Rush and Ambush." })
 
 Toggles.DisableGlitchJumpscare:OnChanged(function(Value)
 	Modules.Glitch.Name = Value and "Glitch_Disabled" or "Glitch"
@@ -1696,16 +1696,16 @@ Toggles.DisableEntityJumpscares:OnChanged(function(Value)
 	end
 end)
 
-Groupboxes.Visuals_RightTab     = Tabs.Visuals:AddRightTabbox("Сущности / Настройки")
-Groupboxes.Visuals_Entities     = Groupboxes.Visuals_RightTab:AddTab("Сущности")
-Groupboxes.Visuals_EntitySettings = Groupboxes.Visuals_RightTab:AddTab("Настройки")
+Groupboxes.Visuals_RightTab     = Tabs.Visuals:AddRightTabbox("Entities / Settings")
+Groupboxes.Visuals_Entities     = Groupboxes.Visuals_RightTab:AddTab("Entities")
+Groupboxes.Visuals_EntitySettings = Groupboxes.Visuals_RightTab:AddTab("Settings")
 
 Groupboxes.Visuals_Entities:AddDropdown("EntityList", {
-	Text = "Список сущностей",
+	Text = "Entity List",
 	Values = { "Rush","Ambush","Eyes","Halt","Blitz","Lookman","Gloombat Swarm","A-60","A-120","Sally","Jeff the Killer","Groundskeeper","Monument","AR0xMBUSH","RNIUSHCG==" },
 	Multi = true, AllowNull = true
 })
-Groupboxes.Visuals_Entities:AddToggle("NotifyEntities",    { Text = "Уведомлять о сущностях",    Default = false, Tooltip = "Отправляет уведомление при появлении сущности." })
+Groupboxes.Visuals_Entities:AddToggle("NotifyEntities",    { Text = "Notify Entities",    Default = false, Tooltip = "Sends a notification when an entity spawns." })
 Groupboxes.Visuals_Entities:AddDivider()
 
 local ItemsToNotify = {}
@@ -1716,16 +1716,16 @@ for Index, Name in pairs(ItemNames) do
 end
 
 Groupboxes.Visuals_Entities:AddDropdown("NotifyItemList", {
-	Text = "Список предметов",
+	Text = "Item List",
 	Values = ItemsToNotify,
 	Multi = true, AllowNull = true
 })
-Groupboxes.Visuals_Entities:AddToggle("NotifyItemsToggle",    { Text = "Уведомлять о предметах",    Default = false, Tooltip = "Отправляет уведомление при появлении предмета." })
-Groupboxes.Visuals_Entities:AddToggle("NotifyItemsShowDistance",    { Text = "Показывать дистанцию",    Default = false, Tooltip = "Показывает дистанцию до предмета в уведомлении." })
+Groupboxes.Visuals_Entities:AddToggle("NotifyItemsToggle",    { Text = "Notify Items",    Default = false, Tooltip = "Sends a notification when an item spawns." })
+Groupboxes.Visuals_Entities:AddToggle("NotifyItemsShowDistance",    { Text = "Show Distance",    Default = false, Tooltip = "Shows how far away the item is in the notification." })
 Groupboxes.Visuals_Entities:AddDivider()
-Groupboxes.Visuals_Entities:AddToggle("NotifyLibraryCode", { Text = "Уведомлять о коде", Default = false, Tooltip = "Автоматически решает код замка." })
-Groupboxes.Visuals_Entities:AddToggle("NotifyOxygen",      { Text = "Уведомлять о кислороде", Default = false, Tooltip = "Показывает уровень кислорода." })
-Groupboxes.Visuals_Entities:AddToggle("NotifyHasteTime",   { Text = "Уведомлять о времени",   Default = false, Tooltip = "Показывает время до появления Хаста." })
+Groupboxes.Visuals_Entities:AddToggle("NotifyLibraryCode", { Text = "Notify Library Code", Default = false, Tooltip = "Automatically solves the code for the library padlock." })
+Groupboxes.Visuals_Entities:AddToggle("NotifyOxygen",      { Text = "Notify Oxygen Level", Default = false, Tooltip = "Shows how much oxygen you have remaining." })
+Groupboxes.Visuals_Entities:AddToggle("NotifyHasteTime",   { Text = "Notify Haste Time",   Default = false, Tooltip = "Shows how much time you have remaining before 'Haste' spawns." })
 
 Globals.LibraryCodeFound = false
 Toggles.NotifyLibraryCode:OnChanged(function(Value)
@@ -1733,26 +1733,26 @@ Toggles.NotifyLibraryCode:OnChanged(function(Value)
 		local Code = Functions.GetLibraryCode()
 		if Code and not Code:find("_") and not Globals.LibraryCodeFound and CurrentRooms:FindFirstChild("50") then
 			local Lock = Services.Workspace:FindFirstChild("Padlock", true)
-			Functions.Notify({ Title = "Код найден!", Body = "Код: '" .. Code .. "'", Time = Toggles.NotifyKeepNotifications.Value and Lock or 15 })
+			Functions.Notify({ Title = "Padlock code found!", Body = "The code is: '" .. Code .. "'", Time = Toggles.NotifyKeepNotifications.Value and Lock or 15 })
 			Globals.LibraryCodeFound = true
 		end
 	end
 end)
 
-Groupboxes.Visuals_EntitySettings:AddToggle("EntityChatToggle", { Text = "Уведомлять в чат", Default = false, Tooltip = "Пишет сообщение в чат при появлении сущности." })
-Groupboxes.Visuals_EntitySettings:AddInput("EntityChatMessage", { Text = "Сообщение", Default = "появился!", Numeric = false, Placeholder = "Message" })
+Groupboxes.Visuals_EntitySettings:AddToggle("EntityChatToggle", { Text = "Notify Chat", Default = false, Tooltip = "Sends a message in the chat when an entity spawns." })
+Groupboxes.Visuals_EntitySettings:AddInput("EntityChatMessage", { Text = "Message", Default = "spawned!", Numeric = false, Placeholder = "Message" })
 Groupboxes.Visuals_EntitySettings:AddDivider()
-Groupboxes.Visuals_EntitySettings:AddDropdown("NotifyStyle", { Text = "Стиль уведомлений", Values = { "F1xWare", "Doors", "STX", "Library" }, Default = 1 })
-Groupboxes.Visuals_EntitySettings:AddSlider("NotifySoundVolume", { Text = "Громкость звука", Min = 0, Max = 10, Default = 3, Rounding = 1 })
-Groupboxes.Visuals_EntitySettings:AddToggle("NotifyPlaySound", { Text = "Включить звук", Default = true, Tooltip = "Уведомления будут издавать звук." })
-Groupboxes.Visuals_EntitySettings:AddToggle("NotifyKeepNotifications", { Text = "Оставлять уведомления", Default = false, Tooltip = "Некоторые уведомления останутся на экране." })
-Groupboxes.Visuals_EntitySettings:AddButton({ Text = "Тест уведомления", DoubleClick = false, Tooltip = "Отправляет тестовое уведомление.", Func = function()
-	Functions.Notify({Title = "Это тест."})
+Groupboxes.Visuals_EntitySettings:AddDropdown("NotifyStyle", { Text = "Notify Style", Values = { "Abysall", "Doors", "STX", "Library" }, Default = 1 })
+Groupboxes.Visuals_EntitySettings:AddSlider("NotifySoundVolume", { Text = "Sound Volume", Min = 0, Max = 10, Default = 3, Rounding = 1 })
+Groupboxes.Visuals_EntitySettings:AddToggle("NotifyPlaySound", { Text = "Play Sound", Default = true, Tooltip = "Makes notifications play an alert sound." })
+Groupboxes.Visuals_EntitySettings:AddToggle("NotifyKeepNotifications", { Text = "Keep Notifications", Default = false, Tooltip = "Certain notifications will stay on screen until they are no longer needed." })
+Groupboxes.Visuals_EntitySettings:AddButton({ Text = "Test Notification", DoubleClick = false, Tooltip = "Sends a test notifcation, so you can see how your settings look.", Func = function()
+	Functions.Notify({Title = "This is a test."})
 end})
 
-Groupboxes.Visuals_ESP          = Tabs.Visuals:AddRightTabbox("ESP / Настройки")
+Groupboxes.Visuals_ESP          = Tabs.Visuals:AddRightTabbox("ESP/Settings")
 Groupboxes.Visuals_ESP_Toggles  = Groupboxes.Visuals_ESP:AddTab("ESP")
-Groupboxes.Visuals_ESP_Settings = Groupboxes.Visuals_ESP:AddTab("Настройки")
+Groupboxes.Visuals_ESP_Settings = Groupboxes.Visuals_ESP:AddTab("Settings")
 
 local function MakeESPToggle(ToggleKey, ColorKey, Text, Tooltip, ObjectsTable, LabelFunc, RoomBased)
 	Groupboxes.Visuals_ESP_Toggles:AddToggle(ToggleKey, { Text = Text, Default = false, Tooltip = Tooltip })
@@ -1771,27 +1771,27 @@ local function MakeESPToggle(ToggleKey, ColorKey, Text, Tooltip, ObjectsTable, L
 	end)
 	Options[ColorKey]:OnChanged(function(Value)
 		for _, Object in ObjectsTable do
-			F1xWare.ESPLibrary:UpdateObjectColor(Object, Value)
+			Abysall.ESPLibrary:UpdateObjectColor(Object, Value)
 		end
 	end)
 end
 
-Groupboxes.Visuals_ESP_Toggles:AddToggle("ObjectiveESPToggle", { Text = "Цели", Default = false, Tooltip = "Подсвечивает все объекты, необходимые для прогресса." })
-Toggles.ObjectiveESPToggle:AddColorPicker("ObjectiveESPColor", { Text = "Цели", Default = Color3.fromRGB(0, 255, 0), Transparency = 0 })
+Groupboxes.Visuals_ESP_Toggles:AddToggle("ObjectiveESPToggle", { Text = "Objectives", Default = false, Tooltip = "Highlights all objects required to progress." })
+Toggles.ObjectiveESPToggle:AddColorPicker("ObjectiveESPColor", { Text = "Objectives", Default = Color3.fromRGB(0, 255, 0), Transparency = 0 })
 
 local ObjectiveLabels = {
-	["KeyObtain"]              = "Ключ от двери",
-	["ElectricalKeyObtain"]    = "Электрический ключ",
-	["MinesGenerator"]         = "Генератор",
-	["FuseObtain"]             = "Предохранитель",
-	["LiveHintBook"]           = "Книга с подсказками",
-	["LiveBreakerPolePickup"]  = "Рубильник",
-	["LibraryHintPaper"]       = "Бумага с подсказкой",
-	["PickupItem"]             = "Бумага с подсказкой",
-	["CringlePresent"]         = "Подарок",
-	["LeverForGate"]           = "Рычаг ворот",
-	["MinesGateButton"]        = "Кнопка ворот",
-	["GardenGateButton"]       = "Кнопка ворот",
+	["KeyObtain"]              = "Door Key",
+	["ElectricalKeyObtain"]    = "Electrical Key",
+	["MinesGenerator"]         = "Generator",
+	["FuseObtain"]             = "Generator Fuse",
+	["LiveHintBook"]           = "Hint Book",
+	["LiveBreakerPolePickup"]  = "Fuse Breaker",
+	["LibraryHintPaper"]       = "Hint Paper",
+	["PickupItem"]             = "Hint Paper",
+	["CringlePresent"]         = "Present",
+	["LeverForGate"]           = "Gate Lever",
+	["MinesGateButton"]        = "Gate Button",
+	["GardenGateButton"]       = "Gate Button",
 }
 
 Toggles.ObjectiveESPToggle:OnChanged(function(Value)
@@ -1799,13 +1799,13 @@ Toggles.ObjectiveESPToggle:OnChanged(function(Value)
 		if Value then
 			local Label = ObjectiveLabels[Object.Name]
 			if Object.Name == "TimerLever" then
-				Label = "Рычаг времени [+" .. Object:GetAttribute("AddTime") .. "с]"
+				Label = "Time Lever [+" .. Object:GetAttribute("AddTime") .. "s]"
 			elseif Object.Name == "MinesAnchor" then
-				Label = "Якорь [" .. Object:WaitForChild("Sign").TextLabel.Text .. "]"
+				Label = "Anchor [" .. Object:WaitForChild("Sign").TextLabel.Text .. "]"
 			elseif Object.Name == "WaterPump" then
-				Functions.AddESP({ Object = Object.Wheel, Text = "Насос", Color = Options.ObjectiveESPColor.Value }, true)
+				Functions.AddESP({ Object = Object.Wheel, Text = "Water Pump", Color = Options.ObjectiveESPColor.Value }, true)
 			elseif Object.Name == "VineGuillotine" then
-				Functions.AddESP({ Object = Object.Lever, Text = "Рычаг лианы", Color = Options.ObjectiveESPColor.Value }, true)
+				Functions.AddESP({ Object = Object.Lever, Text = "Vine Lever", Color = Options.ObjectiveESPColor.Value }, true)
 			end
 			if Label then
 				Functions.AddESP({ Object = Object, Text = Label, Color = Options.ObjectiveESPColor.Value }, true)
@@ -1817,51 +1817,51 @@ Toggles.ObjectiveESPToggle:OnChanged(function(Value)
 end)
 Options.ObjectiveESPColor:OnChanged(function(Value)
 	for _, Object in Objects.Objectives do
-		F1xWare.ESPLibrary:UpdateObjectColor(Object, Value)
+		Abysall.ESPLibrary:UpdateObjectColor(Object, Value)
 	end
 end)
 
-Groupboxes.Visuals_ESP_Toggles:AddToggle("DoorESPToggle",       { Text = "Двери",        Default = false, Tooltip = "Подсвечивает следующую дверь." })
-Groupboxes.Visuals_ESP_Toggles:AddToggle("HidingSpotESPToggle", { Text = "Укрытия", Default = false, Tooltip = "Подсвечивает места, где можно спрятаться." })
-Groupboxes.Visuals_ESP_Toggles:AddToggle("PlayerESPToggle",     { Text = "Игроки",      Default = false, Tooltip = "Подсвечивает других игроков." })
-Groupboxes.Visuals_ESP_Toggles:AddToggle("ChestESPToggle",      { Text = "Сундуки",       Default = false, Tooltip = "Подсвечивает объекты с добычей." })
-Groupboxes.Visuals_ESP_Toggles:AddToggle("ItemESPToggle",       { Text = "Предметы",        Default = false, Tooltip = "Подсвечивает все предметы." })
-Groupboxes.Visuals_ESP_Toggles:AddToggle("CurrencyESPToggle",   { Text = "Валюта",     Default = false, Tooltip = "Подсвечивает всю валюту." })
-Groupboxes.Visuals_ESP_Toggles:AddToggle("LadderESPToggle",     { Text = "Лестницы",      Default = false, Tooltip = "Подсвечивает лестницы." })
+Groupboxes.Visuals_ESP_Toggles:AddToggle("DoorESPToggle",       { Text = "Doors",        Default = false, Tooltip = "Highlights the next door." })
+Groupboxes.Visuals_ESP_Toggles:AddToggle("HidingSpotESPToggle", { Text = "Hiding Spots", Default = false, Tooltip = "Highlights places where you can hide from entities" })
+Groupboxes.Visuals_ESP_Toggles:AddToggle("PlayerESPToggle",     { Text = "Players",      Default = false, Tooltip = "Highlights other players." })
+Groupboxes.Visuals_ESP_Toggles:AddToggle("ChestESPToggle",      { Text = "Chests",       Default = false, Tooltip = "Highlights objects that can contain loot." })
+Groupboxes.Visuals_ESP_Toggles:AddToggle("ItemESPToggle",       { Text = "Items",        Default = false, Tooltip = "Highlights all collectable items/consumables." })
+Groupboxes.Visuals_ESP_Toggles:AddToggle("CurrencyESPToggle",   { Text = "Currency",     Default = false, Tooltip = "Highlights all currency that spawns." })
+Groupboxes.Visuals_ESP_Toggles:AddToggle("LadderESPToggle",     { Text = "Ladders",      Default = false, Tooltip = "Highlights ladders that can be used to disable the anticheat." })
 Groupboxes.Visuals_ESP_Toggles:AddDivider()
 Groupboxes.Visuals_ESP_Toggles:AddDropdown("EntityESPOptions",     { 
-	Text = "Список сущностей",
+	Text = "Entity List",
 	Values = { "Rush","Ambush","Eyes","Dupe","Figure","Blitz","Lookman","Snare","Giggle","Gloombat Eggs","Grumble","A-60","A-120","Sally","Jeff the Killer","Groundskeeper","Mandrake Hole","Monument","Bramble","AR0xMBUSH","RNIUSHCG==" },
 	Multi = true,
 	AllowNull = true
 })
-Groupboxes.Visuals_ESP_Toggles:AddToggle("EntityESPToggle",     { Text = "Сущности",      Default = false, Tooltip = "Подсвечивает всех сущностей." })
+Groupboxes.Visuals_ESP_Toggles:AddToggle("EntityESPToggle",     { Text = "Entities",      Default = false, Tooltip = "Highlights all entities that spawn." })
 
-Toggles.DoorESPToggle:AddColorPicker("DoorESPColor",           { Text = "Двери",        Default = Color3.fromRGB(0, 200, 255),  Transparency = 0 })
-Toggles.HidingSpotESPToggle:AddColorPicker("HidingSpotESPColor", { Text = "Укрытия", Default = Color3.fromRGB(255, 170, 0),  Transparency = 0 })
-Toggles.PlayerESPToggle:AddColorPicker("PlayerESPColor",       { Text = "Игроки",      Default = Color3.fromRGB(255, 255, 255), Transparency = 0 })
-Toggles.ChestESPToggle:AddColorPicker("ChestESPColor",         { Text = "Сундуки",       Default = Color3.fromRGB(255, 255, 0),   Transparency = 0 })
-Toggles.ItemESPToggle:AddColorPicker("ItemESPColor",           { Text = "Предметы",        Default = Color3.fromRGB(170, 0, 255),   Transparency = 0 })
-Toggles.CurrencyESPToggle:AddColorPicker("CurrencyESPColor",   { Text = "Валюта",     Default = Color3.fromRGB(255, 255, 0),   Transparency = 0 })
-Toggles.LadderESPToggle:AddColorPicker("LadderESPColor",       { Text = "Лестницы",      Default = Color3.fromRGB(255, 255, 255), Transparency = 0 })
-Toggles.EntityESPToggle:AddColorPicker("EntityESPColor",       { Text = "Сущности",     Default = Color3.fromRGB(255, 0, 0),     Transparency = 0 })
+Toggles.DoorESPToggle:AddColorPicker("DoorESPColor",           { Text = "Doors",        Default = Color3.fromRGB(0, 200, 255),  Transparency = 0 })
+Toggles.HidingSpotESPToggle:AddColorPicker("HidingSpotESPColor", { Text = "Hiding Spots", Default = Color3.fromRGB(255, 170, 0),  Transparency = 0 })
+Toggles.PlayerESPToggle:AddColorPicker("PlayerESPColor",       { Text = "Players",      Default = Color3.fromRGB(255, 255, 255), Transparency = 0 })
+Toggles.ChestESPToggle:AddColorPicker("ChestESPColor",         { Text = "Chests",       Default = Color3.fromRGB(255, 255, 0),   Transparency = 0 })
+Toggles.ItemESPToggle:AddColorPicker("ItemESPColor",           { Text = "Items",        Default = Color3.fromRGB(170, 0, 255),   Transparency = 0 })
+Toggles.CurrencyESPToggle:AddColorPicker("CurrencyESPColor",   { Text = "Currency",     Default = Color3.fromRGB(255, 255, 0),   Transparency = 0 })
+Toggles.LadderESPToggle:AddColorPicker("LadderESPColor",       { Text = "Ladders",      Default = Color3.fromRGB(255, 255, 255), Transparency = 0 })
+Toggles.EntityESPToggle:AddColorPicker("EntityESPColor",       { Text = "Entities",     Default = Color3.fromRGB(255, 0, 0),     Transparency = 0 })
 
 local HidingSpotLabels = {
-	Wardrobe = "Шкаф", ["Backdoor_Wardrobe"] = "Шкаф", Toolshed = "Шкаф",
-	RetroWardrobe = "Шкаф", ["Wardrobe-FOOLS26"] = "Шкаф",
-	Locker_Large = "Шкафчик", Rooms_Locker = "Шкафчик", Rooms_Locker_Fridge = "Шкафчик",
-	Bed = "Кровать", Double_Bed = "Двуспальная кровать", CircularVent = "Вентиляция", Dumpster = "Мусорка"
+	Wardrobe = "Closet", ["Backdoor_Wardrobe"] = "Closet", Toolshed = "Closet",
+	RetroWardrobe = "Closet", ["Wardrobe-FOOLS26"] = "Closet",
+	Locker_Large = "Locker", Rooms_Locker = "Locker", Rooms_Locker_Fridge = "Locker",
+	Bed = "Bed", Double_Bed = "Double Bed", CircularVent = "Vent", Dumpster = "Dumpster"
 }
 local ChestLabels = {
 	ChestBox = true, ChestBoxLocked = true, Toolbox = true, Toolbox_Locked = true,
-	Chest_Vine = "Сундук с лианой", Toolshed_Small = "Сарай", Locker_Small_Locked = "Закрытый шкафчик", MouseHole = "Мышь"
+	Chest_Vine = "Vine Chest", Toolshed_Small = "Toolshed", Locker_Small_Locked = "Locked Item Locker", MouseHole = "Mouse"
 }
 local EntityESPLabels = {
-	JeffTheKiller = "Джефф", GiggleCeiling = "Гиггл",
-	Snare = "Снейр", GrumbleRig = "Грамбл",
-	Drakobloxxer = "Дракоблоксер", Hole = "Дыра Мандрагоры", Groundskeeper = "Смотритель",
-	LiveEntityBramble = "Брамбл", Figure = "Фигура", FigureRig = "Фигура", FigureRagdoll = "Фигура",
-	FakeDoor = "Дюп", DoorFake = "Дюп"
+	JeffTheKiller = "Jeff the Killer", GiggleCeiling = "Giggle",
+	Snare = "Snare", GrumbleRig = "Grumble",
+	Drakobloxxer = "Drakobloxxer", Hole = "Mandrake Hole", Groundskeeper = "Groundskeeper",
+	LiveEntityBramble = "Bramble", Figure = "Figure", FigureRig = "Figure", FigureRagdoll = "Figure",
+	FakeDoor = "Dupe", DoorFake = "Dupe"
 }
 
 local NodeEntities = {
@@ -1870,12 +1870,12 @@ local NodeEntities = {
 
 Toggles.DoorESPToggle:OnChanged(function(Value)
 	for _, Object in Objects.Doors do
-		if Value then Functions.AddESP({ Object = Object, Text = "Дверь " .. Functions.GetDoorNumber(Object), Color = Options.DoorESPColor.Value }, true)
+		if Value then Functions.AddESP({ Object = Object, Text = "Door " .. Functions.GetDoorNumber(Object), Color = Options.DoorESPColor.Value }, true)
 		else Functions.RemoveESP(Object) end
 	end
 end)
 Options.DoorESPColor:OnChanged(function(Value)
-	for _, Object in Objects.Doors do F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
+	for _, Object in Objects.Doors do Abysall.ESPLibrary:UpdateObjectColor(Object, Value) end
 end)
 
 Toggles.HidingSpotESPToggle:OnChanged(function(Value)
@@ -1886,7 +1886,7 @@ Toggles.HidingSpotESPToggle:OnChanged(function(Value)
 	end
 end)
 Options.HidingSpotESPColor:OnChanged(function(Value)
-	for _, Object in Objects.HidingSpots do F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
+	for _, Object in Objects.HidingSpots do Abysall.ESPLibrary:UpdateObjectColor(Object, Value) end
 end)
 
 Toggles.PlayerESPToggle:OnChanged(function(Value)
@@ -1904,7 +1904,7 @@ end)
 Options.PlayerESPColor:OnChanged(function(Value)
 	for _, Player in Services.Players:GetPlayers() do
 		if Player.Character and Player ~= LocalPlayer then
-			F1xWare.ESPLibrary:UpdateObjectColor(Player.Character, Value)
+			Abysall.ESPLibrary:UpdateObjectColor(Player.Character, Value)
 		end
 	end
 end)
@@ -1914,9 +1914,9 @@ Toggles.ChestESPToggle:OnChanged(function(Value)
 		if Value then
 			local Label
 			if Object.Name == "ChestBox" or Object.Name == "ChestBoxLocked" then
-				Label = Object:GetAttribute("Locked") and "Закрытый сундук" or "Сундук"
+				Label = Object:GetAttribute("Locked") and "Locked Chest" or "Chest"
 			elseif Object.Name == "Toolbox" or Object.Name == "Toolbox_Locked" then
-				Label = Object:GetAttribute("Locked") and "Закрытый ящик" or "Ящик"
+				Label = Object:GetAttribute("Locked") and "Locked Toolbox" or "Toolbox"
 			elseif ChestLabels[Object.Name] and ChestLabels[Object.Name] ~= true then
 				Label = ChestLabels[Object.Name]
 			end
@@ -1928,13 +1928,13 @@ Toggles.ChestESPToggle:OnChanged(function(Value)
 end)
 
 Options.ChestESPColor:OnChanged(function(Value)
-	for _, Object in Objects.Chests do F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
+	for _, Object in Objects.Chests do Abysall.ESPLibrary:UpdateObjectColor(Object, Value) end
 end)
 
 Toggles.ItemESPToggle:OnChanged(function(Value)
 	for _, Object in Objects.Items do
 		if Value then
-			local Label = ItemNames[Object.Name] or (Object.Name == "Green_Herb" and "Зеленая трава")
+			local Label = ItemNames[Object.Name] or (Object.Name == "Green_Herb" and "Green Herb")
 			if Label then
 				Functions.AddESP({ Object = Object, Text = Label, Color = Options.ItemESPColor.Value }, Object:GetAttribute("ParentRoom") ~= nil)
 			end
@@ -1944,7 +1944,7 @@ Toggles.ItemESPToggle:OnChanged(function(Value)
 	end
 end)
 Options.ItemESPColor:OnChanged(function(Value)
-	for _, Object in Objects.Items do F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
+	for _, Object in Objects.Items do Abysall.ESPLibrary:UpdateObjectColor(Object, Value) end
 end)
 
 Toggles.CurrencyESPToggle:OnChanged(function(Value)
@@ -1952,9 +1952,9 @@ Toggles.CurrencyESPToggle:OnChanged(function(Value)
 		if Value then
 			local Label
 			if Object.Name == "GoldPile" and Object:GetAttribute("GoldValue") then
-				Label = "Золото [" .. Object:GetAttribute("GoldValue") .. "]"
+				Label = "Gold Pile [" .. Object:GetAttribute("GoldValue") .. "]"
 			elseif Object.Name == "StardustPickup" then
-				Label = "Звездная пыль"
+				Label = "Stardust Pile"
 			end
 			if Label then Functions.AddESP({ Object = Object, Text = Label, Color = Options.CurrencyESPColor.Value }, true) end
 		else
@@ -1963,7 +1963,7 @@ Toggles.CurrencyESPToggle:OnChanged(function(Value)
 	end
 end)
 Options.CurrencyESPColor:OnChanged(function(Value)
-	for _, Object in Objects.Currency do F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
+	for _, Object in Objects.Currency do Abysall.ESPLibrary:UpdateObjectColor(Object, Value) end
 end)
 
 Toggles.EntityESPToggle:OnChanged(function(Value)
@@ -1999,101 +1999,101 @@ Options.EntityESPOptions:OnChanged(function(Value)
 end)
 
 Options.EntityESPColor:OnChanged(function(Value)
-	for _, Object in Objects.Entities do F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
+	for _, Object in Objects.Entities do Abysall.ESPLibrary:UpdateObjectColor(Object, Value) end
 end)
 
 Toggles.LadderESPToggle:OnChanged(function(Value)
 	for _, Object in Objects.Ladders do
-		if Value then Functions.AddESP({ Object = Object, Text = "Лестница", Color = Options.LadderESPColor.Value }, true)
+		if Value then Functions.AddESP({ Object = Object, Text = "Ladder", Color = Options.LadderESPColor.Value }, true)
 		else Functions.RemoveESP(Object) end
 	end
 end)
 Options.LadderESPColor:OnChanged(function(Value)
-	for _, Object in Objects.Ladders do F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
+	for _, Object in Objects.Ladders do Abysall.ESPLibrary:UpdateObjectColor(Object, Value) end
 end)
 
-Groupboxes.Visuals_ESP_Settings:AddToggle("ESPRainbow",     { Text = "Эффект радуги", Default = false, Tooltip = "Меняет цвет ESP как радуга." })
-Groupboxes.Visuals_ESP_Settings:AddToggle("ESPShowDistance",{ Text = "Показывать дистанцию",  Default = true,  Tooltip = "Показывает расстояние до объекта." })
+Groupboxes.Visuals_ESP_Settings:AddToggle("ESPRainbow",     { Text = "Rainbow Effect", Default = false, Tooltip = "Makes the esp objects change colour like a rainbow." })
+Groupboxes.Visuals_ESP_Settings:AddToggle("ESPShowDistance",{ Text = "Show Distance",  Default = true,  Tooltip = "Shows how far away your character is from the object." })
 Groupboxes.Visuals_ESP_Settings:AddDivider()
-Groupboxes.Visuals_ESP_Settings:AddSlider("ESPFillTransparency",        { Text = "Прозрачность заливки",         Min = 0, Max = 1, Default = 0.75, Rounding = 2, Compact = true })
-Groupboxes.Visuals_ESP_Settings:AddSlider("ESPOutlineTransparency",     { Text = "Прозрачность контура",      Min = 0, Max = 1, Default = 0,    Rounding = 2, Compact = true })
-Groupboxes.Visuals_ESP_Settings:AddSlider("ESPTextTransparency",        { Text = "Прозрачность текста",         Min = 0, Max = 1, Default = 0,    Rounding = 2, Compact = true })
-Groupboxes.Visuals_ESP_Settings:AddSlider("ESPTextOutlineTransparency", { Text = "Прозрачность контура текста", Min = 0, Max = 1, Default = 0,    Rounding = 2, Compact = true })
-Groupboxes.Visuals_ESP_Settings:AddSlider("ESPFadeTime",                { Text = "Время исчезновения",                 Min = 0, Max = 1, Default = 0.25, Rounding = 2, Compact = true })
-Groupboxes.Visuals_ESP_Settings:AddSlider("ESPRenderLimit",             { Text = "Лимит отрисовки",              Min = 30, Max = 240, Default = 240, Rounding = 0, Compact = true })
-Groupboxes.Visuals_ESP_Settings:AddSlider("ESPTextSize",                { Text = "Размер текста",                 Min = 12, Max = 24, Default = 20, Rounding = 0, Compact = true })
+Groupboxes.Visuals_ESP_Settings:AddSlider("ESPFillTransparency",        { Text = "Fill Transparency",         Min = 0, Max = 1, Default = 0.75, Rounding = 2, Compact = true })
+Groupboxes.Visuals_ESP_Settings:AddSlider("ESPOutlineTransparency",     { Text = "Outline Transparency",      Min = 0, Max = 1, Default = 0,    Rounding = 2, Compact = true })
+Groupboxes.Visuals_ESP_Settings:AddSlider("ESPTextTransparency",        { Text = "Text Transparency",         Min = 0, Max = 1, Default = 0,    Rounding = 2, Compact = true })
+Groupboxes.Visuals_ESP_Settings:AddSlider("ESPTextOutlineTransparency", { Text = "Text Outline Transparency", Min = 0, Max = 1, Default = 0,    Rounding = 2, Compact = true })
+Groupboxes.Visuals_ESP_Settings:AddSlider("ESPFadeTime",                { Text = "Fade Time",                 Min = 0, Max = 1, Default = 0.25, Rounding = 2, Compact = true })
+Groupboxes.Visuals_ESP_Settings:AddSlider("ESPRenderLimit",             { Text = "Render Limit",              Min = 30, Max = 240, Default = 240, Rounding = 0, Compact = true })
+Groupboxes.Visuals_ESP_Settings:AddSlider("ESPTextSize",                { Text = "Text Size",                 Min = 12, Max = 24, Default = 20, Rounding = 0, Compact = true })
 Groupboxes.Visuals_ESP_Settings:AddDropdown("ESPTextFont", {
-	Text = "Шрифт текста",
+	Text = "Text Font",
 	Values = { "Legacy","Arial","ArialBold","SourceSans","SourceSansBold","SourceSansLight","SourceSansItalic","Bodoni","Garamond","Cartoon","Code","Highway","SciFi","Arcade","Fantasy","Antique","SourceSansSemibold","Gotham","GothamMedium","GothamBold","GothamBlack","AmaticSC","Bangers","Creepster","DenkOne","Fondamento","FredokaOne","GrenzeGotisch","IndieFlower","JosefinSans","Jura","Kalam","LuckiestGuy","Merriweather","Michroma","Nunito","Oswald","PatrickHand","PermanentMarker","Roboto","RobotoCondensed","RobotoMono","Sarpanch","SpecialElite","TitilliumWeb","Ubuntu","BuilderSans","BuilderSansMedium","BuilderSansBold","BuilderSansExtraBold","Arimo","ArimoBold" },
 	Default = 12
 })
 Groupboxes.Visuals_ESP_Settings:AddDivider()
-Groupboxes.Visuals_ESP_Settings:AddDropdown("ESPTracersOrigin",  { Text = "Начало линий", Values = { "Снизу","Центр","Сверху","Мышь" }, Default = 1 })
-Groupboxes.Visuals_ESP_Settings:AddSlider("ESPTracerThickness",  { Text = "Толщина линий", Min = 0.5, Max = 2, Default = 0.75, Rounding = 2, Compact = true })
-Groupboxes.Visuals_ESP_Settings:AddToggle("ESPTracersToggle",    { Text = "Включить линии", Default = false, Tooltip = "Рисует линии к объектам." })
+Groupboxes.Visuals_ESP_Settings:AddDropdown("ESPTracersOrigin",  { Text = "Tracer Origin", Values = { "Bottom","Center","Top","Mouse" }, Default = 1 })
+Groupboxes.Visuals_ESP_Settings:AddSlider("ESPTracerThickness",  { Text = "Tracer Thickness", Min = 0.5, Max = 2, Default = 0.75, Rounding = 2, Compact = true })
+Groupboxes.Visuals_ESP_Settings:AddToggle("ESPTracersToggle",    { Text = "Enable Tracers", Default = false, Tooltip = "Draws a line to highlighted objects." })
 Groupboxes.Visuals_ESP_Settings:AddDivider()
-Groupboxes.Visuals_ESP_Settings:AddSlider("ESPArrowsRadius",     { Text = "Радиус стрелок", Min = 100, Max = 500, Default = 250, Rounding = 0, Compact = true })
-Groupboxes.Visuals_ESP_Settings:AddToggle("ESPArrowsToggle",     { Text = "Включить стрелки", Default = false, Tooltip = "Показывает стрелки к объектам вне экрана." })
+Groupboxes.Visuals_ESP_Settings:AddSlider("ESPArrowsRadius",     { Text = "Arrow Radius", Min = 100, Max = 500, Default = 250, Rounding = 0, Compact = true })
+Groupboxes.Visuals_ESP_Settings:AddToggle("ESPArrowsToggle",     { Text = "Enable Arrows", Default = false, Tooltip = "Shows arrow that point to off-screen objects." })
 
-F1xWare.ESPLibrary:SetRainbow(false)
-F1xWare.ESPLibrary:SetShowDistance(true)
-F1xWare.ESPLibrary:SetFillTransparency(0.75)
-F1xWare.ESPLibrary:SetOutlineTransparency(0)
-F1xWare.ESPLibrary:SetTextTransparency(0)
-F1xWare.ESPLibrary:SetTextOutlineTransparency(0)
-F1xWare.ESPLibrary:SetRenderLimit(240)
-F1xWare.ESPLibrary:SetFadeTime(0.25)
-F1xWare.ESPLibrary:SetTextSize(20)
-F1xWare.ESPLibrary:SetFont(Enum.Font.Highway)
-F1xWare.ESPLibrary:SetTracers(false)
-F1xWare.ESPLibrary:SetTracerSize(0.75)
-F1xWare.ESPLibrary:SetTracerOrigin("Bottom")
-F1xWare.ESPLibrary:SetArrows(false)
-F1xWare.ESPLibrary:SetArrowRadius(250)
-F1xWare.ESPLibrary:SetDistanceSizeRatio(0.8)
+Abysall.ESPLibrary:SetRainbow(false)
+Abysall.ESPLibrary:SetShowDistance(true)
+Abysall.ESPLibrary:SetFillTransparency(0.75)
+Abysall.ESPLibrary:SetOutlineTransparency(0)
+Abysall.ESPLibrary:SetTextTransparency(0)
+Abysall.ESPLibrary:SetTextOutlineTransparency(0)
+Abysall.ESPLibrary:SetRenderLimit(240)
+Abysall.ESPLibrary:SetFadeTime(0.25)
+Abysall.ESPLibrary:SetTextSize(20)
+Abysall.ESPLibrary:SetFont(Enum.Font.Highway)
+Abysall.ESPLibrary:SetTracers(false)
+Abysall.ESPLibrary:SetTracerSize(0.75)
+Abysall.ESPLibrary:SetTracerOrigin("Bottom")
+Abysall.ESPLibrary:SetArrows(false)
+Abysall.ESPLibrary:SetArrowRadius(250)
+Abysall.ESPLibrary:SetDistanceSizeRatio(0.8)
 
-Toggles.ESPRainbow:OnChanged(function(V)        F1xWare.ESPLibrary:SetRainbow(V) end)
-Toggles.ESPShowDistance:OnChanged(function(V)   F1xWare.ESPLibrary:SetShowDistance(V) end)
-Options.ESPFillTransparency:OnChanged(function(V)        F1xWare.ESPLibrary:SetFillTransparency(V) end)
-Options.ESPOutlineTransparency:OnChanged(function(V)     F1xWare.ESPLibrary:SetOutlineTransparency(V) end)
-Options.ESPTextTransparency:OnChanged(function(V)        F1xWare.ESPLibrary:SetTextTransparency(V) end)
-Options.ESPTextOutlineTransparency:OnChanged(function(V) F1xWare.ESPLibrary:SetTextOutlineTransparency(V) end)
-Options.ESPFadeTime:OnChanged(function(V)        F1xWare.ESPLibrary:SetFadeTime(V) end)
-Options.ESPRenderLimit:OnChanged(function(V)     F1xWare.ESPLibrary:SetRenderLimit(V) end)
-Options.ESPTextSize:OnChanged(function(V)        F1xWare.ESPLibrary:SetTextSize(V) end)
-Options.ESPTextFont:OnChanged(function(V)        F1xWare.ESPLibrary:SetFont(Enum.Font[V]) end)
-Toggles.ESPTracersToggle:OnChanged(function(V)   F1xWare.ESPLibrary:SetTracers(V) end)
-Options.ESPTracersOrigin:OnChanged(function(V)   F1xWare.ESPLibrary:SetTracerOrigin(V) end)
-Options.ESPTracerThickness:OnChanged(function(V) F1xWare.ESPLibrary:SetTracerSize(V) end)
-Toggles.ESPArrowsToggle:OnChanged(function(V)    F1xWare.ESPLibrary:SetArrows(V) end)
-Options.ESPArrowsRadius:OnChanged(function(V)    F1xWare.ESPLibrary:SetArrowRadius(V) end)
+Toggles.ESPRainbow:OnChanged(function(V)        Abysall.ESPLibrary:SetRainbow(V) end)
+Toggles.ESPShowDistance:OnChanged(function(V)   Abysall.ESPLibrary:SetShowDistance(V) end)
+Options.ESPFillTransparency:OnChanged(function(V)        Abysall.ESPLibrary:SetFillTransparency(V) end)
+Options.ESPOutlineTransparency:OnChanged(function(V)     Abysall.ESPLibrary:SetOutlineTransparency(V) end)
+Options.ESPTextTransparency:OnChanged(function(V)        Abysall.ESPLibrary:SetTextTransparency(V) end)
+Options.ESPTextOutlineTransparency:OnChanged(function(V) Abysall.ESPLibrary:SetTextOutlineTransparency(V) end)
+Options.ESPFadeTime:OnChanged(function(V)        Abysall.ESPLibrary:SetFadeTime(V) end)
+Options.ESPRenderLimit:OnChanged(function(V)     Abysall.ESPLibrary:SetRenderLimit(V) end)
+Options.ESPTextSize:OnChanged(function(V)        Abysall.ESPLibrary:SetTextSize(V) end)
+Options.ESPTextFont:OnChanged(function(V)        Abysall.ESPLibrary:SetFont(Enum.Font[V]) end)
+Toggles.ESPTracersToggle:OnChanged(function(V)   Abysall.ESPLibrary:SetTracers(V) end)
+Options.ESPTracersOrigin:OnChanged(function(V)   Abysall.ESPLibrary:SetTracerOrigin(V) end)
+Options.ESPTracerThickness:OnChanged(function(V) Abysall.ESPLibrary:SetTracerSize(V) end)
+Toggles.ESPArrowsToggle:OnChanged(function(V)    Abysall.ESPLibrary:SetArrows(V) end)
+Options.ESPArrowsRadius:OnChanged(function(V)    Abysall.ESPLibrary:SetArrowRadius(V) end)
 
 Tabs.Floors:UpdateWarningBox({
 	Visible = true,
-	Title = "Внимание",
-	Text = "Функции, выделенные красным, не работают на текущем этаже.",
+	Title = "Compatability Warning",
+	Text = "Features highlighted in red do not work in the current floor.",
 })
 
-Groupboxes.Floors_Automation = Tabs.Floors:AddRightGroupbox("Автоматизация")
+Groupboxes.Floors_Automation = Tabs.Floors:AddRightGroupbox("Automation")
 Groupboxes.Floors_Automation:AddToggle("AutoSteerMinecart", {
-	Text = "Авто-вагонетка", Default = false, Tooltip = "Автоматически проходит погоню на вагонетке.",
+	Text = "Auto Steer Minecart", Default = false, Tooltip = "Automatically completes the minecart chase.",
 	Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Automation:AddSlider("AutoSteerMinecartTurnDistance", {
-	Text = "Дистанция поворота", Min = 20, Max = 40, Default = 30, Rounding = 0,
+	Text = "Turn Distance", Min = 20, Max = 40, Default = 30, Rounding = 0,
 	Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Automation:AddSlider("AutoSteerMinecartDuckDistance", {
-	Text = "Дистанция приседания", Min = 20, Max = 40, Default = 30, Rounding = 0,
+	Text = "Crouch Distance", Min = 20, Max = 40, Default = 30, Rounding = 0,
 	Disabled = not Functions.CheckCompatability({"require"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Automation:AddDivider()
-Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalk",             { Text = "Авто The Rooms",       Default = false, Tooltip = "Автоматически двигается и прячется от сущностей." })
-Groupboxes.Floors_Automation:AddSlider("RoomsAutoWalkPathfindTimeout", { Text = "Таймаут пути", Min = 0.5, Max = 3, Default = 1, Rounding = 1 })
-Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalkIgnoreA60",    { Text = "Игнорировать A-60",      Default = false, Tooltip = "Продолжает идти при A-60." })
-Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalkShowPathToggle", { Text = "Показывать путь",       Default = false, Tooltip = "Показывает текущий путь." })
+Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalk",             { Text = "Auto Rooms",       Default = false, Tooltip = "Automatically moves and hides from entities in The Rooms." })
+Groupboxes.Floors_Automation:AddSlider("RoomsAutoWalkPathfindTimeout", { Text = "Pathfind Timeout", Min = 0.5, Max = 3, Default = 1, Rounding = 1 })
+Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalkIgnoreA60",    { Text = "Ignore A-60",      Default = false, Tooltip = "Continues to walk if entity 'A-60' is present, enables position spoof automatically." })
+Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalkShowPathToggle", { Text = "Show Path",       Default = false, Tooltip = "Shows the current path of rooms auto-walk." })
 Groupboxes.Floors_Automation:AddToggle("RoomsAutoWalkSpoofFootsteps", {
-    Text = "Спуф шагов", Default = false, Tooltip = "Заставляет казаться, что вы идете нормально.",
+    Text = "Spoof Footsteps", Default = false, Tooltip = "Makes it appear as if your character is walking normally.",
     Disabled = not Functions.CheckCompatability({"hookmetamethod", "newcclosure", "getnamecallmethod"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 
@@ -2102,7 +2102,7 @@ Toggles.RoomsAutoWalk:OnChanged(function()
 		if Object.Name == "PathNode" then Object:Destroy() end
 	end
 end)
-Toggles.RoomsAutoWalkShowPathToggle:AddColorPicker("RoomsAutoWalkShowPathColor", { Text = "Путь", Default = Color3.fromRGB(0, 255, 0), Transparency = 0 })
+Toggles.RoomsAutoWalkShowPathToggle:AddColorPicker("RoomsAutoWalkShowPathColor", { Text = "Path", Default = Color3.fromRGB(0, 255, 0), Transparency = 0 })
 Toggles.RoomsAutoWalkShowPathToggle:OnChanged(function(Value)
 	for _, Object in Globals.RoomsNodesFolder:GetChildren() do
 		if Object.Name == "PathNode" then Object.Transparency = Value and 0.5 or 1 end
@@ -2336,13 +2336,13 @@ Connections.RoomsHandler = CurrentRooms.ChildAdded:Connect(function(Room)
 	end
 end)
 
-Groupboxes.Floors_Completion = Tabs.Floors:AddRightGroupbox("Завершение")
+Groupboxes.Floors_Completion = Tabs.Floors:AddRightGroupbox("Completion")
 Groupboxes.Floors_Completion:AddButton({
-    Text = "Авто-завершение плотины",
-    Tooltip = "Автоматически телепортируется и взаимодействует с насосами.",
+    Text = "Auto Complete Dam Seek",
+    Tooltip = "Automatically teleports to and interacts with each water pump.",
     Func = function()
         if LatestRoom.Value < 100 or Floor ~= "Mines" then
-            Functions.Notify({Title = "Вы должны быть в комнате 200."})
+            Functions.Notify({Title = "You must be in Room 200 to do this."})
             return
         end
 
@@ -2359,7 +2359,7 @@ Groupboxes.Floors_Completion:AddButton({
                 Object = nil
             }
             for _, Object in pairs(Objects.Objectives) do
-                if Object.Name == "WaterPump" and Object:GetAttribute("F1xWare_Completed") ~= true then
+                if Object.Name == "WaterPump" and Object:GetAttribute("Abysall_Completed") ~= true then
                     if Object.PrimaryPart and Object.PrimaryPart.Position.Y > Highest.Height then
                         Highest.Object = Object
                         Highest.Height = Object.PrimaryPart.Position.Y
@@ -2383,13 +2383,13 @@ Groupboxes.Floors_Completion:AddButton({
                     Functions.ForceFirePrompt(Prompt)
                 end
 
-                if Pump:GetAttribute("F1xWare_Completed") then
+                if Pump:GetAttribute("Abysall_Completed") then
                     break
                 end
             end
         end
 
-        Functions.Notify({Title = "Попытка завершить клапаны.", Body = "Подождите."})
+        Functions.Notify({Title = "Attempting to complete the valves.", Body = "Please wait."})
         while task.wait(0.1) do
             local Pump = GetNextPump()
             if Pump then
@@ -2398,13 +2398,13 @@ Groupboxes.Floors_Completion:AddButton({
                 break
             end
         end
-        Functions.Notify({Title = "Клапаны успешно завершены."})
+        Functions.Notify({Title = "Successfully completed the valves."})
     end
 })
 
 Groupboxes.Floors_Completion:AddButton({
-    Text = "Авто-завершение Крингла",
-    Tooltip = "Мгновенно завершает квест.",
+    Text = "Auto Complete Cringle",
+    Tooltip = "Instantly completes the quest.",
     Func = function()
         local TouchPart = CurrentRooms:FindFirstChild("RippleExitDoor", true)
         if TouchPart then
@@ -2413,12 +2413,12 @@ Groupboxes.Floors_Completion:AddButton({
     end
 })
 
-Groupboxes.Floors_Visuals = Tabs.Floors:AddLeftGroupbox("Визуал")
+Groupboxes.Floors_Visuals = Tabs.Floors:AddLeftGroupbox("Visuals")
 Groupboxes.Floors_Visuals:AddToggle("ShowSeekPathToggle", {
-	Text = "Показывать путь Сика", Default = false, Tooltip = "Показывает правильный путь во время погони.",
+	Text = "Show Seek Path", Default = false, Tooltip = "Shows you the correct path in seek chases.",
 	Risky = Floor ~= "Mines"
 })
-Toggles.ShowSeekPathToggle:AddColorPicker("ShowSeekPathColor", { Text = "Путь Сика", Default = Color3.fromRGB(0, 255, 0), Transparency = 0 })
+Toggles.ShowSeekPathToggle:AddColorPicker("ShowSeekPathColor", { Text = "Seek Path", Default = Color3.fromRGB(0, 255, 0), Transparency = 0 })
 
 local function UpdateBeamVisibility(BeamTable, ColorKey, Visible)
 	local Vis = Visible and 0 or 1
@@ -2434,36 +2434,36 @@ Toggles.ShowSeekPathToggle:OnChanged(function(V)  UpdateBeamVisibility(Objects.S
 Options.ShowSeekPathColor:OnChanged(function(V)   UpdateBeamColor(Objects.SeekHighlights, V) end)
 
 Groupboxes.Floors_Visuals:AddToggle("ShowEyestalkPathToggle", {
-	Text = "Показывать путь Глаз", Default = false, Tooltip = "Показывает правильный путь во время погони.",
+	Text = "Show Eyestalk Path", Default = false, Tooltip = "Shows you the correct path in the eyestalk chase.",
 	Risky = Floor ~= "Garden"
 })
-Toggles.ShowEyestalkPathToggle:AddColorPicker("ShowEyestalkPathColor", { Text = "Путь Глаз", Default = Color3.fromRGB(0, 255, 0), Transparency = 0 })
+Toggles.ShowEyestalkPathToggle:AddColorPicker("ShowEyestalkPathColor", { Text = "Eyestalk Path", Default = Color3.fromRGB(0, 255, 0), Transparency = 0 })
 Toggles.ShowEyestalkPathToggle:OnChanged(function(V) UpdateBeamVisibility(Objects.EyestalkHighlights, "ShowEyestalkPathColor", V) end)
 Options.ShowEyestalkPathColor:OnChanged(function(V)  UpdateBeamColor(Objects.EyestalkHighlights, V) end)
 
-Groupboxes.Floors_Bypass = Tabs.Floors:AddLeftGroupbox("Обход")
+Groupboxes.Floors_Bypass = Tabs.Floors:AddLeftGroupbox("Bypass")
 Groupboxes.Floors_Bypass:AddToggle("RemoveSeekTrigger", {
-	Text = "Удалить триггер Сика", Default = false, Tooltip = "Отключает погоню Сика.",
+	Text = "Delete Seek Trigger", Default = false, Tooltip = "Diables the 'Seek' chase trigger.",
 	Risky = not (Floor == "Fools" or Floor == "OldHotel"),
 	Disabled = not Functions.CheckCompatability({"firetouchinterest"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Bypass:AddToggle("RemoveFigure", {
-	Text = "Удалить Фигуру", Default = false, Tooltip = "Полностью удаляет сущность 'Фигура'.",
+	Text = "Delete Figure", Default = false, Tooltip = "Completely removes the entity 'Figure' (doesn't always work).",
 	Risky = not (Floor == "Fools" or Floor == "OldHotel" or Floor == "Mines"),
 	Disabled = not Functions.CheckCompatability({"isnetworkowner"}), DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Bypass:AddToggle("AutoRevive", {
-	Text = "Бесконечные возрождения", Default = false, Tooltip = "Автоматически возрождает после смерти.",
+	Text = "Infinite Revives", Default = false, Tooltip = "Automatically revives after dying, with unlimited respawns.",
 	Risky = not (Floor == "Fools" or Floor == "OldHotel")
 })
 Groupboxes.Floors_Bypass:AddToggle("FigureGodmode", {
-	Text = "Бессмертие от Фигуры", Default = false, Tooltip = "Предотвращает урон от Фигуры.",
+	Text = "Figure Godmode", Default = false, Tooltip = "Prevents 'Figure' from hurting you.",
 	Risky = not (Floor == "Fools" or Floor == "OldHotel")
 })
 Groupboxes.Floors_Bypass:AddDivider()
-Groupboxes.Floors_Bypass:AddToggle("RemoveBasementGate",  { Text = "Убрать ворота подвала",   Default = false, Tooltip = "Убирает ворота в комнатах подвала.",            Risky = not (Floor == "Fools" or Floor == "OldHotel") })
-Groupboxes.Floors_Bypass:AddToggle("RemovePaintingsDoor", { Text = "Убрать дверь картин",  Default = false, Tooltip = "Убирает двери камина в комнатах с картинами.", Risky = not (Floor == "Fools" or Floor == "OldHotel") })
-Groupboxes.Floors_Bypass:AddToggle("RemoveSkeletonDoor",  { Text = "Убрать дверь скелета",   Default = false, Tooltip = "Убирает дверь скелета в лазарете.",    Risky = Floor ~= "Fools" })
+Groupboxes.Floors_Bypass:AddToggle("RemoveBasementGate",  { Text = "Remove Basement Gate",   Default = false, Tooltip = "Removes the gate from basement rooms.",            Risky = not (Floor == "Fools" or Floor == "OldHotel") })
+Groupboxes.Floors_Bypass:AddToggle("RemovePaintingsDoor", { Text = "Remove Paintings Door",  Default = false, Tooltip = "Removes the fireplace doors from painting rooms.", Risky = not (Floor == "Fools" or Floor == "OldHotel") })
+Groupboxes.Floors_Bypass:AddToggle("RemoveSkeletonDoor",  { Text = "Remove Skeleton Door",   Default = false, Tooltip = "Removes the skeleton door from the infirmary.",    Risky = Floor ~= "Fools" })
 
 local ObstructionNames = { ThingToOpen = "RemoveBasementGate", MovingDoor = "RemovePaintingsDoor", Wax_Door = "RemoveSkeletonDoor" }
 for ObjName, ToggleName in ObstructionNames do
@@ -2476,26 +2476,26 @@ for ObjName, ToggleName in ObstructionNames do
 	end)
 end
 
-Groupboxes.Floors_Farming = Tabs.Floors:AddLeftGroupbox("Фарм")
+Groupboxes.Floors_Farming = Tabs.Floors:AddLeftGroupbox("Farming")
 Groupboxes.Floors_Farming:AddToggle("KnobFarm", {
-    Text = "Фарм ручек",
+    Text = "Knob Farm",
     Default = false,
-    Tooltip = "Автоматически получает ручки для вас.",
+    Tooltip = "Automatically gains knobs for you, dies and revives repeatedly.",
 })
 
 Groupboxes.Floors_Farming:AddButton({
-    Text = "Начать фарм ручек",
-    Tooltip = "Начинает фарм, нажмите, когда у вас достаточно золота.",
+    Text = "Start Knob Farm",
+    Tooltip = "Starts farming knobs, click this when you have enough gold.",
     Func = function()
 		if LatestRoom.Value ~= 0 then
-			Functions.Notify({Title = "Вы должны быть в комнате 0."})
+			Functions.Notify({Title = "You must be in Room 0 to use this."})
 			return
 		end
 
 		if LocalPlayer.PlayerGui:FindFirstChild("TopbarUI") then 
 			local GoldCount = LocalPlayer.PlayerGui.TopbarUI.Topbar.StatsTopbarHandler.StatModules.Gold.GoldVal
 			if GoldCount.Value <= 0 then
-				Functions.Notify({Title = "Вам нужно золото."})
+				Functions.Notify({Title = "You must have gold to do this."})
 				return
 			end
 		end
@@ -2506,9 +2506,9 @@ Groupboxes.Floors_Farming:AddButton({
 
 Groupboxes.Floors_Farming:AddDivider()
 Groupboxes.Floors_Farming:AddButton({
-	Text = "Начать фарм смертей",
+	Text = "Start Death Farm",
 	DoubleClick = true,
-	Tooltip = "Автоматически фармит смерти, присоединяясь к новым забегам.",
+	Tooltip = "Automatically farms deaths, joining new runs.",
 	Func = function()
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/Abysall/refs/heads/main/Scripts/DeathFarm.luau"))()
 	end,
@@ -2517,14 +2517,14 @@ Groupboxes.Floors_Farming:AddButton({
 	DisabledTooltip = Globals.ImcompatibleMessage
 })
 Groupboxes.Floors_Farming:AddButton({
-	Text = "Скопировать ссылку на фарм смертей",
+	Text = "Copy Death Farm Loadstring",
 	DoubleClick = false,
-	Tooltip = "Копирует ссылку в буфер обмена.",
+	Tooltip = "Copies the death farm loadstring to your clipboard.",
 	Func = function()
 		toclipboard([==[
 			loadstring(game:HttpGet("https://raw.githubusercontent.com/bocaj111004/Abysall/refs/heads/main/Scripts/DeathFarm.luau"))()
 		]==])
-		Library:Notify("Ссылка скопирована.")
+		Library:Notify("Loadstring has been copied to your clipboard.")
 	end,
 
 	Disabled = not Functions.CheckCompatability({"fireproximityprompt", "firesignal"}),
@@ -2533,7 +2533,7 @@ Groupboxes.Floors_Farming:AddButton({
 
 Toggles.KnobFarm:OnChanged(function(Value)
     if Value then
-        Functions.Notify({Title = "Соберите немного золота.", Body = "Нажмите 'Начать фарм', когда будете готовы."})
+        Functions.Notify({Title = "Please collect some gold to earn knobs.", Body = "Click 'Start Knob Farm' when you're ready."})
 	else
 		Globals.KnobFarmStarted = false
     end
@@ -2546,7 +2546,7 @@ Connections.KnobFarm = Services.RunService.Heartbeat:Connect(function()
 		if not Globals.KnobFarmActive then
 			Globals.KnobFarmActive = true
 			if Functions.CheckCompatability({"replicatesignal"}) then
-				F1xWare.Environment.replicatesignal(LocalPlayer.Kill)
+				Abysall.Environment.replicatesignal(LocalPlayer.Kill)
 			else
 				RemotesFolder.Underwater:FireServer(true)
 			end
@@ -2565,10 +2565,10 @@ end)
 local MainHook
 local OtherHook
 if Functions.CheckCompatability({"hookmetamethod", "newcclosure", "getnamecallmethod"}) then
-	MainHook = F1xWare.Environment.hookmetamethod(game, "__namecall", F1xWare.Environment.newcclosure(function(Self, ...)
+	MainHook = Abysall.Environment.hookmetamethod(game, "__namecall", Abysall.Environment.newcclosure(function(Self, ...)
 		local Args = { ... }
-		if F1xWare and F1xWare.Environment then
-			local Method = F1xWare.Environment.getnamecallmethod()
+		if Abysall and Abysall.Environment then
+			local Method = Abysall.Environment.getnamecallmethod()
 
 			if Self.Name == "Crouch" and Method == "FireServer" then
 				if Toggles.CrouchSpoof.Value or Toggles.PositionSpoof.Value then
@@ -2595,7 +2595,7 @@ if Functions.CheckCompatability({"hookmetamethod", "newcclosure", "getnamecallme
 		return MainHook(Self, table.unpack(Args))
 	end))
 
-    OtherHook = F1xWare.Environment.hookmetamethod(game, "__index", F1xWare.Environment.newcclosure(function(Self, Property)
+    OtherHook = Abysall.Environment.hookmetamethod(game, "__index", Abysall.Environment.newcclosure(function(Self, Property)
         local Real = OtherHook(Self, Property)
 
         if Property == "MoveDirection" and Self == Humanoid and Globals.RoomsAutoWalkActive and Toggles.RoomsAutoWalkSpoofFootsteps.Value and Floor == "Rooms" and not Character:GetAttribute("Hiding") then
@@ -2687,7 +2687,7 @@ Functions.HandleCharacter = function(NewCharacter)
 	if Toggles.EnableCharacterSlide.Value then Character:SetAttribute("CanSlide", true) end
 
 	if Functions.CheckCompatability({"require"}) then
-		Main_Game = F1xWare.Environment.require(Globals.MainUI.Initiator.Main_Game)
+		Main_Game = Abysall.Environment.require(Globals.MainUI.Initiator.Main_Game)
 	end
 
 	if Main_Game and Toggles.RemoveCameraBobbing.Value then
@@ -2798,7 +2798,7 @@ Functions.HandleCharacter = function(NewCharacter)
 			local Code = Functions.GetLibraryCode()
 			if Code and not Code:find("_") and not Globals.LibraryCodeFound then
 				local Lock = Services.Workspace:FindFirstChild("Padlock", true)
-				Functions.Notify({ Title = "Код найден!", Body = "Код: '" .. Code .. "'", Time = Toggles.NotifyKeepNotifications.Value and Lock or 15 })
+				Functions.Notify({ Title = "Padlock code found!", Body = "The code is: '" .. Code .. "'", Time = Toggles.NotifyKeepNotifications.Value and Lock or 15 })
 				Globals.LibraryCodeFound = true
 			end
 		end
@@ -2809,7 +2809,7 @@ Functions.HandleCharacter = function(NewCharacter)
 			local Code = Functions.GetLibraryCode()
 			if Code and not Code:find("_") and not Globals.LibraryCodeFound then
 				local Lock = Services.Workspace:FindFirstChild("Padlock", true)
-				Functions.Notify({ Title = "Код найден!", Body = "Код: '" .. Code .. "'", Time = Toggles.NotifyKeepNotifications.Value and Lock or 15 })
+				Functions.Notify({ Title = "Padlock code found!", Body = "The code is: '" .. Code .. "'", Time = Toggles.NotifyKeepNotifications.Value and Lock or 15 })
 				Globals.LibraryCodeFound = true
 			end
 		end
@@ -2852,7 +2852,7 @@ Functions.HandleCharacter = function(NewCharacter)
 		if Character:GetAttribute("Climbing") == true and Toggles.DisableAnticheat.Value and not Globals.AnticheatDisabled then
 			task.wait(0.25)
 			Character:SetAttribute("Climbing", false)
-			Functions.Notify({ Title = "Анти-чит отключен.", Body = "Он включится после катсцены или Халта." })
+			Functions.Notify({ Title = "Successfully disabled the anticheat.", Body = "It will be re-enabled after a cutscene or halt room." })
 			Globals.AnticheatDisabled = true
 		end
 	end)
@@ -2860,7 +2860,7 @@ Functions.HandleCharacter = function(NewCharacter)
 	Connections.AnticheatEnableDetector1 = RemotesFolder:WaitForChild("Cutscene").OnClientEvent:Connect(function(CutsceneName)
 		if Globals.AnticheatDisabled and not CutsceneName:find("SewerSeek") then
 			Globals.AnticheatDisabled = false
-			Functions.Notify({ Title = "Анти-чит включен.", Body = "Взаимодействуйте с лестницей, чтобы отключить его снова." })
+			Functions.Notify({ Title = "The anticheat has been re-enabled.", Body = "Interact with a ladder to disable it again." })
 		end
 	end)
 
@@ -2868,7 +2868,7 @@ Functions.HandleCharacter = function(NewCharacter)
 		if ModuleName == "Void" or ModuleName == "Glitch" then
 			if Globals.AnticheatDisabled then
 				Globals.AnticheatDisabled = false
-				Functions.Notify({ Title = "Анти-чит включен.", Body = "Взаимодействуйте с лестницей, чтобы отключить его снова." })
+				Functions.Notify({ Title = "The anticheat has been re-enabled.", Body = "Interact with a ladder to disable it again." })
 			end
 			LocalPlayer:SetAttribute("CurrentRoom", LatestRoom.Value)
 		end
@@ -3029,7 +3029,7 @@ Functions.HandleCharacter = function(NewCharacter)
 		end
 
 		if Globals.SelfKilled and Globals.MainUI:FindFirstChild("Statistics") then
-			Globals.MainUI.Statistics.Death.Text = "Died to F1xWare"
+			Globals.MainUI.Statistics.Death.Text = "Died to Abysall Hub"
 		end
 
 		local MainFrame = Globals.MainUI:FindFirstChild("MainFrame")
@@ -3279,7 +3279,7 @@ Functions.HandleObject = function(Object)
 		task.spawn(function()
 			task.wait(0.5)
 			if Object.Parent then
-				if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Ключ от двери", Color = Options.ObjectiveESPColor.Value }, true) end
+				if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Door Key", Color = Options.ObjectiveESPColor.Value }, true) end
 				table.insert(Objects.Objectives, Object)
 			end
 		end)
@@ -3287,7 +3287,7 @@ Functions.HandleObject = function(Object)
 		task.spawn(function()
 			task.wait(0.5)
 			if Object.Parent then
-				if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Электрический ключ", Color = Options.ObjectiveESPColor.Value }, true) end
+				if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Electrical Key", Color = Options.ObjectiveESPColor.Value }, true) end
 				table.insert(Objects.Objectives, Object)
 			end
 		end)
@@ -3296,7 +3296,7 @@ Functions.HandleObject = function(Object)
 			task.wait(0.5)
 			if Object.Parent then
 				Object:SetAttribute("AddTime", Object.TakeTimer.TextLabel.Text == "01:00" and 60 or 30)
-				if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Рычаг времени [+" .. Object:GetAttribute("AddTime") .. "с]", Color = Options.ObjectiveESPColor.Value }, true) end
+				if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Time Lever [+" .. Object:GetAttribute("AddTime") .. "s]", Color = Options.ObjectiveESPColor.Value }, true) end
 				Object:WaitForChild("Main").SoundToPlay.Played:Once(function()
 					Functions.RemoveESP(Object)
 					Functions.BlacklistESP(Object)
@@ -3305,10 +3305,10 @@ Functions.HandleObject = function(Object)
 			end
 		end)
 	elseif Name == "LiveHintBook" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Книга с подсказками", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Hint Book", Color = Options.ObjectiveESPColor.Value }, true) end
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "LiveBreakerPolePickup" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Рубильник", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Fuse Breaker", Color = Options.ObjectiveESPColor.Value }, true) end
 		for _, Child in Object:GetChildren() do
 			if Child.Name == "ActivateEventPrompt" and (Child.MaxActivationDistance == 5 or Child:GetAttribute("MaxActivationDistance_Old") == 5) then
 				Child:Destroy()
@@ -3316,50 +3316,50 @@ Functions.HandleObject = function(Object)
 		end
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "LibraryHintPaper" or Name == "PickupItem" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Бумага с подсказкой", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Hint Paper", Color = Options.ObjectiveESPColor.Value }, true) end
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "MinesAnchor" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Якорь [" .. Object:WaitForChild("Sign").TextLabel.Text .. "]", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Anchor [" .. Object:WaitForChild("Sign").TextLabel.Text .. "]", Color = Options.ObjectiveESPColor.Value }, true) end
 		Object:GetAttributeChangedSignal("Activated"):Once(function()
 			Functions.RemoveESP(Object)
 			Functions.BlacklistESP(Object)
 		end)
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "WaterPump" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object:WaitForChild("Wheel"), Text = "Насос", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object:WaitForChild("Wheel"), Text = "Water Pump", Color = Options.ObjectiveESPColor.Value }, true) end
 		Object:WaitForChild("Wheel").Sound.Played:Once(function()
-			Object:SetAttribute("F1xWare_Completed", true)
+			Object:SetAttribute("Abysall_Completed", true)
 
 			Functions.RemoveESP(Object.Wheel)
 			Functions.BlacklistESP(Object.Wheel)
 		end)
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "CringlePresent" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Подарок", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Present", Color = Options.ObjectiveESPColor.Value }, true) end
 		Object:WaitForChild("ToolProp").Highlight:Destroy()
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "LeverForGate" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Рычаг ворот", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Gate Lever", Color = Options.ObjectiveESPColor.Value }, true) end
 		Object:WaitForChild("Main").SoundToPlay.Played:Once(function()
 			Functions.RemoveESP(Object)
 			Functions.BlacklistESP(Object)
 		end)
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "VineGuillotine" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object.Lever, Text = "Рычаг лианы", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object.Lever, Text = "Vine Lever", Color = Options.ObjectiveESPColor.Value }, true) end
 		Object.Lever:WaitForChild("ActivateEventPrompt"):GetAttributeChangedSignal("Interactions"):Once(function()
 			Functions.RemoveESP(Object)
 			Functions.BlacklistESP(Object)
 		end)
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "MandrakeLive" then
-		if Toggles.ObjectiveESPToggle.Value and Options.EntityESPOptions.Value["Mandrake Hole"] then Functions.AddESP({ Object = Object.Hole, Text = "Дыра Мандрагоры", Color = Options.EntityESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value and Options.EntityESPOptions.Value["Mandrake Hole"] then Functions.AddESP({ Object = Object.Hole, Text = "Mandrake Hole", Color = Options.EntityESPColor.Value }, true) end
 		table.insert(Objects.Entities, Object.Hole)
 	elseif Name == "MinesGenerator" then
 		task.spawn(function()
 			task.wait(0.75)
 			if Object.Parent then
-				if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Генератор", Color = Options.ObjectiveESPColor.Value }, true) end
+				if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Generator", Color = Options.ObjectiveESPColor.Value }, true) end
 				Object:WaitForChild("Lever").Sound.Played:Once(function()
 					Functions.RemoveESP(Object)
 					Functions.BlacklistESP(Object)
@@ -3368,28 +3368,28 @@ Functions.HandleObject = function(Object)
 			end
 		end)
 	elseif Name == "FuseObtain" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Предохранитель", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Generator Fuse", Color = Options.ObjectiveESPColor.Value }, true) end
 		Object:WaitForChild("Hitbox").FuseModel:GetPropertyChangedSignal("LocalTransparencyModifier"):Once(function()
 			Functions.RemoveESP(Object)
 			Functions.BlacklistESP(Object)
 		end)
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "MinesGateButton" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Кнопка ворот", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Gate Button", Color = Options.ObjectiveESPColor.Value }, true) end
 		Object.Parent:WaitForChild("MinesGate").Main.SoundOpen.Played:Once(function()
 			Functions.RemoveESP(Object)
 			Functions.BlacklistESP(Object)
 		end)
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "GardenGateButton" then
-		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Кнопка ворот", Color = Options.ObjectiveESPColor.Value }, true) end
+		if Toggles.ObjectiveESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Gate Button", Color = Options.ObjectiveESPColor.Value }, true) end
 		Object.Parent:WaitForChild("GardenGate").Collision.Sound.Played:Once(function()
 			Functions.RemoveESP(Object)
 			Functions.BlacklistESP(Object)
 		end)
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "Ladder" then
-		if Toggles.LadderESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Лестница", Color = Options.LadderESPColor.Value }, true) end
+		if Toggles.LadderESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Ladder", Color = Options.LadderESPColor.Value }, true) end
 		table.insert(Objects.Ladders, Object)
 	elseif Name == "Door" and Object.Parent and tonumber(Object.Parent.Name) then
 		local DoorParts = {}
@@ -3418,7 +3418,7 @@ Functions.HandleObject = function(Object)
 				W.Part0 = HP W.Part1 = DoorPart W.Enabled = true
 			end
 			table.insert(Objects.Doors, HighlightModel)
-			if Toggles.DoorESPToggle.Value then Functions.AddESP({ Object = HighlightModel, Text = "Дверь " .. Functions.GetDoorNumber(Object), Color = Options.DoorESPColor.Value }, true) end
+			if Toggles.DoorESPToggle.Value then Functions.AddESP({ Object = HighlightModel, Text = "Door " .. Functions.GetDoorNumber(Object), Color = Options.DoorESPColor.Value }, true) end
 		else
 			local Root = Object:WaitForChild("Door", 9e9)
 			local HP = Instance.new("Part", Object)
@@ -3433,7 +3433,7 @@ Functions.HandleObject = function(Object)
 			W.Part0 = HP W.Part1 = Root W.Enabled = true
 			Instance.new("Humanoid", Object).Name = "HighlightHumanoid"
 			table.insert(Objects.Doors, HP)
-			if Toggles.DoorESPToggle.Value then Functions.AddESP({ Object = HP, Text = "Дверь " .. Functions.GetDoorNumber(Object), Color = Options.DoorESPColor.Value }, true) end
+			if Toggles.DoorESPToggle.Value then Functions.AddESP({ Object = HP, Text = "Door " .. Functions.GetDoorNumber(Object), Color = Options.DoorESPColor.Value }, true) end
 		end
 
 		local LastDoorFire = tick()
@@ -3520,7 +3520,7 @@ Functions.HandleObject = function(Object)
 			if Child.Name == "PlayerBarrier" and Child.Size.Y == 2.75 and (Child.Rotation.X == 0 or Child.Rotation.X == 180) then
 				local NewBridge = Child:Clone()
 				NewBridge.CFrame = NewBridge.CFrame * CFrame.new(0, 0, -5)
-				NewBridge.Name = F1xWare.ESPLibrary:GenerateRandomString()
+				NewBridge.Name = Abysall.ESPLibrary:GenerateRandomString()
 				NewBridge.Size = Vector3.new(NewBridge.Size.X, NewBridge.Size.Y, 11)
 				NewBridge.Parent = Object
 				NewBridge.CanCollide = Toggles.BypassSeekObstructions.Value
@@ -3621,52 +3621,52 @@ Functions.HandleObject = function(Object)
 		end
 		table.insert(Objects.Obstructions, Object)
 	elseif Name == "ChestBox" or Name == "ChestBoxLocked" then
-		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = Object:GetAttribute("Locked") and "Закрытый сундук" or "Сундук", Color = Options.ChestESPColor.Value }, true) end
+		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = Object:GetAttribute("Locked") and "Locked Chest" or "Chest", Color = Options.ChestESPColor.Value }, true) end
 		table.insert(Objects.Chests, Object)
 	elseif Name == "Toolbox" or Name == "Toolbox_Locked" then
-		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = Object:GetAttribute("Locked") and "Закрытый ящик" or "Ящик", Color = Options.ChestESPColor.Value }, true) end
+		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = Object:GetAttribute("Locked") and "Locked Toolbox" or "Toolbox", Color = Options.ChestESPColor.Value }, true) end
 		table.insert(Objects.Chests, Object)
 	elseif Name == "Chest_Vine" then
-		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Сундук с лианой", Color = Options.ChestESPColor.Value }, true) end
+		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Vine Chest", Color = Options.ChestESPColor.Value }, true) end
 		table.insert(Objects.Chests, Object)
 	elseif Name == "Toolshed_Small" then
-		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Сарай", Color = Options.ChestESPColor.Value }, true) end
+		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Toolshed", Color = Options.ChestESPColor.Value }, true) end
 		table.insert(Objects.Chests, Object)
 	elseif Name == "Locker_Small_Locked" then
-		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Закрытый шкафчик", Color = Options.ChestESPColor.Value }, true) end
+		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Locked Item Locker", Color = Options.ChestESPColor.Value }, true) end
 		table.insert(Objects.Chests, Object)
 	elseif Name == "MouseHole" then
-		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Мышь", Color = Options.ChestESPColor.Value }, true) end
+		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Mouse", Color = Options.ChestESPColor.Value }, true) end
 		table.insert(Objects.Chests, Object)
 	elseif ItemNames[Name] and Object:FindFirstChild("ModulePrompt") then
 		if Toggles.ItemESPToggle.Value then Functions.AddESP({ Object = Object, Text = ItemNames[Name], Color = Options.ItemESPColor.Value }, Object:GetAttribute("ParentRoom") ~= nil) end
 		if Name == "LotusHolder" or Name == "LotusPetalPickup" then
 			Object.Handle:GetPropertyChangedSignal("LocalTransparencyModifier"):Connect(function()
-				F1xWare.ESPLibrary:RemoveESP(Object)
+				Abysall.ESPLibrary:RemoveESP(Object)
 				Functions.BlacklistESP(Object)
 			end)
 		end
 
 		if Toggles.NotifyItemsToggle.Value and Options.NotifyItemList.Value[ItemNames[Name]] and Object.Parent.Name ~= "Drops" then
 			if Toggles.NotifyItemsShowDistance.Value then
-				Functions.Notify({ Title = "Предмет '" .. ItemNames[Name] .. "' появился.", Body = "Он в '" .. math.round(LocalPlayer:DistanceFromCharacter(Object.PrimaryPart.Position)) .. "' стадах от вас." })
+				Functions.Notify({ Title = "Item '" .. ItemNames[Name] .. "' has spawned.", Body = "It is '" .. math.round(LocalPlayer:DistanceFromCharacter(Object.PrimaryPart.Position)) .. "' studs away from you." })
 			else
-				Functions.Notify({ Title = "Предмет '" .. ItemNames[Name] .. "' появился."})
+				Functions.Notify({ Title = "Item '" .. ItemNames[Name] .. "' has spawned."})
 			end
 		end
 
 		table.insert(Objects.Items, Object)
 	elseif Name == "Green_Herb" then
-		if Toggles.ItemESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Зеленая трава", Color = Options.ItemESPColor.Value }, true) end
+		if Toggles.ItemESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Green Herb", Color = Options.ItemESPColor.Value }, true) end
 		table.insert(Objects.Items, Object)
 	elseif Name == "GoldPile" and Object:GetAttribute("GoldValue") then
-		if Toggles.CurrencyESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Золото [" .. Object:GetAttribute("GoldValue") .. "]", Color = Options.CurrencyESPColor.Value }, true) end
+		if Toggles.CurrencyESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Gold Pile [" .. Object:GetAttribute("GoldValue") .. "]", Color = Options.CurrencyESPColor.Value }, true) end
 		table.insert(Objects.Currency, Object)
 	elseif Name == "StardustPickup" then
-		if Toggles.CurrencyESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Звездная пыль", Color = Options.CurrencyESPColor.Value }, true) end
+		if Toggles.CurrencyESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Stardust Pile", Color = Options.CurrencyESPColor.Value }, true) end
 		table.insert(Objects.Currency, Object)
 	elseif Name == "GiggleCeiling" then
-		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Giggle"] then Functions.AddESP({ Object = Object, Text = "Гиггл", Color = Options.EntityESPColor.Value }, true) end
+		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Giggle"] then Functions.AddESP({ Object = Object, Text = "Giggle", Color = Options.EntityESPColor.Value }, true) end
 		if Toggles.BypassGiggle.Value then Object:WaitForChild("Hitbox").CanTouch = false end
 		table.insert(Objects.Entities, Object)
 	elseif Name == "GloomPile" then
@@ -3681,7 +3681,7 @@ Functions.HandleObject = function(Object)
 		end)
 
 		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Gloombat Eggs"] then
-			Functions.AddESP({ Object = Object, Text = "Яйца Глумбата", Color = Options.EntityESPColor.Value })
+			Functions.AddESP({ Object = Object, Text = "Gloombat Eggs", Color = Options.EntityESPColor.Value })
 		end
 
 		table.insert(Connections, Connection)
@@ -3692,9 +3692,9 @@ Functions.HandleObject = function(Object)
 				while Object:IsDescendantOf(game) do
 					for _, Part in Object:GetChildren() do
 						if Part:IsA("BasePart") then
-							F1xWare.Environment.firetouchinterest(RootPart, Part, 0)
+							Abysall.Environment.firetouchinterest(RootPart, Part, 0)
 							task.wait()
-							F1xWare.Environment.firetouchinterest(RootPart, Part, 1)
+							Abysall.Environment.firetouchinterest(RootPart, Part, 1)
 						end
 					end
 					task.wait()
@@ -3710,7 +3710,7 @@ Functions.HandleObject = function(Object)
 				if Lock and Lock:FindFirstChild("UnlockPrompt") then Lock.UnlockPrompt.Enabled = false end
 			end
 			if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Dupe"] then
-				Functions.AddESP({ Object = Object, Text = "Дюп", Color = Options.EntityESPColor.Value }, true)
+				Functions.AddESP({ Object = Object, Text = "Dupe", Color = Options.EntityESPColor.Value }, true)
 			end
 			table.insert(Objects.Entities, Object)
 		end
@@ -3721,7 +3721,7 @@ Functions.HandleObject = function(Object)
 		end
 		table.insert(Objects.Entities, Object)
 	elseif Name == "Snare" then
-		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Snare"] then Functions.AddESP({ Object = Object, Text = "Снейр", Color = Options.EntityESPColor.Value }, true) end
+		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Snare"] then Functions.AddESP({ Object = Object, Text = "Snare", Color = Options.EntityESPColor.Value }, true) end
 		for _, Part in Object:GetDescendants() do
 			if Part:IsA("BasePart") then Part.CanTouch = not Toggles.BypassSnare.Value end
 		end
@@ -3757,15 +3757,15 @@ Functions.HandleObject = function(Object)
 		table.insert(Objects.SeekObstructions, Object)
 	elseif Object:GetAttribute("RawName") and Object:GetAttribute("RawName"):find("Halt") or Object:GetAttribute("Shade") == true then
 		if Toggles.NotifyEntities.Value and Options.EntityList.Value["Halt"] then
-			Functions.Notify({ Title = "Сущность 'Халт' появится в следующей комнате.", Image = EntityIcons["Halt"] })
-			if Toggles.EntityChatToggle.Value then Functions.SendChat("Халт в следующей комнате!") end
+			Functions.Notify({ Title = "Entity 'Halt' will spawn in the next room.", Image = EntityIcons["Halt"] })
+			if Toggles.EntityChatToggle.Value then Functions.SendChat("Halt next room!") end
 		end
 		local HaltLogConn
 		HaltLogConn = Services.LogService.MessageOut:Connect(function(Message)
 			if Message == "client teleporting" then
 				if Globals.AnticheatDisabled then
 					Globals.AnticheatDisabled = false
-					Functions.Notify({ Title = "Анти-чит включен.", Body = "Взаимодействуйте с лестницей, чтобы отключить его снова." })
+					Functions.Notify({ Title = "The anticheat has been re-enabled.", Body = "Interact with a ladder to disable it again." })
 				end
 				HaltLogConn:Disconnect()
 			end
@@ -3781,13 +3781,13 @@ Functions.HandleObject = function(Object)
 			Object:WaitForChild("Humanoid").Health = 0
 		end
 	elseif Name == "GrumbleRig" then
-		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Грамбл"] then Functions.AddESP({ Object = Object, Text = "Грамбл", Color = Options.EntityESPColor.Value }, true) end
+		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Grumble"] then Functions.AddESP({ Object = Object, Text = "Grumble", Color = Options.EntityESPColor.Value }, true) end
 		table.insert(Objects.Entities, Object)
 	elseif Name == "LiveEntityBramble" then
-		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Брамбл"] then Functions.AddESP({ Object = Object, Text = "Брамбл", Color = Options.EntityESPColor.Value }, true) end
+		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Bramble"] then Functions.AddESP({ Object = Object, Text = "Bramble", Color = Options.EntityESPColor.Value }, true) end
 		table.insert(Objects.Entities, Object)
 	elseif Name == "Groundskeeper" then
-		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Смотритель"] then Functions.AddESP({ Object = Object, Text = "Смотритель", Color = Options.EntityESPColor.Value }, true) end
+		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Groundskeeper"] then Functions.AddESP({ Object = Object, Text = "Groundskeeper", Color = Options.EntityESPColor.Value }, true) end
 		if Toggles.NotifyEntities.Value and Options.EntityList.Value["Groundskeeper"] then
 			local ED = Entities["Groundskeeper"]
 			Functions.Notify({ Title = ED.NotifyMessage.Title, Body = ED.NotifyMessage.Body, Image = EntityIcons["Groundskeeper"] })
@@ -3799,14 +3799,14 @@ Functions.HandleObject = function(Object)
 				Part.CanTouch = false
 			end
 		end
-		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Фигура"] then Functions.AddESP({ Object = Object, Text = "Фигура", Color = Options.EntityESPColor.Value }, true) end
+		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Figure"] then Functions.AddESP({ Object = Object, Text = "Figure", Color = Options.EntityESPColor.Value }, true) end
 		table.insert(Objects.Entities, Object)
 		if Toggles.RemoveFigure.Value and Functions.CheckCompatability({"isnetworkowner"}) then
 			if Floor == "Mines" then
 				for _, Part in Object:GetDescendants() do
 					if Part:IsA("BasePart") then
 						task.spawn(function()
-							if F1xWare.Environment.isnetworkowner(Part) then
+							if Abysall.Environment.isnetworkowner(Part) then
 								Part.Position = Vector3.new(-49999, -49999, -49999)
 							end
 						end)
@@ -3818,7 +3818,7 @@ Functions.HandleObject = function(Object)
 					if Part:IsA("BasePart") then
 						Part.CanCollide = false
 						task.spawn(function()
-							while F1xWare.Environment.isnetworkowner(Part) do
+							while Abysall.Environment.isnetworkowner(Part) do
 								Part.Position = Vector3.new(math.random(-29999,29999), math.random(-29999,29999), math.random(-29999,29999))
 								task.wait()
 							end
@@ -3838,13 +3838,13 @@ Functions.HandleObject = function(Object)
 		table.insert(Objects.Obstructions, Object)
 	elseif Name == "ElevatorBreaker" then
 		if Toggles.AutoBreakerBox.Value and not Globals.BreakerBoxNotified then
-			Functions.Notify({ Title = "Взаимодействуйте с рубильником.", Body = "Он решится автоматически." })
+			Functions.Notify({ Title = "Interact with the breaker box.", Body = "It will be automatically solved." })
 			Globals.BreakerBoxNotified = true
 		end
 		Connections.BreakerConnection = Object:WaitForChild("SurfaceGui").Frame.Code:GetPropertyChangedSignal("Text"):Connect(function()
 			if Toggles.AutoBreakerBox.Value then
 				if not Globals.BreakerBoxStartNotified and (Floor == "Fools" or Floor == "OldHotel") then
-					Functions.Notify({ Title = "Попытка решить рубильник.", Body = "Подождите." })
+					Functions.Notify({ Title = "Attempting to solve the breaker box.", Body = "Please wait." })
 					Globals.BreakerBoxStartNotified = true
 				end
 				RemotesFolder.EBF:FireServer()
@@ -3854,7 +3854,7 @@ Functions.HandleObject = function(Object)
 	elseif Name == "ElevatorCar" then
 		local ElevConn = Object.DescendantAdded:Connect(function(Desc)
 			if Toggles.AutoBreakerBox.Value and Desc.Name == "TouchInterest" and not Globals.BreakerBoxFinishedNotified then
-				Functions.Notify({ Title = "Рубильник решен.", Body = "Попробуйте пойти к лифту!" })
+				Functions.Notify({ Title = "Successfully solved the breaker box.", Body = "Try going to the elevator!" })
 				Globals.BreakerBoxFinishedNotified = true
 			end
 		end)
@@ -4073,8 +4073,8 @@ end)
 local PromptsToFire = {}
 local PromptCooldown = {}
 
-Functions.FirePrompt      = F1xWare.Environment.fireproximityprompt
-Functions.ForceFirePrompt = F1xWare.Environment.fireproximityprompt
+Functions.FirePrompt      = Abysall.Environment.fireproximityprompt
+Functions.ForceFirePrompt = Abysall.Environment.fireproximityprompt
 
 if not Functions.FirePrompt then
 	Functions.FirePrompt = function(Prompt)
@@ -4576,7 +4576,7 @@ Library:OnUnload(function()
 
 	CollisionClone:Destroy()
 	CollisionPartClone:Destroy()
-	F1xWare.ESPLibrary:Unload()
+	Abysall.ESPLibrary:Unload()
 
 	if Main_Game then
 		Main_Game.fovtarget   = 70
@@ -4589,9 +4589,9 @@ Library:OnUnload(function()
 		Controls.GetMoveVector = Globals.OriginalGetMoveVector
 	end
 
-	getgenv().F1xWare = nil
+	getgenv().Abysall = nil
 end)
 
 while not Globals.MainUI do task.wait() end
-F1xWare.Interface.ApplySettingsTab(Window)
-Functions.Notify({ Title = "Успешно загружено за " .. math.floor((tick() - LoadStart) * 1000) / 1000 .. " секунд." , Body = "Нажми '" .. tostring(Options.MenuKeybind.Value) .. "' чтобы скрыть меню."})
+Abysall.Interface.ApplySettingsTab(Window)
+Functions.Notify({ Title = "Successfully loaded in " .. math.floor((tick() - LoadStart) * 1000) / 1000 .. " seconds." , Body = "Press '" .. tostring(Options.MenuKeybind.Value) .. "' to toggle the UI."})
