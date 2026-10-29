@@ -1,29 +1,69 @@
-if getgenv().F1xWareLoaded then return end
-getgenv().F1xWareLoaded = true
+if Abysall then
+    return 
+end
+getgenv().Abysall = {
+    Legit = true
+}
 
-local BaseUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
+local GameList = {
+  [2440500124] = "Doors"
+}
 
-local function LoadFile(path)
-    local success, content = pcall(function()
-        return game:HttpGet(BaseUrl .. path)
-    end)
-    
-    if success and content then
-        local func = loadstring(content)
-        if func then
-            return func()
-        end
+local BaseUrl = "https://raw.githubusercontent.com/bocaj111004/Abysall/refs/heads/main/"
+getgenv().Abysall = {
+    Environment = loadstring(game:HttpGet(BaseUrl .. "Components/Environment.luau"))(),
+    ESPLibrary = loadstring(game:HttpGet(BaseUrl .. "Components/ESP.luau"))(),
+
+    Legit = true, -- pog
+}
+
+local function CloneReference(Object)
+    if Abysall and Abysall.Environment.cloneref then
+        return Abysall.Environment.cloneref(Object)
     else
-        warn("Ошибка загрузки: " .. path)
+        return Object
     end
 end
 
-getgenv().Environment = LoadFile("Components/Environment.luau")
-getgenv().ESPLibrary = LoadFile("Components/ESP.luau")
-getgenv().Interface = LoadFile("Components/Interface.luau")
+local Services = setmetatable({}, {
+    __index = function(self, Name)
+        return CloneReference(game:GetService(Name))
+    end
+})
 
-if game.PlaceId == 6516141723 then
-    LoadFile("Games/Doors/Lobby.luau")
+if Abysall.Environment.writefile and Abysall.Environment.readfile then
+    if not Abysall.Environment.isfile("Abysall/UserData.json") then
+        local Data = {
+            TotalExecutions = 0,
+            UILibrary = "Obsidian"
+        }
+        Abysall.Environment.writefile("Abysall/UserData.json", Services.HttpService:JSONEncode(Data))
+    end
+
+    local UserData = Abysall.Environment.readfile("Abysall/UserData.json")
+    local Decoded = Services.HttpService:JSONDecode(UserData)
+    if not Decoded.TotalExecutions then
+        Decoded.TotalExecutions = 0    
+    end
+
+    Decoded.TotalExecutions = Decoded.TotalExecutions + 1
+
+    if not Decoded.UILibrary then
+        Decoded.UILibrary = "Obsidian"
+    end
+
+    Abysall.TotalExecutions = Decoded.TotalExecutions
+    Abysall.UILibrary = Decoded.UILibrary
+
+    Abysall.Environment.writefile("Abysall/UserData.json", Services.HttpService:JSONEncode(Decoded))
+end
+
+Abysall.Interface = loadstring(game:HttpGet(BaseUrl .. "Components/Interface.luau"))()
+Abysall.Analytics = loadstring(game:HttpGet(BaseUrl .. "Components/Analytics.luau"))()
+
+local CurrentGame = GameList[game.GameId]
+if CurrentGame then
+    loadstring(game:HttpGet(BaseUrl .. "Games/" .. CurrentGame .. "/Loader.luau"))()
 else
-    LoadFile("Games/Doors/Main.luau")
+    loadstring(game:HttpGet(BaseUrl .. "Games/Universal/Loader.luau"))()
 end
