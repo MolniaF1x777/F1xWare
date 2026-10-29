@@ -1,3 +1,8 @@
+local getgenv = getgenv or function() return _G end
+
+getgenv().F1xWare = getgenv().F1xWare or {}
+local F1xWare = getgenv().F1xWare
+
 local cloneref = cloneref or function(obj) return obj end
 
 local Environment = {
@@ -35,7 +40,7 @@ end
 function Environment:SafeCall(func, ...)
     local success, result = pcall(func, ...)
     if not success then
-        warn("[F1xWare:SafeCall Error]:", result)
+        warn("[F1xWare Error]:", result)
     end
     return success, result
 end
@@ -63,5 +68,6 @@ function Environment:Unload()
     table.clear(self.Hooks)
 end
 
+F1xWare.Environment = Environment
 getgenv().Environment = Environment
 return Environment
