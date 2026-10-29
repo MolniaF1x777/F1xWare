@@ -1,4 +1,11 @@
+local getgenv = getgenv or function() return _G end
+
+getgenv().F1xWare = getgenv().F1xWare or {}
+local F1xWare = getgenv().F1xWare
+
 local BaseUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
 
 local ESP = {
     BaseUrl = BaseUrl,
@@ -11,9 +18,6 @@ local ESP = {
     Drawings = {},
     Color = Color3.fromRGB(215, 35, 35)
 }
-
-local RunService = game:GetService("RunService")
-local Camera = workspace.CurrentCamera
 
 function ESP:Add(object, text, color)
     if self.Items[object] then return end
@@ -64,5 +68,6 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
+F1xWare.ESP = ESP
 getgenv().ESP = ESP
 return ESP
