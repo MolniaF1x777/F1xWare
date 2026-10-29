@@ -1,5 +1,11 @@
 repeat task.wait() until game:IsLoaded()
 
+local getgenv = getgenv or function() return _G end
+
+getgenv().F1xWare = getgenv().F1xWare or {}
+getgenv().Environment = getgenv().Environment or {}
+getgenv().Interface = getgenv().Interface or {}
+
 local BaseUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
 
 local HttpService = game:GetService("HttpService")
@@ -19,6 +25,8 @@ end
 local UserData = HttpService:JSONDecode(readfile("F1xWare/UserData.json"))
 UserData["TotalLoads"] = (UserData["TotalLoads"] or 0) + 1
 writefile("F1xWare/UserData.json", HttpService:JSONEncode(UserData))
+
+getgenv().F1xWare.UserData = UserData
 
 loadstring(game:HttpGet(BaseUrl .. "Components/Environment.luau"))()
 loadstring(game:HttpGet(BaseUrl .. "Components/ESP.luau"))()
