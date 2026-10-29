@@ -1,3 +1,8 @@
+local getgenv = getgenv or function() return _G end
+
+getgenv().F1xWare = getgenv().F1xWare or {}
+local F1xWare = getgenv().F1xWare
+
 local BaseUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
 local HttpService = game:GetService("HttpService")
 
@@ -25,7 +30,8 @@ function Analytics:LogEvent(eventName, payload)
     end
 end
 
-Analytics:LogEvent("SessionInitialized", { PlaceId = game.PlaceId })
+Analytics:LogEvent("Loaded", { Game = game.PlaceId })
 
+F1xWare.Analytics = Analytics
 getgenv().Analytics = Analytics
 return Analytics
