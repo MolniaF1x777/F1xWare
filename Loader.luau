@@ -7,7 +7,6 @@ getgenv().Abysall = {
 
 local RepoUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
 
--- Кэш файлов: качаем только version.txt, остальное берём с диска
 local HasFS = type(writefile) == "function" and type(readfile) == "function"
     and type(isfile) == "function" and type(isfolder) == "function"
     and type(makefolder) == "function"
