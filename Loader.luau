@@ -1,6 +1,46 @@
 if Abysall then
     return 
 end
+
+local RepoUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
+local CacheDir = "F1xWare/cache"
+
+local FileApi = type(writefile) == "function" and type(readfile) == "function"
+    and type(isfile) == "function" and type(isfolder) == "function" and type(makefolder) == "function"
+
+if FileApi then
+    if not isfolder("F1xWare") then makefolder("F1xWare") end
+
+    local Ok, Remote = pcall(game.HttpGet, game, RepoUrl .. "version.txt")
+    local LocalVersion = isfile("F1xWare/version.txt") and readfile("F1xWare/version.txt") or nil
+
+    if Ok then
+        Remote = Remote:gsub("%s+", "")
+        if #Remote < 20 and Remote ~= LocalVersion then
+            if isfolder(CacheDir) and type(delfolder) == "function" then delfolder(CacheDir) end
+            writefile("F1xWare/version.txt", Remote)
+        end
+    end
+
+    if not isfolder(CacheDir) then makefolder(CacheDir) end
+end
+
+getgenv().F1xGet = function(Url)
+    if not FileApi then return game:HttpGet(Url) end
+
+    local Path = CacheDir .. "/" .. (Url:gsub("^https?://", ""):gsub("[^%w]", "_"))
+    if isfile(Path) then
+        local Cached = readfile(Path)
+        if #Cached > 0 then return Cached end
+    end
+
+    local Source = game:HttpGet(Url)
+    if Source:sub(1, 3) ~= "404" then
+        pcall(writefile, Path, Source)
+    end
+    return Source
+end
+
 getgenv().Abysall = {
     Legit = true
 }
