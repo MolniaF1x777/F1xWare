@@ -30,6 +30,7 @@ if SettingsCode then Interface.ApplySettingsTab = loadstring(SettingsCode)() end
 if Interface.ThemeManager then
     Interface.ThemeManager.BuiltInThemes = {
         ["Default"]        = { 1,  { FontColor = "ffffff", MainColor = "1c1c1c", AccentColor = "0055ff", BackgroundColor = "141414", OutlineColor = "323232" } },
+        ["Halloween"]      = { 19, { FontColor = "ffffff", MainColor = "1a1226", AccentColor = "9d4edd", BackgroundColor = "0b0612", OutlineColor = "9d4edd" } },
         ["BBot"]           = { 2,  { FontColor = "ffffff", MainColor = "1e1e1e", AccentColor = "7e48a3", BackgroundColor = "232323", OutlineColor = "141414" } },
         ["Fatality"]       = { 3,  { FontColor = "ffffff", MainColor = "1e1842", AccentColor = "c50754", BackgroundColor = "191335", OutlineColor = "3c355d" } },
         ["Jester"]         = { 4,  { FontColor = "ffffff", MainColor = "242424", AccentColor = "db4467", BackgroundColor = "1c1c1c", OutlineColor = "373737" } },
@@ -48,6 +49,13 @@ if Interface.ThemeManager then
         ["Oceanic Next"]   = { 17, { FontColor = "d8dee9", MainColor = "1b2b34", AccentColor = "6699cc", BackgroundColor = "16232a", OutlineColor = "343d46" } },
         ["Material"]       = { 18, { FontColor = "eeffff", MainColor = "212121", AccentColor = "82aaff", BackgroundColor = "151515", OutlineColor = "424242" } },
     }
+
+    task.spawn(function()
+        task.wait(0.5)
+        if Interface.Library and Interface.Library.Options and Interface.Library.Options.Theme then
+            Interface.Library.Options.Theme:SetValue("Halloween")
+        end
+    end)
 end
 
 return Interface
