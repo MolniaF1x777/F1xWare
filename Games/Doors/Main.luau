@@ -63,86 +63,56 @@ Functions.CheckCompatability = function(Array)
 end
 
 local Entities = {
-	["RushMoving"] = {
-		Alias = "Rush",
-		NotifyMessage = { Title = "Entity 'Rush' has spawned.", Body = "Find a hiding spot." }
-	},
-	["AmbushMoving"] = {
-		Alias = "Ambush",
-		NotifyMessage = { Title = "Entity 'Ambush' has spawned.", Body = "Find a hiding spot." }
-	},
-	["Eyes"] = {
-		Alias = "Eyes",
-		NotifyMessage = { Title = "Entity 'Eyes' has spawned.", Body = "Avoid looking at it." }
-	},
-	["Noise"] = {
-		Alias = "Noise",
-		NotifyMessage = { Title = "Entity 'Noise' has spawned.", Body = "Find a hiding spot." }
-	},
-	["Stem"] = {
-		Alias = "Stem",
-		NotifyMessage = { Title = "Entity 'Stem' has spawned.", Body = "Find a hiding spot." }
-	},
-	["Creak"] = {
-		Alias = "Creak",
-		NotifyMessage = { Title = "Entity 'Creak' has spawned.", Body = "Find a hiding spot." }
-	},
-	["Lookman"] = {
-		Alias = "Eyes",
-		NotifyMessage = { Title = "Entity 'Eyes' has spawned.", Body = "Avoid looking at it." }
-	},
-	["BackdoorRush"] = {
-		Alias = "Blitz",
-		NotifyMessage = { Title = "Entity 'Blitz' has spawned.", Body = "Find a hiding spot." }
-	},
-	["BackdoorLookman"] = {
-		Alias = "Lookman",
-		NotifyMessage = { Title = "Entity 'Lookman' has spawned.", Body = "Avoid looking at its eyes." }
-	},
-	["Groundskeeper"] = {
-		Alias = "Groundskeeper",
-		NotifyMessage = { Title = "Entity 'Groundskeeper' has spawned.", Body = "Avoid stepping on the grass." }
-	},
-	["A60"] = {
-		Alias = "A-60",
-		NotifyMessage = { Title = "Entity 'A-60' has spawned.", Body = "Find a hiding spot." }
-	},
-	["A120"] = {
-		Alias = "A-120",
-		NotifyMessage = { Title = "Entity 'A-120' has spawned.", Body = "Find a hiding spot." }
-	},
-	["GloombatSwarm"] = {
-		Alias = "Gloombat Swarm",
-		NotifyMessage = { Title = "Entity 'Gloombat Swarm' has spawned.", Body = "Keep all light sources turned off." }
-	},
-	["GlitchRush"] = {
-		Alias = "RNIUSHCG==",
-		NotifyMessage = { Title = "Entity 'RNIUSHCG==' has spawned.", Body = "Find a hiding spot." }
-	},
-	["GlitchAmbush"] = {
-		Alias = "AR0xMBUSH",
-		NotifyMessage = { Title = "Entity 'AR0xMBUSH' has spawned.", Body = "Find a hiding spot." }
-	},
-	["MonumentEntity"] = {
-		Alias = "Monument",
-		NotifyMessage = { Title = "Entity 'Monument' has spawned.", Body = "It can't move while you are looking at it." }
-	},
-	["JeffTheKiller"] = {
-		Alias = "Jeff the Killer",
-		NotifyMessage = { Title = "Entity 'Jeff the Killer' has spawned.", Body = "Avoid touching him." }
-	},
-	["CustomEntity"] = {
-		Alias = "Custom Entity",
-		NotifyMessage = { Title = "Entity 'Custom Entity' has spawned.", Body = "Find a hiding spot." }
-	},
-	["FrozenAmbush"] = {
-		Alias = "Frozen Ambush",
-		NotifyMessage = { Title = "Entity 'Frozen Ambush' has spawned.", Body = "Find a hiding spot." }
-	},
-	["SallyMoving"] = {
-		Alias = "Sally",
-		NotifyMessage = { Title = "Entity 'Sally' has spawned.", Body = "Drop an item for her." }
-	}
+	-- Отель (Hotel)
+	["RushMoving"] = { Alias = "Rush", NotifyMessage = { Title = "Entity 'Rush' has spawned.", Body = "Find a hiding spot." } },
+	["AmbushMoving"] = { Alias = "Ambush", NotifyMessage = { Title = "Entity 'Ambush' has spawned.", Body = "Find a hiding spot." } },
+	["Eyes"] = { Alias = "Eyes", NotifyMessage = { Title = "Entity 'Eyes' has spawned.", Body = "Avoid looking at it." } },
+	["GlitchRush"] = { Alias = "RNIUSHCG==", NotifyMessage = { Title = "Entity 'RNIUSHCG==' has spawned.", Body = "Find a hiding spot." } },
+	["GlitchAmbush"] = { Alias = "AR0xMBUSH", NotifyMessage = { Title = "Entity 'AR0xMBUSH' has spawned.", Body = "Find a hiding spot." } },
+	["FrozenAmbush"] = { Alias = "Frozen Ambush", NotifyMessage = { Title = "Entity 'Frozen Ambush' has spawned.", Body = "Find a hiding spot." } },
+
+	-- Шахты (Mines) - ИСПРАВЛЕНО
+	["RushMoving"] = { Alias = "Rush", NotifyMessage = { Title = "Entity 'Rush' has spawned.", Body = "Find a hiding spot." } },
+	["AmbushMoving"] = { Alias = "Ambush", NotifyMessage = { Title = "Entity 'Ambush' has spawned.", Body = "Find a hiding spot." } },
+	["GloombatSwarm"] = { Alias = "Gloombat Swarm", NotifyMessage = { Title = "Entity 'Gloombat Swarm' has spawned.", Body = "Keep all light sources turned off." } },
+	["GiggleCeiling"] = { Alias = "Giggle", NotifyMessage = { Title = "Entity 'Giggle' has spawned.", Body = "Don't walk under it." } },
+	["GrumbleRig"] = { Alias = "Grumble", NotifyMessage = { Title = "Entity 'Grumble' has spawned.", Body = "Avoid its light." } },
+	["QueenGrumble"] = { Alias = "Queen Grumble", NotifyMessage = { Title = "Entity 'Queen Grumble' has spawned.", Body = "Run." } },
+
+	-- Задний двор (Backdoor) - ИСПРАВЛЕНО
+	["BackdoorRush"] = { Alias = "Blitz", NotifyMessage = { Title = "Entity 'Blitz' has spawned.", Body = "Find a hiding spot." } },
+	["BackdoorLookman"] = { Alias = "Lookman", NotifyMessage = { Title = "Entity 'Lookman' has spawned.", Body = "Avoid looking at its eyes." } },
+	["Haste"] = { Alias = "Haste", NotifyMessage = { Title = "Entity 'Haste' has spawned.", Body = "Run! Find a lever!" } },
+
+	-- Улица (The Outdoors)
+	["Groundskeeper"] = { Alias = "Groundskeeper", NotifyMessage = { Title = "Entity 'Groundskeeper' has spawned.", Body = "Avoid stepping on the grass." } },
+	["MonumentEntity"] = { Alias = "Monument", NotifyMessage = { Title = "Entity 'Monument' has spawned.", Body = "It can't move while you are looking at it." } },
+	
+	-- Лестница (Stairwell)
+	["Noise"] = { Alias = "Noise", NotifyMessage = { Title = "Entity 'Noise' has spawned.", Body = "Find a hiding spot." } },
+	["Stem"] = { Alias = "Stem", NotifyMessage = { Title = "Entity 'Stem' has spawned.", Body = "Find a hiding spot." } },
+	["Creak"] = { Alias = "Creak", NotifyMessage = { Title = "Entity 'Creak' has spawned.", Body = "Find a hiding spot." } },
+	["Meld"] = { Alias = "Meld", NotifyMessage = { Title = "Meld has spawned.", Body = "Find the fire alarm." } },
+
+	-- Комнаты (Rooms)
+	["A60"] = { Alias = "A-60", NotifyMessage = { Title = "Entity 'A-60' has spawned.", Body = "Find a hiding spot." } },
+	["A120"] = { Alias = "A-120", NotifyMessage = { Title = "Entity 'A-120' has spawned.", Body = "Find a hiding spot." } },
+	["SallyMoving"] = { Alias = "Sally", NotifyMessage = { Title = "Entity 'Sally' has spawned.", Body = "Drop an item for her." } },
+
+	-- Архивы (Archives) 
+	["Bash"] = { Alias = "Bash", NotifyMessage = { Title = "Entity 'Bash' has spawned.", Body = "Hide in a cubicle!" } },
+	["Honcho"] = { Alias = "Honcho", NotifyMessage = { Title = "Boss 'Honcho' has appeared.", Body = "Get to work!" } },
+	["Drones"] = { Alias = "Drones", NotifyMessage = { Title = "Drones are stampeding.", Body = "Avoid touching them." } },
+	["Scribbles"] = { Alias = "Scribbles", NotifyMessage = { Title = "Entity 'Scribbles' has spawned.", Body = "Hide behind a wall." } },
+	["Ransom"] = { Alias = "Ransom", NotifyMessage = { Title = "Entity 'Ransom' demands payment.", Body = "Find 500 gold!" } },
+	["Teller"] = { Alias = "Teller", NotifyMessage = { Title = "Entity 'Teller' has spawned.", Body = "Remember your ticket number." } },
+	["Alma"] = { Alias = "Alma", NotifyMessage = { Title = "Entity 'Alma' has spawned.", Body = "Look away!" } },
+	["ForgetMeNot"] = { Alias = "Forget-Me-Not", NotifyMessage = { Title = "Entity 'Forget-Me-Not' has spawned.", Body = "Remember the room." } },
+
+	-- Прочее
+	["JeffTheKiller"] = { Alias = "Jeff the Killer", NotifyMessage = { Title = "Entity 'Jeff the Killer' has spawned.", Body = "Avoid touching him." } },
+	["CustomEntity"] = { Alias = "Custom Entity", NotifyMessage = { Title = "Entity 'Custom Entity' has spawned.", Body = "Find a hiding spot." } }
+	
 }
 
 local EntityIcons = {
@@ -1851,6 +1821,30 @@ Groupboxes.Visuals_ESP_Toggles:AddToggle("ItemESPToggle",       { Text = "Items"
 Groupboxes.Visuals_ESP_Toggles:AddToggle("CurrencyESPToggle",   { Text = "Currency",     Default = false, Tooltip = "Highlights all currency that spawns." })
 Groupboxes.Visuals_ESP_Toggles:AddToggle("LadderESPToggle",     { Text = "Ladders",      Default = false, Tooltip = "Highlights ladders that can be used to disable the anticheat." })
 Groupboxes.Visuals_ESP_Toggles:AddDivider()
+	local EntityTabs = Groupboxes.Visuals_ESP_Toggles:AddTabbox("Entities List")
+
+	local HotelTab = EntityTabs:AddTab("Hotel")
+	HotelTab:AddDropdown("HotelEntityList", { Text = "Hotel", Values = { "Rush", "Ambush", "Eyes", "Dupe", "Figure", "Lookman", "Snare", "Giggle", "Gloombat Eggs", "AR0xMBUSH", "RNIUSHCG==" }, Multi = true, AllowNull = true })
+
+	local OutdoorsTab = EntityTabs:AddTab("Outdoors")
+	OutdoorsTab:AddDropdown("OutdoorsEntityList", { Text = "Outdoors", Values = { "Groundskeeper", "Monument" }, Multi = true, AllowNull = true })
+
+	local BackdoorTab = EntityTabs:AddTab("Backdoor")
+	BackdoorTab:AddDropdown("BackdoorEntityList", { Text = "Backdoor", Values = { "Blitz", "Lookman", "Haste" }, Multi = true, AllowNull = true })
+
+	local MinesTab = EntityTabs:AddTab("Mines")
+	MinesTab:AddDropdown("MinesEntityList", { Text = "Mines", Values = { "Rush", "Ambush", "Giggle", "Grumble", "Queen Grumble", "Gloombat Swarm" }, Multi = true, AllowNull = true })
+
+	local StairwellTab = EntityTabs:AddTab("Stairwell")
+	StairwellTab:AddDropdown("StairwellEntityList", { Text = "Stairwell", Values = { "Noise", "Stem", "Creak", "Meld" }, Multi = true, AllowNull = true })
+
+	local RoomsTab = EntityTabs:AddTab("Rooms")
+	RoomsTab:AddDropdown("RoomsEntityList", { Text = "Rooms", Values = { "A-60", "A-120", "Sally", "Jeff the Killer" }, Multi = true, AllowNull = true })
+
+	local ArchivesTab = EntityTabs:AddTab("Archives")
+	ArchivesTab:AddDropdown("ArchivesEntityList", { Text = "Archives", Values = { "Bash", "Honcho", "Drones", "Scribbles", "Ransom", "Teller", "Alma", "Forget-Me-Not" }, Multi = true, AllowNull = true })
+
+	Groupboxes.Visuals_ESP_Toggles:AddToggle("EntityESPToggle", { Text = "Entities", Default = false, Tooltip = "Highlights all entities that spawn." })
 Groupboxes.Visuals_ESP_Toggles:AddDropdown("EntityESPOptions",     { 
 	Text = "Entity List",
 		Values = { "Rush","Ambush","Eyes","Dupe","Figure","Blitz","Lookman","Snare","Giggle","Gloombat Eggs","Grumble","A-60","A-120","Sally","Jeff the Killer","Groundskeeper","Mandrake Hole","Monument","Bramble","AR0xMBUSH","RNIUSHCG==", "Noise", "Stem", "Creak", "Scrapper" },
@@ -1993,12 +1987,23 @@ Options.CurrencyESPColor:OnChanged(function(Value)
 	for _, Object in Objects.Currency do F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
 end)
 
+local function IsEntityEnabled(Label)
+	if Options.HotelEntityList.Value[Label] then return true end
+	if Options.OutdoorsEntityList.Value[Label] then return true end
+	if Options.BackdoorEntityList.Value[Label] then return true end
+	if Options.MinesEntityList.Value[Label] then return true end
+	if Options.StairwellEntityList.Value[Label] then return true end
+	if Options.RoomsEntityList.Value[Label] then return true end
+	if Options.ArchivesEntityList.Value[Label] then return true end
+	return false
+end
+
 Toggles.EntityESPToggle:OnChanged(function(Value)
 	for _, Object in Objects.Entities do
 		if Value then
 			local Label = EntityESPLabels[Object.Name]
 			if not Label and Entities[Object.Name] then Label = Entities[Object.Name].Alias end
-			if Label and Options.EntityESPOptions.Value[Label] then
+			if Label and IsEntityEnabled(Label) then
 				Functions.AddESP({ Object = Object, Text = Label, Color = Options.EntityESPColor.Value }, NodeEntities[Label] ~= true)
 			else
 				Functions.RemoveESP(Object)
@@ -2008,6 +2013,28 @@ Toggles.EntityESPToggle:OnChanged(function(Value)
 		end
 	end
 end)
+
+local function OnOptionsChanged()
+	for _, Object in Objects.Entities do
+		if Toggles.EntityESPToggle.Value then
+			local Label = EntityESPLabels[Object.Name]
+			if not Label and Entities[Object.Name] then Label = Entities[Object.Name].Alias end
+			if Label and IsEntityEnabled(Label) then
+				Functions.AddESP({ Object = Object, Text = Label, Color = Options.EntityESPColor.Value }, NodeEntities[Label] ~= true)
+			else
+				Functions.RemoveESP(Object)
+			end
+		end
+	end
+end
+
+Options.HotelEntityList:OnChanged(OnOptionsChanged)
+Options.OutdoorsEntityList:OnChanged(OnOptionsChanged)
+Options.BackdoorEntityList:OnChanged(OnOptionsChanged)
+Options.MinesEntityList:OnChanged(OnOptionsChanged)
+Options.StairwellEntityList:OnChanged(OnOptionsChanged)
+Options.RoomsEntityList:OnChanged(OnOptionsChanged)
+Options.ArchivesEntityList:OnChanged(OnOptionsChanged)
 
 Options.EntityESPOptions:OnChanged(function(Value)
 	for _, Object in Objects.Entities do
