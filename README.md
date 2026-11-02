@@ -7,4 +7,4 @@ F1xWare is a free, open-source script hub designed for maximum performance and a
 To load the hub, execute the following script in your executor:
 
 ```lua
-loadstring(game:HttpGet("https://molniaf1x777.github.io/F1xWare/Loader.luau"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/MolniaF1x777/F1xWare/main/Loader.luau"))()
