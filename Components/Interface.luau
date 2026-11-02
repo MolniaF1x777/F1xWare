@@ -4,12 +4,12 @@ local BaseUrl = "https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/h
 local AbysallUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
 
 local Interface = {
-  Library = loadstring(game:HttpGet(BaseUrl .. "Library.lua"))(),
-  SaveManager = loadstring(game:HttpGet(BaseUrl .. "addons/SaveManager.lua"))(),
-  ThemeManager = loadstring(game:HttpGet(BaseUrl .. "addons/ThemeManager.lua"))(),
+  Library = loadstring(F1xGet(BaseUrl .. "Library.lua"))(),
+  SaveManager = loadstring(F1xGet(BaseUrl .. "addons/SaveManager.lua"))(),
+  ThemeManager = loadstring(F1xGet(BaseUrl .. "addons/ThemeManager.lua"))(),
 
-  ApplyInfoTab = loadstring(game:HttpGet(AbysallUrl .. "Components/InfoTab.luau"))(),
-  ApplySettingsTab = loadstring(game:HttpGet(AbysallUrl .. "Components/SettingsTab.luau"))()
+  ApplyInfoTab = loadstring(F1xGet(AbysallUrl .. "Components/InfoTab.luau"))(),
+  ApplySettingsTab = loadstring(F1xGet(AbysallUrl .. "Components/SettingsTab.luau"))()
 }
 
 Interface.ThemeManager.BuiltInThemes = {
