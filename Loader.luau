@@ -1,60 +1,70 @@
 if Abysall then
-    return 
+    return
 end
+getgenv().Abysall = {
+    Legit = true
+}
 
 local RepoUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
-local CacheDir = "F1xWare/cache"
 
-local FileApi = type(writefile) == "function" and type(readfile) == "function"
-    and type(isfile) == "function" and type(isfolder) == "function" and type(makefolder) == "function"
+-- Кэш файлов: качаем только version.txt, остальное берём с диска
+local HasFS = type(writefile) == "function" and type(readfile) == "function"
+    and type(isfile) == "function" and type(isfolder) == "function"
+    and type(makefolder) == "function"
 
-if FileApi then
-    if not isfolder("F1xWare") then makefolder("F1xWare") end
+local CacheDir
+if HasFS then
+    pcall(function()
+        if not isfolder("F1xWare") then makefolder("F1xWare") end
 
-    local Ok, Remote = pcall(game.HttpGet, game, RepoUrl .. "version.txt")
-    local LocalVersion = isfile("F1xWare/version.txt") and readfile("F1xWare/version.txt") or nil
-
-    if Ok then
-        Remote = Remote:gsub("%s+", "")
-        if #Remote < 20 and Remote ~= LocalVersion then
-            if isfolder(CacheDir) and type(delfolder) == "function" then delfolder(CacheDir) end
-            writefile("F1xWare/version.txt", Remote)
+        local Version
+        local Ok, Remote = pcall(game.HttpGet, game, RepoUrl .. "version.txt")
+        if Ok and type(Remote) == "string" and #Remote < 20 and Remote:sub(1, 4) ~= "404:" then
+            Version = (Remote:gsub("%s+", ""))
+            writefile("F1xWare/version.txt", Version)
+        elseif isfile("F1xWare/version.txt") then
+            Version = readfile("F1xWare/version.txt")
         end
-    end
 
-    if not isfolder(CacheDir) then makefolder(CacheDir) end
+        if Version and #Version > 0 then
+            CacheDir = "F1xWare/cache_" .. Version
+            if not isfolder(CacheDir) then makefolder(CacheDir) end
+        end
+    end)
 end
 
 getgenv().F1xGet = function(Url)
-    if not FileApi then return game:HttpGet(Url) end
-
-    local Path = CacheDir .. "/" .. (Url:gsub("^https?://", ""):gsub("[^%w]", "_"))
-    if isfile(Path) then
-        local Cached = readfile(Path)
-        if #Cached > 0 then return Cached end
+    local Path
+    if CacheDir then
+        Path = CacheDir .. "/" .. (Url:gsub("^https?://", ""):gsub("[^%w]", "_"))
+        if isfile(Path) then
+            local Cached = readfile(Path)
+            if #Cached > 0 then
+                return Cached
+            end
+        end
     end
 
     local Source = game:HttpGet(Url)
-    if Source:sub(1, 3) ~= "404" then
+    if Source:sub(1, 4) == "404:" or #Source == 0 then
+        error("F1xWare: failed to download " .. Url)
+    end
+    if Path then
         pcall(writefile, Path, Source)
     end
     return Source
 end
 
-getgenv().Abysall = {
-    Legit = true
-}
-
 local GameList = {
-  [2440500124] = "Doors"
+    [2440500124] = "Doors"
 }
 
-local BaseUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
+local BaseUrl = RepoUrl
 getgenv().Abysall = {
-    Environment = loadstring(game:HttpGet(BaseUrl .. "Components/Environment.luau"))(),
-    ESPLibrary = loadstring(game:HttpGet(BaseUrl .. "Components/ESP.luau"))(),
+    Environment = loadstring(F1xGet(BaseUrl .. "Components/Environment.luau"))(),
+    ESPLibrary = loadstring(F1xGet(BaseUrl .. "Components/ESP.luau"))(),
 
-    Legit = true, -- pog
+    Legit = true,
 }
 
 local function CloneReference(Object)
@@ -72,6 +82,11 @@ local Services = setmetatable({}, {
 })
 
 if Abysall.Environment.writefile and Abysall.Environment.readfile then
+    if Abysall.Environment.makefolder and Abysall.Environment.isfolder
+        and not Abysall.Environment.isfolder("Abysall") then
+        Abysall.Environment.makefolder("Abysall")
+    end
+
     if not Abysall.Environment.isfile("Abysall/UserData.json") then
         local Data = {
             TotalExecutions = 0,
@@ -83,7 +98,7 @@ if Abysall.Environment.writefile and Abysall.Environment.readfile then
     local UserData = Abysall.Environment.readfile("Abysall/UserData.json")
     local Decoded = Services.HttpService:JSONDecode(UserData)
     if not Decoded.TotalExecutions then
-        Decoded.TotalExecutions = 0    
+        Decoded.TotalExecutions = 0
     end
 
     Decoded.TotalExecutions = Decoded.TotalExecutions + 1
@@ -98,12 +113,12 @@ if Abysall.Environment.writefile and Abysall.Environment.readfile then
     Abysall.Environment.writefile("Abysall/UserData.json", Services.HttpService:JSONEncode(Decoded))
 end
 
-Abysall.Interface = loadstring(game:HttpGet(BaseUrl .. "Components/Interface.luau"))()
-Abysall.Analytics = loadstring(game:HttpGet(BaseUrl .. "Components/Analytics.luau"))()
+Abysall.Interface = loadstring(F1xGet(BaseUrl .. "Components/Interface.luau"))()
+Abysall.Analytics = loadstring(F1xGet(BaseUrl .. "Components/Analytics.luau"))()
 
 local CurrentGame = GameList[game.GameId]
 if CurrentGame then
-    loadstring(game:HttpGet(BaseUrl .. "Games/" .. CurrentGame .. "/Loader.luau"))()
+    loadstring(F1xGet(BaseUrl .. "Games/" .. CurrentGame .. "/Loader.luau"))()
 else
-    loadstring(game:HttpGet(BaseUrl .. "Games/Universal/Loader.luau"))()
+    loadstring(F1xGet(BaseUrl .. "Games/Universal/Loader.luau"))()
 end
