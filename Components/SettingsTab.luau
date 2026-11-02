@@ -1,7 +1,7 @@
 return function(Window)
 	local function CloneReference(Object)
-		if Abysall and Abysall.Environment.cloneref then
-			return Abysall.Environment.cloneref(Object)
+		if F1xWare and F1xWare.Environment.cloneref then
+			return F1xWare.Environment.cloneref(Object)
 		else
 			return Object
 		end
@@ -13,9 +13,9 @@ return function(Window)
 		end
 	})
 
-	local Library = Abysall.Interface.Library
-	local SaveManager = Abysall.Interface.SaveManager
-	local ThemeManager = Abysall.Interface.ThemeManager
+	local Library = F1xWare.Interface.Library
+	local SaveManager = F1xWare.Interface.SaveManager
+	local ThemeManager = F1xWare.Interface.ThemeManager
 	
 	local Toggles = Library.Toggles
 	local Options = Library.Options
@@ -44,18 +44,18 @@ return function(Window)
 			"Obsidian",
 			"Linoria"
 		},
-		Default = (Abysall.UILibrary == "Linoria" and 2 or 1),
+		Default = (F1xWare.UILibrary == "Linoria" and 2 or 1),
 		Callback = function(Value)
-			if Abysall.Environment.writefile and Abysall.Environment.readfile then
-				if not Abysall.Environment.isfile("Abysall/UserData.json") then
+			if F1xWare.Environment.writefile and F1xWare.Environment.readfile then
+				if not F1xWare.Environment.isfile("F1xWare/UserData.json") then
 					local Data = {
 						TotalExecutions = 0,
 						UILibrary = "Obsidian"
 					}
-					Abysall.Environment.writefile("Abysall/UserData.json", Services.HttpService:JSONEncode(Data))
+					F1xWare.Environment.writefile("F1xWare/UserData.json", Services.HttpService:JSONEncode(Data))
 				end
 
-				local UserData = Abysall.Environment.readfile("Abysall/UserData.json")
+				local UserData = F1xWare.Environment.readfile("F1xWare/UserData.json")
 				local Decoded = Services.HttpService:JSONDecode(UserData)
 				Decoded.UILibrary = Value
 
@@ -63,10 +63,10 @@ return function(Window)
 					Decoded.UILibrary = "Obsidian"
 				end
 
-				Abysall.TotalExecutions = Decoded.TotalExecutions
-				Abysall.UILibrary = Decoded.UILibrary
+				F1xWare.TotalExecutions = Decoded.TotalExecutions
+				F1xWare.UILibrary = Decoded.UILibrary
 
-				Abysall.Environment.writefile("Abysall/UserData.json", Services.HttpService:JSONEncode(Decoded))
+				F1xWare.Environment.writefile("F1xWare/UserData.json", Services.HttpService:JSONEncode(Decoded))
 			end
 		end
 	})
@@ -102,8 +102,8 @@ return function(Window)
 	SaveManager:SetLibrary(Library)
 	SaveManager:IgnoreThemeSettings()
 	SaveManager:SetIgnoreIndexes({"UILibrary"})
-	ThemeManager:SetFolder("Abysall")
-	SaveManager:SetFolder("Abysall/" .. Abysall.SavePath)
+	ThemeManager:SetFolder("F1xWare")
+	SaveManager:SetFolder("F1xWare/" .. F1xWare.SavePath)
 	SaveManager:BuildConfigSection(SettingsTab)
 	ThemeManager:ApplyToTab(SettingsTab)
 	SaveManager:LoadAutoloadConfig()

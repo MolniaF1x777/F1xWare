@@ -1,14 +1,14 @@
-local Library = (Abysall.UILibrary == "Linoria" and "LinoriaLib" or "Obsidian")
+local Library = (F1xWare.UILibrary == "Linoria" and "LinoriaLib" or "Obsidian")
 local BaseUrl = "https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/heads/main/"
-local AbysallUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
+local F1xWareUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
 
 local Interface = {
   Library = loadstring(F1xGet(BaseUrl .. "Library.lua"))(),
   SaveManager = loadstring(F1xGet(BaseUrl .. "addons/SaveManager.lua"))(),
   ThemeManager = loadstring(F1xGet(BaseUrl .. "addons/ThemeManager.lua"))(),
 
-  ApplyInfoTab = loadstring(F1xGet(AbysallUrl .. "Components/InfoTab.luau"))(),
-  ApplySettingsTab = loadstring(F1xGet(AbysallUrl .. "Components/SettingsTab.luau"))()
+  ApplyInfoTab = loadstring(F1xGet(F1xWareUrl .. "Components/InfoTab.luau"))(),
+  ApplySettingsTab = loadstring(F1xGet(F1xWareUrl .. "Components/SettingsTab.luau"))()
 }
 
 Interface.ThemeManager.BuiltInThemes = {

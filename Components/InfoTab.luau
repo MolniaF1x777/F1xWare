@@ -9,8 +9,8 @@ return function(Window)
     }
 
     local function CloneReference(Object)
-        if Abysall and Abysall.Environment.cloneref then
-            return Abysall.Environment.cloneref(Object)
+        if F1xWare and F1xWare.Environment.cloneref then
+            return F1xWare.Environment.cloneref(Object)
         else
             return Object
         end
@@ -22,9 +22,9 @@ return function(Window)
         end
     })
 
-    local Library = Abysall.Interface.Library
-    local SaveManager = Abysall.Interface.SaveManager
-    local ThemeManager = Abysall.Interface.ThemeManager
+    local Library = F1xWare.Interface.Library
+    local SaveManager = F1xWare.Interface.SaveManager
+    local ThemeManager = F1xWare.Interface.ThemeManager
 
     local Toggles = Library.Toggles
     local Options = Library.Options
@@ -44,21 +44,21 @@ return function(Window)
     })
 
     User:AddLabel("ID: " .. LocalPlayer.Name, true)
-    User:AddLabel("Total Executions: " .. (Abysall.TotalExecutions and Abysall.TotalExecutions or "N/A"), true)
+    User:AddLabel("Total Executions: " .. (F1xWare.TotalExecutions and F1xWare.TotalExecutions or "N/A"), true)
 
     local Changelog = InfoTab:AddRightGroupbox("Changelog")
     for Index, Change in pairs(LatestChangelog) do
         Changelog:AddLabel(Change, true)
     end
 
-    local Name, Version = Abysall.Environment.identifyexecutor()
+    local Name, Version = F1xWare.Environment.identifyexecutor()
     local Executor = InfoTab:AddRightGroupbox("Executor Info")
     Executor:AddLabel("Name: " .. Name, true)
 	Executor:AddLabel("Version: " .. (Version and Version or "N/A"), true)
     Executor:AddDivider()
     Executor:AddLabel("Test Result: ", true)
 
-    for Index, Result in pairs(Abysall.Environment.Results) do
+    for Index, Result in pairs(F1xWare.Environment.Results) do
 		-- fix for veloshitty 💔
 		Result = Result:gsub("<", "(")
 		Result = Result:gsub(">", ")")
