@@ -1034,7 +1034,7 @@ Functions.GetRandomCode = function()
 end
 
 local Window = Library:CreateWindow({
-	Title = "F1xWare Hub",
+	Title = "F1xWare v.1.1.0",
 	Footer = "dsc.gg/F1xWare",
 	NotifySide = "Right",
 	ShowCustomCursor = false,
@@ -1853,7 +1853,7 @@ Groupboxes.Visuals_ESP_Toggles:AddToggle("LadderESPToggle",     { Text = "Ladder
 Groupboxes.Visuals_ESP_Toggles:AddDivider()
 Groupboxes.Visuals_ESP_Toggles:AddDropdown("EntityESPOptions",     { 
 	Text = "Entity List",
-	Values = { "Rush","Ambush","Eyes","Dupe","Figure","Blitz","Lookman","Snare","Giggle","Gloombat Eggs","Grumble","A-60","A-120","Sally","Jeff the Killer","Groundskeeper","Mandrake Hole","Monument","Bramble","AR0xMBUSH","RNIUSHCG==" },
+		Values = { "Rush","Ambush","Eyes","Dupe","Figure","Blitz","Lookman","Snare","Giggle","Gloombat Eggs","Grumble","A-60","A-120","Sally","Jeff the Killer","Groundskeeper","Mandrake Hole","Monument","Bramble","AR0xMBUSH","RNIUSHCG==", "Noise", "Stem", "Creak", "Scrapper" },
 	Multi = true,
 	AllowNull = true
 })
@@ -3382,6 +3382,16 @@ Functions.HandleObject = function(Object)
 	elseif Name == "MandrakeLive" then
 		if Toggles.ObjectiveESPToggle.Value and Options.EntityESPOptions.Value["Mandrake Hole"] then Functions.AddESP({ Object = Object.Hole, Text = "Mandrake Hole", Color = Options.EntityESPColor.Value }, true) end
 		table.insert(Objects.Entities, Object.Hole)
+			elseif Name == "Noise" or Name == "Stem" or Name == "Creak" then
+		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value[Name] then 
+			Functions.AddESP({ Object = Object, Text = Name, Color = Color3.fromRGB(255, 0, 0) }, true) 
+		end
+		table.insert(Objects.Entities, Object)
+	elseif Name == "StairwellScrapper" or Name == "Scrapper" then
+		if Toggles.ObjectiveESPToggle.Value then 
+			Functions.AddESP({ Object = Object, Text = "Scrapper", Color = Color3.fromRGB(0, 255, 150) }, true) 
+		end
+		table.insert(Objects.Objectives, Object)
 	elseif Name == "MinesGenerator" then
 		task.spawn(function()
 			task.wait(0.75)
@@ -3666,19 +3676,31 @@ Functions.HandleObject = function(Object)
 		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Mouse", Color = Options.ChestESPColor.Value }, true) end
 		table.insert(Objects.Chests, Object)
 	elseif ItemNames[Name] and Object:FindFirstChild("ModulePrompt") then
-		if Toggles.ItemESPToggle.Value then Functions.AddESP({ Object = Object, Text = ItemNames[Name], Color = Options.ItemESPColor.Value }, Object:GetAttribute("ParentRoom") ~= nil) end
-		if Name == "LotusHolder" or Name == "LotusPetalPickup" then
-			Object.Handle:GetPropertyChangedSignal("LocalTransparencyModifier"):Connect(function()
-				F1xWare.ESPLibrary:RemoveESP(Object)
-				Functions.BlacklistESP(Object)
-			end)
+			elseif ItemNames[Name] then -- Убрали проверку на ModulePrompt, чтобы видеть всё
+		if Toggles.ItemESPToggle.Value then
+			local ItemColor = Options.ItemESPColor.Value
+			-- Красим мусор в серый
+			if Name == "garbage" or Name == "BottleCrate" or Name == "JerryCan" or Name == "DinkyLamp" or Name == "BrokenMonitor" then
+				ItemColor = Color3.fromRGB(150, 150, 150)
+			end
+			Functions.AddESP({ Object = Object, Text = ItemNames[Name], Color = ItemColor }, Object:GetAttribute("ParentRoom") ~= nil)
 		end
+		
+		-- Логика для Infinite Items и уведомлений (оставляем как было)
+		if Object:FindFirstChild("ModulePrompt") then
+			if Name == "LotusHolder" or Name == "LotusPetalPickup" then
+				Object.Handle:GetPropertyChangedSignal("LocalTransparencyModifier"):Connect(function()
+					F1xWare.ESPLibrary:RemoveESP(Object)
+					Functions.BlacklistESP(Object)
+				end)
+			end
 
-		if Toggles.NotifyItemsToggle.Value and Options.NotifyItemList.Value[ItemNames[Name]] and Object.Parent.Name ~= "Drops" then
-			if Toggles.NotifyItemsShowDistance.Value then
-				Functions.Notify({ Title = "Item '" .. ItemNames[Name] .. "' has spawned.", Body = "It is '" .. math.round(LocalPlayer:DistanceFromCharacter(Object.PrimaryPart.Position)) .. "' studs away from you." })
-			else
-				Functions.Notify({ Title = "Item '" .. ItemNames[Name] .. "' has spawned."})
+			if Toggles.NotifyItemsToggle.Value and Options.NotifyItemList.Value[ItemNames[Name]] and Object.Parent.Name ~= "Drops" then
+				if Toggles.NotifyItemsShowDistance.Value then
+					Functions.Notify({ Title = "Item '" .. ItemNames[Name] .. "' has spawned.", Body = "It is '" .. math.round(LocalPlayer:DistanceFromCharacter(Object.PrimaryPart.Position)) .. "' studs away from you." })
+				else
+					Functions.Notify({ Title = "Item '" .. ItemNames[Name] .. "' has spawned."})
+				end
 			end
 		end
 
@@ -4622,3 +4644,13 @@ end)
 while not Globals.MainUI do task.wait() end
 F1xWare.Interface.ApplySettingsTab(Window)
 Functions.Notify({ Title = "Successfully loaded in " .. math.floor((tick() - LoadStart) * 1000) / 1000 .. " seconds." , Body = "Press '" .. tostring(Options.MenuKeybind.Value) .. "' to toggle the UI."})
+local currentFloor = Floor
+Services.ReplicatedStorage:WaitForChild("GameData"):WaitForChild("Floor"):GetPropertyChangedSignal("Value"):Connect(function()
+    local newFloor = Services.ReplicatedStorage.GameData.Floor.Value
+    if newFloor ~= currentFloor then
+        currentFloor = newFloor
+        Library:Unload()
+        task.wait(1)
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/MolniaF1x777/F1xWare/main/Loader.luau"))()
+    end
+end)

@@ -1,6 +1,7 @@
-if F1xWare then
+if getgenv().F1xWare and getgenv().F1xWare.Loaded then
     return
 end
+
 getgenv().F1xWare = {
     Legit = true
 }
@@ -27,6 +28,18 @@ if HasFS then
 
         if Version and #Version > 0 then
             CacheDir = "F1xWare/cache_" .. Version
+            
+            -- ОЧИСТКА СТАРЫХ ПАПОК КЭША
+            if type(delfolder) == "function" and type(listfiles) == "function" then
+                pcall(function()
+                    for _, file in ipairs(listfiles("F1xWare")) do
+                        if file:match("cache_") and file ~= CacheDir then
+                            delfolder(file)
+                        end
+                    end
+                end)
+            end
+
             if not isfolder(CacheDir) then makefolder(CacheDir) end
         end
     end)
@@ -62,7 +75,6 @@ local BaseUrl = RepoUrl
 getgenv().F1xWare = {
     Environment = loadstring(F1xGet(BaseUrl .. "Components/Environment.luau"))(),
     ESPLibrary = loadstring(F1xGet(BaseUrl .. "Components/ESP.luau"))(),
-
     Legit = true,
 }
 
