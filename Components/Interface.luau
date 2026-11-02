@@ -57,5 +57,31 @@ if Interface.ThemeManager then
         end
     end)
 end
+task.spawn(function()
+    task.wait(0.5)
+    local CoreGui = game:GetService("CoreGui")
+    local PlayerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+    
+    local Menu = CoreGui:FindFirstChild("F1xWare_Menu") or PlayerGui:FindFirstChild("F1xWare_Menu")
+    
+    if Menu then
+        local TopBar = Menu:FindFirstChild("TopBar") or Menu:FindFirstChild("MainFrame")
+        
+        if TopBar then
+            local VersionText = Instance.new("TextLabel")
+            VersionText.Name = "VersionLabel"
+            VersionText.Parent = TopBar
+            VersionText.BackgroundTransparency = 1
+            VersionText.Text = "v1.1.0" -- ТУТ ТВОЯ ВЕРСИЯ
+            VersionText.TextColor3 = Color3.fromRGB(150, 150, 150) -- Темно-серый цвет
+            VersionText.TextSize = 12 -- Маленький шрифт
+            VersionText.Font = Enum.Font.Code
+            
+            VersionText.Position = UDim2.new(0, 125, 0, 0) 
+            VersionText.Size = UDim2.new(0, 100, 1, 0)
+            VersionText.TextXAlignment = Enum.TextXAlignment.Left
+        end
+    end
+end)
 
 return Interface

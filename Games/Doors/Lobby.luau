@@ -36,7 +36,7 @@ end
 task.wait(1)
 
 local Window = Library:CreateWindow({
-    Title = "F1xWare v.1.1.0",
+    Title = "F1xWare",
     Footer = "dsc.gg/F1xWare",
     NotifySide = "Right",
     ShowCustomCursor = false,
