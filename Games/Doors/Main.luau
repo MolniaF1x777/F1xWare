@@ -75,6 +75,18 @@ local Entities = {
 		Alias = "Eyes",
 		NotifyMessage = { Title = "Entity 'Eyes' has spawned.", Body = "Avoid looking at it." }
 	},
+	["Noise"] = {
+		Alias = "Noise",
+		NotifyMessage = { Title = "Entity 'Noise' has spawned.", Body = "Find a hiding spot." }
+	},
+	["Stem"] = {
+		Alias = "Stem",
+		NotifyMessage = { Title = "Entity 'Stem' has spawned.", Body = "Find a hiding spot." }
+	},
+	["Creak"] = {
+		Alias = "Creak",
+		NotifyMessage = { Title = "Entity 'Creak' has spawned.", Body = "Find a hiding spot." }
+	},
 	["Lookman"] = {
 		Alias = "Eyes",
 		NotifyMessage = { Title = "Entity 'Eyes' has spawned.", Body = "Avoid looking at it." }
@@ -209,7 +221,17 @@ local ItemNames = {
 	["AloeVera"]          = "Aloe Vera",
 	["Donut"]             = "Donut",
 	["Lotus"]             = "Lotus",
-	["BoxingGloves"]      = "Boxing Gloves"
+	["BoxingGloves"]      = "Boxing Gloves",
+	["garbage"]           = "Garbage",
+	["BottleCrate"]       = "Bottle Crate",
+	["JerryCan"]          = "Jerry Can",
+	["DinkyLamp"]              = "Dinky Lamp",
+	["BrokenMonitor"]     	   = "Broken Monitor",
+	["StairwellFireAlarm"]     = "Fire Alarm",
+	["Monitor"]                = "Terminal",
+	["StairwellChunkMapBoard"] = "Map Board",
+	["StairwellScrapper"]      = "Scrapper",
+	["Scrapper"]               = "Scrapper"
 }
 
 local CutsceneNames = {
@@ -1842,6 +1864,11 @@ Toggles.HidingSpotESPToggle:AddColorPicker("HidingSpotESPColor", { Text = "Hidin
 Toggles.PlayerESPToggle:AddColorPicker("PlayerESPColor",       { Text = "Players",      Default = Color3.fromRGB(255, 255, 255), Transparency = 0 })
 Toggles.ChestESPToggle:AddColorPicker("ChestESPColor",         { Text = "Chests",       Default = Color3.fromRGB(255, 255, 0),   Transparency = 0 })
 Toggles.ItemESPToggle:AddColorPicker("ItemESPColor",           { Text = "Items",        Default = Color3.fromRGB(170, 0, 255),   Transparency = 0 })
+Toggles.ItemESPToggle:AddColorPicker("TrashESPColor",          { Text = "Trash",        Default = Color3.fromRGB(150, 150, 150), Transparency = 0 })
+Toggles.ObjectiveESPToggle:AddColorPicker("FireAlarmESPColor", { Text = "Fire Alarm",   Default = Color3.fromRGB(255, 100, 0),   Transparency = 0 })
+Toggles.ObjectiveESPToggle:AddColorPicker("TerminalESPColor",  { Text = "Terminal",     Default = Color3.fromRGB(200, 0, 255),   Transparency = 0 })
+Toggles.ObjectiveESPToggle:AddColorPicker("MapESPColor",       { Text = "Map Board",    Default = Color3.fromRGB(0, 200, 255),   Transparency = 0 })
+Toggles.ObjectiveESPToggle:AddColorPicker("ScrapperESPColor",  { Text = "Scrapper",     Default = Color3.fromRGB(0, 255, 150),   Transparency = 0 })
 Toggles.CurrencyESPToggle:AddColorPicker("CurrencyESPColor",   { Text = "Currency",     Default = Color3.fromRGB(255, 255, 0),   Transparency = 0 })
 Toggles.LadderESPToggle:AddColorPicker("LadderESPColor",       { Text = "Ladders",      Default = Color3.fromRGB(255, 255, 255), Transparency = 0 })
 Toggles.EntityESPToggle:AddColorPicker("EntityESPColor",       { Text = "Entities",     Default = Color3.fromRGB(255, 0, 0),     Transparency = 0 })
