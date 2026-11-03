@@ -63,6 +63,10 @@ Interface.ThemeManager.BuiltInThemes = {
 }
 
 local function Symbolize(Title)
+	if not Interface.Symbols then
+		return Title
+	end
+	
 	local Symbol = type(Title) == "string" and Interface.Symbols[Title]
 	if Symbol then
 		return Symbol .. "  " .. Title
