@@ -1,14 +1,14 @@
 return function(Window)
     local LatestChangelog = {
         "3/11/2026",
-        "<font color='rgb(0, 255, 0)'>+ 2.0.1- BETA Bugs fixed </font>",
+        "<font color='rgb(0, 255, 0)'>+ 2.0.3 Bugs fixed </font>",
         "2/11/2026",
         "<font color='rgb(0, 255, 0)'>+ Added Stairwell support (Scrapper, Fire Alarm, Map)</font>",
         "<font color='rgb(0, 255, 0)'>+ Added new entities (Noise, Stem, Creak)</font>",
         "<font color='rgb(0, 255, 0)'>+ Added garbage ESP (grey color)</font>",
         "<font color='rgb(0, 255, 0)'>+ Auto-clear old cache folders</font>",
         "<font color='rgb(0, 255, 0)'>+ Auto-reload on floor change</font>",
-        "<font color='rgb(0, 255, 0)'>+ Custom version tag in UI</font>",
+        "<font color='rgb(0, 255, 0)'>+ Custom version tag in UI<The previous version is not working, clear the cache./font>",
         "<font color='rgb(0, 255, 0)'>+ ESP added and bugs fixed</font>",
         "<font color='rgb(0, 255, 0)'>+ Creating the F1xWare project</font>",
     }
