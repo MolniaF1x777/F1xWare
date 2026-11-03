@@ -1,5 +1,6 @@
 local BaseUrl = "https://raw.githubusercontent.com/deividcomsono/Obsidian/refs/heads/main/"
 local F1xWareUrl = "https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/"
+local Interface = {}
 
 local function Fetch(Url)
 	for _ = 1, 3 do
