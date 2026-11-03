@@ -1,5 +1,7 @@
 return function(Window)
     local LatestChangelog = {
+        "3/11/2026"
+        "<font color='rgb(0, 255, 0)'>+ 2.0.1- BETA Bugs fixed </font>",
         "2/11/2026",
         "<font color='rgb(0, 255, 0)'>+ Added Stairwell support (Scrapper, Fire Alarm, Map)</font>",
         "<font color='rgb(0, 255, 0)'>+ Added new entities (Noise, Stem, Creak)</font>",

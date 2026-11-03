@@ -204,6 +204,42 @@ local ItemNames = {
 	["Scrapper"]               = "Scrapper"
 }
 
+local TrashNames = {
+	garbage = true,
+	BottleCrate = true,
+	JerryCan = true,
+	DinkyLamp = true,
+	BrokenMonitor = true
+}
+
+local NoPromptItems = {
+	garbage = true,
+	BottleCrate = true,
+	JerryCan = true,
+	DinkyLamp = true,
+	BrokenMonitor = true,
+	StairwellFireAlarm = true,
+	Monitor = true,
+	StairwellChunkMapBoard = true
+}
+
+local SpecialItemColors = {
+	StairwellFireAlarm = "FireAlarmESPColor",
+	Monitor = "TerminalESPColor",
+	StairwellChunkMapBoard = "MapESPColor"
+}
+
+local function GetItemColor(Name)
+	if TrashNames[Name] then
+		return Options.TrashESPColor.Value
+	end
+	local ColorKey = SpecialItemColors[Name]
+	if ColorKey and Options[ColorKey] then
+		return Options[ColorKey].Value
+	end
+	return Options.ItemESPColor.Value
+end
+
 local CutsceneNames = {
     "Figure",
     "FigureEnd",
@@ -458,7 +494,7 @@ Globals.DoorsNotify = function(NotifyOptions)
 	end)
 end
 
-Globals.STX = loadstring(game:HttpGet("https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/Components/STX.luau"))()
+Globals.STX = loadstring(F1xGet("https://raw.githubusercontent.com/MolniaF1x777/F1xWare/refs/heads/main/Components/STX.luau"))()
 Functions.Notify = function(Settings)
 	local HiddenContainer = GetHiddenContainer()
 
@@ -1005,7 +1041,7 @@ end
 
 local Window = Library:CreateWindow({
 	Title = "F1xWare",
-	Footer = "dsc.gg/F1xWare",
+	Footer = "dsc.gg/F1xWare  |  v" .. F1xWare.Interface.Version,
 	NotifySide = "Right",
 	ShowCustomCursor = false,
 	AutoShow = true,
@@ -1694,7 +1730,7 @@ Groupboxes.Visuals_EntitySettings = Groupboxes.Visuals_RightTab:AddTab("Settings
 
 Groupboxes.Visuals_Entities:AddDropdown("EntityList", {
 	Text = "Entity List",
-	Values = { "Rush","Ambush","Eyes","Halt","Blitz","Lookman","Gloombat Swarm","A-60","A-120","Sally","Jeff the Killer","Groundskeeper","Monument","AR0xMBUSH","RNIUSHCG==" },
+		Values = { "Rush","Ambush","Eyes","Halt","Blitz","Lookman","Gloombat Swarm","A-60","A-120","Sally","Jeff the Killer","Groundskeeper","Monument","AR0xMBUSH","RNIUSHCG==","Noise","Stem","Creak","Meld" },
 	Multi = true, AllowNull = true
 })
 Groupboxes.Visuals_Entities:AddToggle("NotifyEntities",    { Text = "Notify Entities",    Default = false, Tooltip = "Sends a notification when an entity spawns." })
@@ -1821,37 +1857,13 @@ Groupboxes.Visuals_ESP_Toggles:AddToggle("ItemESPToggle",       { Text = "Items"
 Groupboxes.Visuals_ESP_Toggles:AddToggle("CurrencyESPToggle",   { Text = "Currency",     Default = false, Tooltip = "Highlights all currency that spawns." })
 Groupboxes.Visuals_ESP_Toggles:AddToggle("LadderESPToggle",     { Text = "Ladders",      Default = false, Tooltip = "Highlights ladders that can be used to disable the anticheat." })
 Groupboxes.Visuals_ESP_Toggles:AddDivider()
-	local EntityTabs = Groupboxes.Visuals_ESP_Toggles:AddTabbox("Entities List")
-
-	local HotelTab = EntityTabs:AddTab("Hotel")
-	HotelTab:AddDropdown("HotelEntityList", { Text = "Hotel", Values = { "Rush", "Ambush", "Eyes", "Dupe", "Figure", "Lookman", "Snare", "Giggle", "Gloombat Eggs", "AR0xMBUSH", "RNIUSHCG==" }, Multi = true, AllowNull = true })
-
-	local OutdoorsTab = EntityTabs:AddTab("Outdoors")
-	OutdoorsTab:AddDropdown("OutdoorsEntityList", { Text = "Outdoors", Values = { "Groundskeeper", "Monument" }, Multi = true, AllowNull = true })
-
-	local BackdoorTab = EntityTabs:AddTab("Backdoor")
-	BackdoorTab:AddDropdown("BackdoorEntityList", { Text = "Backdoor", Values = { "Blitz", "Lookman", "Haste" }, Multi = true, AllowNull = true })
-
-	local MinesTab = EntityTabs:AddTab("Mines")
-	MinesTab:AddDropdown("MinesEntityList", { Text = "Mines", Values = { "Rush", "Ambush", "Giggle", "Grumble", "Queen Grumble", "Gloombat Swarm" }, Multi = true, AllowNull = true })
-
-	local StairwellTab = EntityTabs:AddTab("Stairwell")
-	StairwellTab:AddDropdown("StairwellEntityList", { Text = "Stairwell", Values = { "Noise", "Stem", "Creak", "Meld" }, Multi = true, AllowNull = true })
-
-	local RoomsTab = EntityTabs:AddTab("Rooms")
-	RoomsTab:AddDropdown("RoomsEntityList", { Text = "Rooms", Values = { "A-60", "A-120", "Sally", "Jeff the Killer" }, Multi = true, AllowNull = true })
-
-	local ArchivesTab = EntityTabs:AddTab("Archives")
-	ArchivesTab:AddDropdown("ArchivesEntityList", { Text = "Archives", Values = { "Bash", "Honcho", "Drones", "Scribbles", "Ransom", "Teller", "Alma", "Forget-Me-Not" }, Multi = true, AllowNull = true })
-
-	Groupboxes.Visuals_ESP_Toggles:AddToggle("EntityESPToggle", { Text = "Entities", Default = false, Tooltip = "Highlights all entities that spawn." })
-Groupboxes.Visuals_ESP_Toggles:AddDropdown("EntityESPOptions",     { 
+Groupboxes.Visuals_ESP_Toggles:AddToggle("EntityESPToggle", { Text = "Entities", Default = false, Tooltip = "Highlights all entities that spawn." })
+Groupboxes.Visuals_ESP_Toggles:AddDropdown("EntityESPOptions", {
 	Text = "Entity List",
-		Values = { "Rush","Ambush","Eyes","Dupe","Figure","Blitz","Lookman","Snare","Giggle","Gloombat Eggs","Grumble","A-60","A-120","Sally","Jeff the Killer","Groundskeeper","Mandrake Hole","Monument","Bramble","AR0xMBUSH","RNIUSHCG==", "Noise", "Stem", "Creak", "Scrapper" },
+	Values = { "Rush","Ambush","Eyes","Dupe","Figure","Blitz","Lookman","Snare","Giggle","Gloombat Eggs","Grumble","A-60","A-120","Sally","Jeff the Killer","Groundskeeper","Mandrake Hole","Monument","Bramble","AR0xMBUSH","RNIUSHCG==","Noise","Stem","Creak","Meld","Haste","Bash","Honcho","Drones","Scribbles","Ransom","Teller","Alma","Forget-Me-Not","Scrapper" },
 	Multi = true,
 	AllowNull = true
 })
-Groupboxes.Visuals_ESP_Toggles:AddToggle("EntityESPToggle",     { Text = "Entities",      Default = false, Tooltip = "Highlights all entities that spawn." })
 
 Toggles.DoorESPToggle:AddColorPicker("DoorESPColor",           { Text = "Doors",        Default = Color3.fromRGB(0, 200, 255),  Transparency = 0 })
 Toggles.HidingSpotESPToggle:AddColorPicker("HidingSpotESPColor", { Text = "Hiding Spots", Default = Color3.fromRGB(255, 170, 0),  Transparency = 0 })
@@ -1886,7 +1898,13 @@ local EntityESPLabels = {
 }
 
 local NodeEntities = {
-	Rush = true, Ambush = true, Eyes = true, Blitz = true, Lookman = true, ["A-60"] = true, ["A-120"] = true, Sally = true, ["Jeff The Killer"] = true, Monument = true, ["AR0xMBUSH"] = true, ["RNIUSHCG=="] = true
+	Rush = true, Ambush = true, Eyes = true, Blitz = true, Lookman = true,
+	["A-60"] = true, ["A-120"] = true, Sally = true, ["Jeff the Killer"] = true,
+	Monument = true, Groundskeeper = true, ["AR0xMBUSH"] = true, ["RNIUSHCG=="] = true,
+	Haste = true, ["Queen Grumble"] = true,
+	Noise = true, Stem = true, Creak = true, Meld = true,
+	Bash = true, Honcho = true, Drones = true, Scribbles = true, Ransom = true,
+	Teller = true, Alma = true, ["Forget-Me-Not"] = true
 }
 
 Toggles.DoorESPToggle:OnChanged(function(Value)
@@ -1957,16 +1975,49 @@ Toggles.ItemESPToggle:OnChanged(function(Value)
 		if Value then
 			local Label = ItemNames[Object.Name] or (Object.Name == "Green_Herb" and "Green Herb")
 			if Label then
-				Functions.AddESP({ Object = Object, Text = Label, Color = Options.ItemESPColor.Value }, Object:GetAttribute("ParentRoom") ~= nil)
+				Functions.AddESP({ Object = Object, Text = Label, Color = TrashNames[Object.Name] and Options.TrashESPColor.Value or Options.ItemESPColor.Value }, Object:GetAttribute("ParentRoom") ~= nil)
 			end
 		else
 			Functions.RemoveESP(Object)
 		end
 	end
 end)
+
 Options.ItemESPColor:OnChanged(function(Value)
-	for _, Object in Objects.Items do F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
+	for _, Object in Objects.Items do
+		if not TrashNames[Object.Name] then F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
+	end
 end)
+Options.TrashESPColor:OnChanged(function(Value)
+	for _, Object in Objects.Items do
+		if TrashNames[Object.Name] then F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
+	end
+end)
+
+local function UpdateItemColors()
+	for _, Object in Objects.Items do
+		F1xWare.ESPLibrary:UpdateObjectColor(Object, GetItemColor(Object.Name))
+	end
+end
+
+Toggles.ItemESPToggle:OnChanged(function(Value)
+	for _, Object in Objects.Items do
+		if Value then
+			local Label = ItemNames[Object.Name] or (Object.Name == "Green_Herb" and "Green Herb")
+			if Label then
+				Functions.AddESP({ Object = Object, Text = Label, Color = GetItemColor(Object.Name) }, Object:GetAttribute("ParentRoom") ~= nil)
+			end
+		else
+			Functions.RemoveESP(Object)
+		end
+	end
+end)
+
+Options.ItemESPColor:OnChanged(UpdateItemColors)
+Options.TrashESPColor:OnChanged(UpdateItemColors)
+Options.FireAlarmESPColor:OnChanged(UpdateItemColors)
+Options.TerminalESPColor:OnChanged(UpdateItemColors)
+Options.MapESPColor:OnChanged(UpdateItemColors)
 
 Toggles.CurrencyESPToggle:OnChanged(function(Value)
 	for _, Object in Objects.Currency do
@@ -1977,63 +2028,33 @@ Toggles.CurrencyESPToggle:OnChanged(function(Value)
 			elseif Object.Name == "StardustPickup" then
 				Label = "Stardust Pile"
 			end
-			if Label then Functions.AddESP({ Object = Object, Text = Label, Color = Options.CurrencyESPColor.Value }, true) end
+			if Label then
+				Functions.AddESP({ Object = Object, Text = Label, Color = Options.CurrencyESPColor.Value }, true)
+			end
 		else
 			Functions.RemoveESP(Object)
 		end
 	end
 end)
+
 Options.CurrencyESPColor:OnChanged(function(Value)
 	for _, Object in Objects.Currency do F1xWare.ESPLibrary:UpdateObjectColor(Object, Value) end
 end)
 
 local function IsEntityEnabled(Label)
-	if Options.HotelEntityList.Value[Label] then return true end
-	if Options.OutdoorsEntityList.Value[Label] then return true end
-	if Options.BackdoorEntityList.Value[Label] then return true end
-	if Options.MinesEntityList.Value[Label] then return true end
-	if Options.StairwellEntityList.Value[Label] then return true end
-	if Options.RoomsEntityList.Value[Label] then return true end
-	if Options.ArchivesEntityList.Value[Label] then return true end
-	return false
-end
-
 Toggles.EntityESPToggle:OnChanged(function(Value)
 	for _, Object in Objects.Entities do
-		if Value then
-			local Label = EntityESPLabels[Object.Name]
-			if not Label and Entities[Object.Name] then Label = Entities[Object.Name].Alias end
-			if Label and IsEntityEnabled(Label) then
-				Functions.AddESP({ Object = Object, Text = Label, Color = Options.EntityESPColor.Value }, NodeEntities[Label] ~= true)
-			else
-				Functions.RemoveESP(Object)
-			end
+		local Label = EntityESPLabels[Object.Name]
+		if not Label and Entities[Object.Name] then
+			Label = Entities[Object.Name].Alias
+		end
+		if Value and Label and Options.EntityESPOptions.Value[Label] then
+			Functions.AddESP({ Object = Object, Text = Label, Color = Options.EntityESPColor.Value }, NodeEntities[Label] ~= true)
 		else
 			Functions.RemoveESP(Object)
 		end
 	end
 end)
-
-local function OnOptionsChanged()
-	for _, Object in Objects.Entities do
-		if Toggles.EntityESPToggle.Value then
-			local Label = EntityESPLabels[Object.Name]
-			if not Label and Entities[Object.Name] then Label = Entities[Object.Name].Alias end
-			if Label and IsEntityEnabled(Label) then
-				Functions.AddESP({ Object = Object, Text = Label, Color = Options.EntityESPColor.Value }, NodeEntities[Label] ~= true)
-			else
-				Functions.RemoveESP(Object)
-			end
-		end
-	end
-end
-
-Options.HotelEntityList:OnChanged(OnOptionsChanged)
-Options.OutdoorsEntityList:OnChanged(OnOptionsChanged)
-Options.BackdoorEntityList:OnChanged(OnOptionsChanged)
-Options.MinesEntityList:OnChanged(OnOptionsChanged)
-Options.StairwellEntityList:OnChanged(OnOptionsChanged)
-Options.RoomsEntityList:OnChanged(OnOptionsChanged)
 Options.ArchivesEntityList:OnChanged(OnOptionsChanged)
 
 Options.EntityESPOptions:OnChanged(function(Value)
@@ -2568,7 +2589,7 @@ Groupboxes.Floors_Farming:AddButton({
 	end,
 
 	Disabled = not Functions.CheckCompatability({"fireproximityprompt", "firesignal"}),
-	DisabledTooltip = Globals.ImcompatibleMessage
+	DisabledTooltip = Globals.IncompatibleMessage
 })
 Groupboxes.Floors_Farming:AddButton({
 	Text = "Copy Death Farm Loadstring",
@@ -2582,7 +2603,7 @@ Groupboxes.Floors_Farming:AddButton({
 	end,
 
 	Disabled = not Functions.CheckCompatability({"fireproximityprompt", "firesignal"}),
-	DisabledTooltip = Globals.ImcompatibleMessage
+	DisabledTooltip = Globals.IncompatibleMessage
 })
 
 Toggles.KnobFarm:OnChanged(function(Value)
@@ -3235,6 +3256,7 @@ Functions.HandleCharacter = function(NewCharacter)
 
 		if Main_Game then
 			task.wait()
+			if Globals.Unloaded then return end
 			Main_Game.fovtarget = Options.FieldOfView.Value
 		else
 			Camera.FieldOfView = Options.FieldOfView.Value
@@ -3407,12 +3429,16 @@ Functions.HandleObject = function(Object)
 		end)
 		table.insert(Objects.Objectives, Object)
 	elseif Name == "MandrakeLive" then
-		if Toggles.ObjectiveESPToggle.Value and Options.EntityESPOptions.Value["Mandrake Hole"] then Functions.AddESP({ Object = Object.Hole, Text = "Mandrake Hole", Color = Options.EntityESPColor.Value }, true) end
-		table.insert(Objects.Entities, Object.Hole)
-			elseif Name == "Noise" or Name == "Stem" or Name == "Creak" then
-		if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value[Name] then 
-			Functions.AddESP({ Object = Object, Text = Name, Color = Color3.fromRGB(255, 0, 0) }, true) 
+		local Hole = Object:WaitForChild("Hole", 5)
+		if Hole then
+			Hole:SetAttribute("ParentRoom", Object:GetAttribute("ParentRoom"))
+			if Toggles.EntityESPToggle.Value and Options.EntityESPOptions.Value["Mandrake Hole"] then
+				Functions.AddESP({ Object = Hole, Text = "Mandrake Hole", Color = Options.EntityESPColor.Value }, true)
+			end
+			table.insert(Objects.Entities, Hole)
 		end
+	elseif (Name == "Noise" or Name == "Stem" or Name == "Creak" or Name == "Meld") and Object:IsA("Model") then
+		task.spawn(Functions.HandleEntity, Object)
 		table.insert(Objects.Entities, Object)
 	elseif Name == "StairwellScrapper" or Name == "Scrapper" then
 		if Toggles.ObjectiveESPToggle.Value then 
@@ -3703,34 +3729,31 @@ Functions.HandleObject = function(Object)
 		if Toggles.ChestESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Mouse", Color = Options.ChestESPColor.Value }, true) end
 		table.insert(Objects.Chests, Object)
 	elseif ItemNames[Name] and Object:FindFirstChild("ModulePrompt") then
-			elseif ItemNames[Name] then -- Убрали проверку на ModulePrompt, чтобы видеть всё
+	elseif ItemNames[Name] and (Object:IsA("Model") or Object:IsA("BasePart")) and (Object:FindFirstChild("ModulePrompt") or NoPromptItems[Name]) then
 		if Toggles.ItemESPToggle.Value then
-			local ItemColor = Options.ItemESPColor.Value
-			-- Красим мусор в серый
-			if Name == "garbage" or Name == "BottleCrate" or Name == "JerryCan" or Name == "DinkyLamp" or Name == "BrokenMonitor" then
-				ItemColor = Color3.fromRGB(150, 150, 150)
-			end
-			Functions.AddESP({ Object = Object, Text = ItemNames[Name], Color = ItemColor }, Object:GetAttribute("ParentRoom") ~= nil)
+			Functions.AddESP({ Object = Object, Text = ItemNames[Name], Color = GetItemColor(Name) }, Object:GetAttribute("ParentRoom") ~= nil)
 		end
-		
-		-- Логика для Infinite Items и уведомлений (оставляем как было)
+
 		if Object:FindFirstChild("ModulePrompt") then
-			if Name == "LotusHolder" or Name == "LotusPetalPickup" then
-				Object.Handle:GetPropertyChangedSignal("LocalTransparencyModifier"):Connect(function()
+			local Handle = Object:FindFirstChild("Handle")
+			if (Name == "LotusHolder" or Name == "LotusPetalPickup") and Handle then
+				Handle:GetPropertyChangedSignal("LocalTransparencyModifier"):Connect(function()
 					F1xWare.ESPLibrary:RemoveESP(Object)
 					Functions.BlacklistESP(Object)
 				end)
 			end
 
-			if Toggles.NotifyItemsToggle.Value and Options.NotifyItemList.Value[ItemNames[Name]] and Object.Parent.Name ~= "Drops" then
-				if Toggles.NotifyItemsShowDistance.Value then
-					Functions.Notify({ Title = "Item '" .. ItemNames[Name] .. "' has spawned.", Body = "It is '" .. math.round(LocalPlayer:DistanceFromCharacter(Object.PrimaryPart.Position)) .. "' studs away from you." })
+			if Toggles.NotifyItemsToggle.Value and Options.NotifyItemList.Value[ItemNames[Name]] and Object.Parent and Object.Parent.Name ~= "Drops" then
+				local Root = Object.PrimaryPart or Object:FindFirstChildWhichIsA("BasePart")
+				if Toggles.NotifyItemsShowDistance.Value and Root then
+					Functions.Notify({ Title = "Item '" .. ItemNames[Name] .. "' has spawned.", Body = "It is '" .. math.round(LocalPlayer:DistanceFromCharacter(Root.Position)) .. "' studs away from you." })
 				else
-					Functions.Notify({ Title = "Item '" .. ItemNames[Name] .. "' has spawned."})
+					Functions.Notify({ Title = "Item '" .. ItemNames[Name] .. "' has spawned." })
 				end
 			end
 		end
 
+		table.insert(Objects.Items, Object)
 		table.insert(Objects.Items, Object)
 	elseif Name == "Green_Herb" then
 		if Toggles.ItemESPToggle.Value then Functions.AddESP({ Object = Object, Text = "Green Herb", Color = Options.ItemESPColor.Value }, true) end
@@ -4073,7 +4096,8 @@ local AllowedInstances = {
 	MovingDoor=true, StardustPickup=true, Hole=true, Groundskeeper=true, MandrakeLive=true,
 	GardenGateButton=true, LotusPetalPickup=true, VineGuillotine=true, LiveEntityBramble=true,
 	RiftSpawn=true, ElevatorBreaker=true, RunnerNodes=true, PathLights=true, DuckBoard=true,
-	Padlock=true, EyestalkEndCutscene=true, MinecartRig=true, SeekMovingNewClone=true
+	Padlock=true, EyestalkEndCutscene=true, MinecartRig=true, SeekMovingNewClone=true,
+	Noise=true, Stem=true, Creak=true, Meld=true
 }
 
 Functions.QueueObject = function(Object)
@@ -4438,15 +4462,18 @@ end)
 
 local RusherAliases = { Rush=true, Ambush=true, Eyes=true, Lookman=true, Blitz=true, ["A-60"]=true, ["A-120"]=true, AR0xMBUSH=true, ["RNIUSHCG=="]=true, ["Custom Entity"]=true }
 
-Connections.EntityHandler = Services.Workspace.ChildAdded:Connect(function(Entity)
+Functions.HandleEntity = function(Entity)
+	if not Entity:IsA("Model") or Entity:GetAttribute("F1xWare_Entity") then return end
 	local EntityData = Entities[Entity.Name]
 	if not EntityData then return end
+	Entity:SetAttribute("F1xWare_Entity", true)
 
-	while not Entity.PrimaryPart do
+	local Waited = 0
+	while not Entity.PrimaryPart and Waited < 5 do
 		for _, Child in Entity:GetChildren() do
 			if Child:IsA("BasePart") then Entity.PrimaryPart = Child end
 		end
-		task.wait()
+		Waited += task.wait()
 	end
 	task.wait(0.1)
 
@@ -4494,6 +4521,10 @@ Connections.EntityHandler = Services.Workspace.ChildAdded:Connect(function(Entit
 		task.wait(10)
 		Entity:Destroy()
 	end
+end
+
+Connections.EntityHandler = Services.Workspace.ChildAdded:Connect(function(Entity)
+	task.spawn(Functions.HandleEntity, Entity)
 end)
 
 local LastClean = tick()
@@ -4545,36 +4576,181 @@ LocalPlayer.CharacterAdded:Connect(function(NewCharacter)
 end)
 
 Library:OnUnload(function()
-	for Key, Connection in Connections do
-		if type(Key) == "string" then
-			pcall(function() Connection:Disconnect() end)
-		else
-			pcall(function() Key:Disconnect() end)
-			pcall(function() Connection:Disconnect() end)
+	Globals.Unloaded = true
+
+	local function Safe(Func)
+		local Success, Err = pcall(Func)
+		if not Success then
+			warn("F1xWare unload: " .. tostring(Err))
 		end
 	end
 
-	for _, Object in Objects.Entities do
-		if Object.Name == "Snare" or Object.Name == "GiggleCeiling" then
-			local Hitbox = Object:FindFirstChild("Hitbox")
-			if Hitbox then Hitbox.CanTouch = true end
-		end
-		if Object.Name == "GloomPile" then
-			for _, Part in Object:GetDescendants() do
-				if Part:IsA("BasePart") then Part.CanTouch = true end
+	Safe(function()
+		for Key, Connection in Connections do
+			if type(Key) == "string" then
+				pcall(function() Connection:Disconnect() end)
+			else
+				pcall(function() Key:Disconnect() end)
+				pcall(function() Connection:Disconnect() end)
 			end
 		end
-		if Object.Name == "FakeDoor" or Object.Name == "DoorFake" then
-			local Hidden = Object:FindFirstChild("Hidden")
-			if Hidden then Hidden.CanTouch = true end
-			local Lock = Object:FindFirstChild("Lock")
-			if Lock and Lock:FindFirstChild("UnlockPrompt") then Lock.UnlockPrompt.Enabled = true end
+		for _, Connection in ESPConnections do
+			pcall(function() Connection:Disconnect() end)
 		end
-		if Object.Name == "SideroomSpace" then
-			local Coll = Object:FindFirstChild("Collision")
-			if Coll then Coll.CanCollide = false Coll.CanTouch = true end
+	end)
+
+	Safe(function()
+		if Globals.FlyBody then Globals.FlyBody:Destroy() end
+		if Globals.ManipulateBody then Globals.ManipulateBody:Destroy() end
+	end)
+
+	Safe(function()
+		if Toggles.PositionSpoof.Value and Floor ~= "Fools" and Floor ~= "OldHotel" then
+			RootPart.CFrame = RootPart.CFrame * CFrame.new(0, 2.346, 0)
 		end
-	end
+		Humanoid.HipHeight = Globals.OldHipHeight or 2.367
+		if Character:FindFirstChild("LowerTorso") and Character.LowerTorso:FindFirstChild("Root") then
+			Character.LowerTorso.Root.C1 = Globals.OriginalC1
+		end
+	end)
+
+	Safe(function()
+		local Old = Globals.OldCollisionState
+		if Old then
+			Collision.CanCollide = Old.Collision
+			local CrouchPart = Collision:FindFirstChild("CollisionCrouch")
+			if CrouchPart and Old.Crouch ~= nil then CrouchPart.CanCollide = Old.Crouch end
+			RootPart.CanCollide = Old.Root
+		end
+		local BaseY = 0.18
+		Collision.Position = RootPart.Position + Vector3.new(0, BaseY, 0)
+		CollisionPart.Position = RootPart.Position + Vector3.new(0, BaseY, 0)
+		CollisionPartClone.Position = RootPart.Position + Vector3.new(0, BaseY, 0)
+		if Collision:FindFirstChild("CollisionCrouch") then
+			Collision.CollisionCrouch.Position = RootPart.Position + Vector3.new(0, -0.982, 0)
+		end
+		CollisionClone:Destroy()
+		CollisionPartClone:Destroy()
+	end)
+
+	Safe(function()
+		for Part, Old in Globals.ThirdPersonOld or {} do
+			Part.Transparency = Old[1]
+			Part.LocalTransparencyModifier = Old[2]
+		end
+	end)
+
+	Safe(function()
+		local FOV = Globals.OldFOV or 70
+		if Main_Game then
+			Main_Game.fovtarget = FOV
+			Main_Game.spring.Speed = 8
+			Main_Game.tooloffset = Vector3.zero
+		end
+		if Camera then Camera.FieldOfView = FOV end
+	end)
+
+	Safe(function()
+		if Globals.OriginalGetMoveVector then
+			local Controls = require(LocalPlayer.PlayerScripts.PlayerModule):GetControls()
+			Controls.GetMoveVector = Globals.OriginalGetMoveVector
+		end
+	end)
+
+	Safe(function()
+		for _, Object in Objects.Entities do
+			if Object.Name == "Snare" or Object.Name == "GiggleCeiling" then
+				local Hitbox = Object:FindFirstChild("Hitbox")
+				if Hitbox then Hitbox.CanTouch = true end
+			end
+			if Object.Name == "GloomPile" then
+				for _, Part in Object:GetDescendants() do
+					if Part:IsA("BasePart") then Part.CanTouch = true end
+				end
+			end
+			if Object.Name == "FakeDoor" or Object.Name == "DoorFake" then
+				local Hidden = Object:FindFirstChild("Hidden")
+				if Hidden then Hidden.CanTouch = true end
+				local Lock = Object:FindFirstChild("Lock")
+				if Lock and Lock:FindFirstChild("UnlockPrompt") then Lock.UnlockPrompt.Enabled = true end
+			end
+			if Object.Name == "SideroomSpace" then
+				local Coll = Object:FindFirstChild("Collision")
+				if Coll then Coll.CanCollide = false Coll.CanTouch = true end
+			end
+		end
+		for _, Object in Objects.SeekBridges do Object:Destroy() end
+	end)
+
+	Safe(function()
+		for _, Fog in Globals.FogInstances do
+			local Density = Fog:GetAttribute("Density_Old")
+			if Density then Fog.Density = Density end
+		end
+		Services.Lighting.FogEnd = Globals.OldFog
+		local OldAmbient = CurrentRooms:FindFirstChild(tostring(LocalPlayer:GetAttribute("CurrentRoom"))):GetAttribute("Ambient")
+		Services.TweenService:Create(Services.Lighting, TweenInfo.new(0.2, Enum.EasingStyle.Exponential), { Ambient = OldAmbient }):Play()
+	end)
+
+	Safe(function()
+		local Vignette = Globals.MainUI:FindFirstChild("HideVignette") or Globals.MainUI.MainFrame:FindFirstChild("HideVignette")
+		if Vignette then Vignette.Image = "rbxassetid://6100076320" end
+		local ModuleRestores = {
+			Screech = "Screech", Glitch = "Glitch", Shade = "Shade",
+			SpiderJumpscare = "SpiderJumpscare", A90 = "A90", Dread = "Dread", Void = "Void"
+		}
+		for Key, OriginalName in ModuleRestores do
+			if Modules[Key] then Modules[Key].Name = OriginalName end
+		end
+	end)
+
+	Safe(function()
+		FakeEvents.Screech:Destroy()
+		FakeEvents.Screech_Real.Parent = RemotesFolder
+		FakeEvents.Shade:Destroy()
+		FakeEvents.Shade_Real.Parent = RemotesFolder
+		if FakeEvents.A90_Real then
+			FakeEvents.A90:Destroy()
+			FakeEvents.A90_Real.Parent = RemotesFolder
+		end
+		if FakeEvents.Surge_Real then
+			FakeEvents.Surge:Destroy()
+			FakeEvents.Surge_Real.Parent = RemotesFolder
+		end
+	end)
+
+	Safe(function()
+		Globals.SeekNodesFolder:Destroy()
+		Globals.RoomsNodesFolder:Destroy()
+	end)
+
+	Safe(function()
+		for _, Prompt in Objects.Prompts do
+			if FakePrompts[Prompt] then
+				FakePrompts[Prompt].Parent = Prompt.Parent
+				Prompt:Destroy()
+			end
+			if Prompt.Parent then
+				Prompt.HoldDuration = Prompt:GetAttribute("HoldDuration_Old") or Prompt.HoldDuration
+				Prompt.RequiresLineOfSight = Prompt:GetAttribute("RequiresLineOfSight_Old") or Prompt.RequiresLineOfSight
+				Prompt.MaxActivationDistance = Prompt:GetAttribute("MaxActivationDistance_Old") or Prompt.MaxActivationDistance
+			end
+		end
+	end)
+
+	Safe(function()
+		Character:SetAttribute("CanJump", OldJump)
+		Character:SetAttribute("CanSlide", OldSlide)
+		Humanoid.WalkSpeed = Functions.GetCurrentSpeed()
+		Humanoid.JumpPower = 5
+	end)
+
+	Safe(function()
+		F1xWare.ESPLibrary:Unload()
+	end)
+
+	getgenv().F1xWare = nil
+end)
 
 	for _, Object in Objects.SeekBridges do Object:Destroy() end
 
@@ -4672,12 +4848,13 @@ while not Globals.MainUI do task.wait() end
 F1xWare.Interface.ApplySettingsTab(Window)
 Functions.Notify({ Title = "Successfully loaded in " .. math.floor((tick() - LoadStart) * 1000) / 1000 .. " seconds." , Body = "Press '" .. tostring(Options.MenuKeybind.Value) .. "' to toggle the UI."})
 local currentFloor = Floor
-Services.ReplicatedStorage:WaitForChild("GameData"):WaitForChild("Floor"):GetPropertyChangedSignal("Value"):Connect(function()
-    local newFloor = Services.ReplicatedStorage.GameData.Floor.Value
-    if newFloor ~= currentFloor then
-        currentFloor = newFloor
-        Library:Unload()
-        task.wait(1)
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/MolniaF1x777/F1xWare/main/Loader.luau"))()
-    end
+Connections.FloorChangeWatcher = Services.ReplicatedStorage:WaitForChild("GameData"):WaitForChild("Floor"):GetPropertyChangedSignal("Value"):Connect(function()
+	if Globals.Unloaded then return end
+	local newFloor = Services.ReplicatedStorage.GameData.Floor.Value
+	if newFloor ~= currentFloor then
+		currentFloor = newFloor
+		Library:Unload()
+		task.wait(1)
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/MolniaF1x777/F1xWare/main/Loader.luau"))()
+	end
 end)
