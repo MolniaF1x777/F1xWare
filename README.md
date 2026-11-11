@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛸 F1xWare
+# 🛸 F1xWare #Святсво🥶🥶🥶🥶
 
 **An exclusive, high-performance script built specifically for DOORS.**
 
